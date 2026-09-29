@@ -2729,6 +2729,14 @@
         const suggestions = [...specialSuggestions, ...getContextualSuggestions(modeKey)]
           .filter((item, index, arr) => arr.findIndex(x => x.id === item.id) === index);
 
+        // تفعيل فلتر Instagram الموجود أصلًا تلقائيًا عند جملة المدرسة.
+        if (mode === 'smart' && specialSuggestions.length > 0 && specialSuggestions[0].linkIndex !== undefined) {
+          selectedLinksState.selected = {};
+          selectedLinksState.selected['link:' + specialSuggestions[0].linkIndex] = true;
+          saveCurrentStateToMode();
+          updateAllFiltersUI();
+        }
+
         if (!suggestions.length) {
           contextualFilters.classList.remove('show');
           return;
