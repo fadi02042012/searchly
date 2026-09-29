@@ -19,12 +19,7 @@
         if (tabBtn) tabBtn.classList.add('active');
         const panel = document.querySelector(`.filter-panel[data-panel="${targetTab}"]`);
         if (panel) panel.classList.add('active');
-        if (targetTab === 'all-filters') {
-          if (typeof buildAllFiltersGrid === 'function') buildAllFiltersGrid();
-          if (typeof attachAllFiltersListeners === 'function') attachAllFiltersListeners();
-          if (typeof updateAllFiltersUI === 'function') updateAllFiltersUI();
-          if (typeof setupAllFiltersMoreButton === 'function') setupAllFiltersMoreButton();
-        }
+        if (false) { }
       }
 
       function attachModeTabListeners() {
@@ -55,12 +50,7 @@
           document.querySelectorAll('.filter-panel').forEach(p => p.classList.remove('active'));
           const panel = document.querySelector(`.filter-panel[data-panel="${tabName}"]`);
           if (panel) panel.classList.add('active');
-          if (tabName === 'all-filters') {
-            if (typeof buildAllFiltersGrid === 'function') buildAllFiltersGrid();
-            if (typeof attachAllFiltersListeners === 'function') attachAllFiltersListeners();
-            if (typeof updateAllFiltersUI === 'function') updateAllFiltersUI();
-            if (typeof setupAllFiltersMoreButton === 'function') setupAllFiltersMoreButton();
-          }
+          if (false) { }
         });
       }
 
