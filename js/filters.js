@@ -378,7 +378,7 @@
                 const idx = arr.indexOf(filter.value);
                 if (idx > -1) arr.splice(idx, 1);
               } else {
-                filterState[filter.key] = filter.key === 'sort' ? 'date' : 'all';
+                filterState[filter.key] = filter.key === 'sort' ? 'relevance' : 'all';
               }
               setFilterButtonVisuals(filterState);
               saveCurrentStateToMode();
