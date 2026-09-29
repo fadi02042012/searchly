@@ -177,7 +177,8 @@
                 video: 'EgIQAQ%3D%3D',
                 playlist: 'EgIQAw%3D%3D',
                 live: 'EgJAAQ%3D%3D',
-                channel: 'EgIQAg%3D%3D'
+                channel: 'EgIQAg%3D%3D',
+                film: 'EgIQBA%3D%3D'
               };
               const type = (fs.type || []).find(v => typeSp[v]);
 
