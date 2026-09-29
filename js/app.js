@@ -173,7 +173,7 @@ const __closeFiltersBtn = document.getElementById('closeFiltersBtn');
 
 function resetAllFilters() {
   // Reset means no active filters; do not restore the newest/date sort.
-  const defaults = {sort:'relevance',type:[],duration:[],date:[],quality:[],feature:[],youtubePreset:''};
+  const defaults = {sort:'relevance',type:[],duration:[],date:[],quality:[],feature:[],youtubePreset:'',videoPlatform:'youtube'};
 
   if (typeof filterState !== 'undefined') {
     Object.keys(defaults).forEach(k => {
@@ -183,7 +183,7 @@ function resetAllFilters() {
 
   if (typeof modeFilters !== 'undefined') {
     Object.keys(modeFilters).forEach(mode => {
-      modeFilters[mode] = {sort:'relevance',type:[],duration:[],date:[],quality:[],feature:[],youtubePreset:''};
+      modeFilters[mode] = {sort:'relevance',type:[],duration:[],date:[],quality:[],feature:[],youtubePreset:'',videoPlatform:'youtube'};
     });
   }
 
@@ -197,7 +197,7 @@ function resetAllFilters() {
   if (typeof imageState !== 'undefined') Object.assign(imageState, {
     allWords:'', site:'', fileType:'', size:'all', exactWidth:'', exactHeight:'',
     aspect:'all', color:'all', colorType:'all', type:'all', rights:'all',
-    time:'all', lang:'', region:'', safe:'active'
+    time:'all', lang:'', region:'', safe:'all'
   });
   if (typeof mapState !== 'undefined') Object.assign(mapState, {
     place:'', near:'', category:'', rating:'0', hours:'all', price:'all', sort:'relevance'
