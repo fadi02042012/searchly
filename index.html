@@ -1235,6 +1235,111 @@
         transition-duration: 0.01ms !important;
       }
     }
+
+    /* =====================================================
+       GEMINI AI TAB
+       ===================================================== */
+    .gemini-tab {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 40px;
+      background: linear-gradient(135deg, rgba(161,66,244,.08), rgba(26,115,232,.08));
+      border: 1px solid var(--border);
+      color: var(--muted); font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: all 0.25s;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .gemini-tab:hover {
+      background: var(--surface-hover); color: var(--text);
+      border-color: var(--border-hover); transform: translateY(-1px);
+    }
+    .gemini-tab.active {
+      background: linear-gradient(135deg, var(--purple), var(--accent));
+      border-color: transparent; color: #fff;
+      box-shadow: 0 4px 14px rgba(161,66,244,.28);
+    }
+    .gemini-panel {
+      width: 100%; max-width: 900px; margin-bottom: 20px;
+      display: none; animation: slideDown .25s ease;
+    }
+    .gemini-panel.show { display: block; }
+    .gemini-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 22px; box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .gemini-head {
+      padding: 20px 22px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .gemini-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 18px; font-weight: 800; color: var(--text);
+    }
+    .gemini-subtitle { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .gemini-status {
+      font-size: 11px; font-weight: 700; color: var(--green);
+      background: rgba(24,128,56,.1); padding: 6px 10px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .gemini-chat {
+      min-height: 260px; max-height: 56vh; overflow-y: auto;
+      padding: 18px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .gemini-welcome {
+      text-align: center; color: var(--muted); padding: 36px 16px;
+    }
+    .gemini-welcome-icon { font-size: 42px; margin-bottom: 10px; }
+    .gemini-message {
+      max-width: 88%; padding: 11px 14px; border-radius: 16px;
+      line-height: 1.75; font-size: 14px; white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .gemini-message.user {
+      align-self: flex-start; background: var(--accent-light); color: var(--text);
+      border: 1px solid rgba(26,115,232,.16);
+    }
+    .gemini-message.model {
+      align-self: flex-end; background: var(--bg-alt); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .gemini-message.loading { color: var(--muted); }
+    .gemini-composer {
+      padding: 14px; border-top: 1px solid var(--border);
+      display: flex; gap: 8px; align-items: flex-end;
+    }
+    .gemini-input {
+      flex: 1; min-height: 46px; max-height: 140px; resize: vertical;
+      padding: 11px 13px; border: 1px solid var(--border);
+      border-radius: 14px; background: var(--bg); color: var(--text);
+      outline: none; font-size: 14px; line-height: 1.5;
+    }
+    .gemini-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-light);
+    }
+    .gemini-send { min-height: 46px; }
+    .gemini-clear {
+      padding: 9px 12px; font-size: 12px; white-space: nowrap;
+    }
+    .gemini-foot {
+      padding: 0 14px 14px; color: var(--muted-2); font-size: 10px;
+      line-height: 1.5;
+    }
+    .gemini-spinner {
+      width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.35);
+      border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite;
+      display: none;
+    }
+    .gemini-send.loading .gemini-spinner { display: inline-block; }
+    .gemini-send.loading .gemini-send-text { display: none; }
+    @media (max-width: 600px) {
+      .gemini-head { align-items: flex-start; flex-direction: column; }
+      .gemini-message { max-width: 96%; }
+      .gemini-composer { flex-wrap: wrap; }
+      .gemini-input { flex-basis: 100%; }
+      .gemini-send, .gemini-clear { flex: 1; justify-content: center; }
+    }
+
 </style>
   <!-- HEADER -->
   <header class="header">
@@ -1264,6 +1369,7 @@
     <button class="mode-tab" data-mode="images"><span class="mode-icon">🖼️</span><span>صور</span></button>
     <button class="mode-tab" data-mode="maps"><span class="mode-icon">🗺️</span><span>خرائط</span></button>
     <button class="mode-tab" data-mode="videos"><span class="mode-icon">🎬</span><span>فيديو</span></button>
+    <button class="gemini-tab" id="geminiTab" type="button"><span>✨</span><span id="geminiTabText">Gemini AI</span></button>
   </div>
 
   <!-- SEARCH BOX -->
@@ -1307,6 +1413,34 @@
     </div>
     <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
   </div>
+
+
+  <section class="gemini-panel" id="geminiPanel" aria-labelledby="geminiPanelTitle">
+    <div class="gemini-card">
+      <div class="gemini-head">
+        <div>
+          <div class="gemini-title" id="geminiPanelTitle">✨ Gemini AI</div>
+          <div class="gemini-subtitle" id="geminiPanelSubtitle">محادثة مباشرة مع Gemini داخل Searchly</div>
+        </div>
+        <span class="gemini-status" id="geminiStatus">● متصل</span>
+      </div>
+      <div class="gemini-chat" id="geminiChat" aria-live="polite">
+        <div class="gemini-welcome" id="geminiWelcome">
+          <div class="gemini-welcome-icon">✨</div>
+          <div id="geminiWelcomeText">اكتب سؤالك وسيرد Gemini مباشرة.</div>
+        </div>
+      </div>
+      <div class="gemini-composer">
+        <textarea class="gemini-input" id="geminiInput" rows="2" maxlength="4000" placeholder="اسأل Gemini..."></textarea>
+        <button class="btn btn-primary gemini-send" id="geminiSend" type="button">
+          <span class="gemini-send-text" id="geminiSendText">✨ اسأل</span>
+          <span class="gemini-spinner" aria-hidden="true"></span>
+        </button>
+        <button class="btn gemini-clear" id="geminiClear" type="button">مسح</button>
+      </div>
+      <div class="gemini-foot" id="geminiFoot">قد تحتوي الإجابات على أخطاء؛ تحقّق من المعلومات المهمة. لا تُدخل مفاتيح API أو معلومات سرية.</div>
+    </div>
+  </section>
 
   <div class="contextual-filters" id="contextualFilters">
     <span class="cf-label"><span>💡</span><span id="cfLabelText">فلاتر مقترحة:</span></span>
@@ -3753,6 +3887,7 @@
       // COMMAND PALETTE
       // =====================================================
       const commands = [
+        { icon: '✨', name: 'Gemini AI', nameEn: 'Gemini AI', action: () => setGeminiView(true) },
         { icon: '🔍', name: 'بحث', nameEn: 'Search', shortcut: 'Ctrl+K', action: () => searchInput.focus() },
         { icon: '🌐', name: 'ترجمة + بحث', nameEn: 'Translate + Search', action: () => performTranslateAndSearch() },
         { icon: '✨', name: 'وضع ذكي', nameEn: 'Smart mode', action: () => { switchMode('smart'); } },
@@ -3835,10 +3970,12 @@
         });
         renderQuickSuggestions();
         renderContextualFilters();
+        initGeminiTab();
         renderPresets();
         updateFilterSummary();
         renderActiveFiltersBar();
         updateAllFiltersUI();
+        updateGeminiUIStrings();
         showToast(strings.toastLangSwitched);
       }
 
@@ -3858,6 +3995,144 @@
           chip.addEventListener('click', () => { searchInput.value = text; currentQuery = text; const detected = detectSearchMode(text); if (detected) switchMode(detected.mode); performSearch(text); });
           quickSuggestions.appendChild(chip);
         });
+      }
+
+
+      // =====================================================
+      // GEMINI AI TAB
+      // =====================================================
+      const geminiState = {
+        history: [],
+        busy: false,
+        maxHistory: 10
+      };
+
+      function updateGeminiUIStrings() {
+        const ar = currentLang === 'ar';
+        const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
+        setText('geminiTabText', ar ? 'Gemini AI' : 'Gemini AI');
+        setText('geminiPanelTitle', ar ? '✨ Gemini AI' : '✨ Gemini AI');
+        setText('geminiPanelSubtitle', ar ? 'محادثة مباشرة مع Gemini داخل Searchly' : 'Chat directly with Gemini inside Searchly');
+        setText('geminiWelcomeText', ar ? 'اكتب سؤالك وسيرد Gemini مباشرة.' : 'Write your question and Gemini will answer directly.');
+        setText('geminiSendText', ar ? '✨ اسأل' : '✨ Ask');
+        setText('geminiClear', ar ? 'مسح' : 'Clear');
+        setText('geminiFoot', ar ? 'قد تحتوي الإجابات على أخطاء؛ تحقّق من المعلومات المهمة. لا تُدخل مفاتيح API أو معلومات سرية.' : 'AI responses can contain errors. Verify important information. Never enter API keys or secrets.');
+        const input = document.getElementById('geminiInput');
+        if (input) input.placeholder = ar ? 'اسأل Gemini...' : 'Ask Gemini...';
+      }
+
+      function setGeminiView(active) {
+        const tab = document.getElementById('geminiTab');
+        const panel = document.getElementById('geminiPanel');
+        if (!tab || !panel) return;
+        tab.classList.toggle('active', active);
+        panel.classList.toggle('show', active);
+        document.querySelectorAll('.search-modes .mode-tab').forEach(el => el.classList.toggle('active', false));
+        const hideSelectors = ['.search-container','.contextual-filters','.presets-bar','.active-filters-bar','.quick-suggestions','.empty-state'];
+        hideSelectors.forEach(sel => document.querySelectorAll(sel).forEach(el => { el.style.display = active ? 'none' : ''; }));
+        if (active) {
+          document.getElementById('geminiInput')?.focus();
+          updateGeminiUIStrings();
+        }
+      }
+
+      function renderGeminiMessage(role, text) {
+        const chat = document.getElementById('geminiChat');
+        const welcome = document.getElementById('geminiWelcome');
+        if (welcome) welcome.remove();
+        const bubble = document.createElement('div');
+        bubble.className = 'gemini-message ' + (role === 'user' ? 'user' : 'model');
+        bubble.textContent = text;
+        chat.appendChild(bubble);
+        chat.scrollTop = chat.scrollHeight;
+        return bubble;
+      }
+
+      function clearGeminiChat() {
+        geminiState.history = [];
+        const chat = document.getElementById('geminiChat');
+        if (chat) chat.innerHTML = '<div class="gemini-welcome" id="geminiWelcome"><div class="gemini-welcome-icon">✨</div><div id="geminiWelcomeText"></div></div>';
+        updateGeminiUIStrings();
+      }
+
+      async function askGemini() {
+        if (geminiState.busy) return;
+        const input = document.getElementById('geminiInput');
+        const send = document.getElementById('geminiSend');
+        const question = (input?.value || '').trim();
+        if (!question) return;
+
+        geminiState.busy = true;
+        if (send) send.classList.add('loading');
+        if (input) input.disabled = true;
+        renderGeminiMessage('user', question);
+
+        const historyForRequest = geminiState.history.slice(-geminiState.maxHistory);
+        geminiState.history.push({ role: 'user', text: question });
+
+        const loading = renderGeminiMessage('model', currentLang === 'ar' ? 'جاري التفكير…' : 'Thinking…');
+        loading.classList.add('loading');
+
+        try {
+          const response = await fetch('/api/gemini-chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: question,
+              history: historyForRequest,
+              language: currentLang
+            })
+          });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(data.error || 'Gemini request failed');
+          const answer = typeof data.answer === 'string' && data.answer.trim()
+            ? data.answer.trim()
+            : (currentLang === 'ar' ? 'لم تصل إجابة من Gemini.' : 'Gemini returned no answer.');
+
+          loading.textContent = answer;
+          loading.classList.remove('loading');
+          geminiState.history.push({ role: 'model', text: answer });
+          if (geminiState.history.length > geminiState.maxHistory) {
+            geminiState.history = geminiState.history.slice(-geminiState.maxHistory);
+          }
+          input.value = '';
+        } catch (error) {
+          loading.remove();
+          renderGeminiMessage('model', currentLang === 'ar'
+            ? 'تعذر الاتصال بـ Gemini الآن. حاول مرة أخرى.'
+            : 'Gemini is temporarily unavailable. Please try again.');
+          console.warn('Searchly Gemini chat error:', error);
+        } finally {
+          geminiState.busy = false;
+          if (send) send.classList.remove('loading');
+          if (input) input.disabled = false;
+          if (input) input.focus();
+        }
+      }
+
+      function initGeminiTab() {
+        const tab = document.getElementById('geminiTab');
+        const input = document.getElementById('geminiInput');
+        const send = document.getElementById('geminiSend');
+        const clear = document.getElementById('geminiClear');
+        if (!tab || !input || !send || !clear) return;
+
+        tab.addEventListener('click', () => setGeminiView(true));
+        send.addEventListener('click', askGemini);
+        clear.addEventListener('click', clearGeminiChat);
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            askGemini();
+          }
+        });
+
+        document.querySelectorAll('.search-modes .mode-tab').forEach(modeTab => {
+          modeTab.addEventListener('click', () => {
+            setGeminiView(false);
+          });
+        });
+        updateGeminiUIStrings();
       }
 
       // =====================================================
