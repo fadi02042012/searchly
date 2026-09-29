@@ -421,22 +421,22 @@
         <div class="advanced-section">
           <div class="advanced-section-title">📊 ترتيب الفيديو</div>
           <div class="filter-group" data-filter-group="sort">
-            <button class="filter-btn" data-filter-sort="relevance">الأكثر صلة</button>
-            <button class="filter-btn" data-filter-sort="views">🔥 الأكثر مشاهدة</button>
-            <button class="filter-btn" data-filter-sort="rating">⭐ الأعلى تقييماً</button>
-            <button class="filter-btn" data-filter-sort="date">📅 الأحدث</button>
-            <button class="filter-btn" data-filter-sort="title">📝 في العنوان</button>
+            <button class="filter-btn active-filter" data-filter-sort="relevance" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();if(typeof filterState!=='undefined')filterState.sort='relevance';document.querySelectorAll('[data-filter-sort]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');if(typeof saveCurrentStateToMode==='function')saveCurrentStateToMode();if(typeof renderActiveFiltersBar==='function')renderActiveFiltersBar();">الأكثر صلة</button>
+            <button class="filter-btn" data-filter-sort="views" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();if(typeof filterState!=='undefined')filterState.sort='views';document.querySelectorAll('[data-filter-sort]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');if(typeof saveCurrentStateToMode==='function')saveCurrentStateToMode();if(typeof renderActiveFiltersBar==='function')renderActiveFiltersBar();">🔥 الأكثر مشاهدة</button>
+            <button class="filter-btn" data-filter-sort="rating" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();if(typeof filterState!=='undefined')filterState.sort='rating';document.querySelectorAll('[data-filter-sort]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');if(typeof saveCurrentStateToMode==='function')saveCurrentStateToMode();if(typeof renderActiveFiltersBar==='function')renderActiveFiltersBar();">⭐ الأعلى تقييماً</button>
+            <button class="filter-btn" data-filter-sort="date" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();if(typeof filterState!=='undefined')filterState.sort='date';document.querySelectorAll('[data-filter-sort]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');if(typeof saveCurrentStateToMode==='function')saveCurrentStateToMode();if(typeof renderActiveFiltersBar==='function')renderActiveFiltersBar();">📅 الأحدث</button>
+            <button class="filter-btn" data-filter-sort="title" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();if(typeof filterState!=='undefined'){filterState.sort='title';filterState.type=Array.from(new Set([...(filterState.type||[]),'title']));}document.querySelectorAll('[data-filter-sort]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');if(typeof saveCurrentStateToMode==='function')saveCurrentStateToMode();if(typeof renderActiveFiltersBar==='function')renderActiveFiltersBar();">📝 في العنوان</button>
           </div>
         </div>
         <div class="advanced-section">
           <div class="advanced-section-title">🚀 مصادر ومنصات الفيديو</div>
           <div class="filter-group">
-            <button class="filter-btn" data-video-platform="youtube">YouTube</button>
-            <button class="filter-btn" data-video-platform="vimeo">Vimeo</button>
-            <button class="filter-btn" data-video-platform="dailymotion">Dailymotion</button>
-            <button class="filter-btn" data-video-platform="bilibili">Bilibili</button>
-            <button class="filter-btn" data-video-platform="youku">Youku</button>
-            <button class="filter-btn" data-video-platform="yandex">Yandex Video</button>
+            <button class="filter-btn" data-video-platform="youtube" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();document.querySelectorAll('[data-video-platform]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');this.closest('.filter-group').dataset.selectedPlatform=this.dataset.videoPlatform;">YouTube</button>
+            <button class="filter-btn" data-video-platform="vimeo" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();document.querySelectorAll('[data-video-platform]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');this.closest('.filter-group').dataset.selectedPlatform=this.dataset.videoPlatform;">Vimeo</button>
+            <button class="filter-btn" data-video-platform="dailymotion" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();document.querySelectorAll('[data-video-platform]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');this.closest('.filter-group').dataset.selectedPlatform=this.dataset.videoPlatform;">Dailymotion</button>
+            <button class="filter-btn" data-video-platform="bilibili" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();document.querySelectorAll('[data-video-platform]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');this.closest('.filter-group').dataset.selectedPlatform=this.dataset.videoPlatform;">Bilibili</button>
+            <button class="filter-btn" data-video-platform="youku" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();document.querySelectorAll('[data-video-platform]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');this.closest('.filter-group').dataset.selectedPlatform=this.dataset.videoPlatform;">Youku</button>
+            <button class="filter-btn" data-video-platform="yandex" type="button" onclick="event.preventDefault();event.stopImmediatePropagation();document.querySelectorAll('[data-video-platform]').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');this.closest('.filter-group').dataset.selectedPlatform=this.dataset.videoPlatform;">Yandex Video</button>
           </div>
         </div>
       </div>
