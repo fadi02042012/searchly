@@ -219,6 +219,31 @@
               // لذلك نترك الترتيب للواجهة ولا نخترع رمزاً غير موثوق.
               // فلتر النوع/المدة/التاريخ/الجودة: نستخدم رموز YouTube الموثقة
               // الموجودة في بيانات الفلاتر الحالية.
+              const presetSp = {
+                views: 'CAMSAhAB',
+                rating: 'CAESAhAB',
+                date: 'CAI%3D',
+                title: ''
+              };
+              const compositeSp = {
+                long_views: 'CAMSAhgC',
+                long_4k: 'EgYQBBgCcAE%3D',
+                long_4k_hd: 'EgYYAiABcAE%3D'
+              };
+
+              // الفلاتر المركبة المحفوظة/الإضافية لها أولوية.
+              const preset = fs.youtubePreset || '';
+              if (preset && compositeSp[preset]) {
+                url += '&sp=' + compositeSp[preset];
+                return url;
+              }
+
+              // ترتيب YouTube يستخدم رموز sp مستقلة.
+              if (fs.sort && presetSp[fs.sort]) {
+                url += '&sp=' + presetSp[fs.sort];
+                return url;
+              }
+
               const candidates = [
                 ['type', typeSp[type]],
                 ['duration', durationSp[duration]],
@@ -226,10 +251,7 @@
                 ['quality', qualitySp[quality]]
               ].filter(([, value]) => Boolean(value));
 
-              if (candidates.length) {
-                // أولوية: النوع ثم المدة ثم التاريخ ثم الجودة.
-                url += '&sp=' + candidates[0][1];
-              }
+              if (candidates.length) url += '&sp=' + candidates[0][1];
               return url;
             }
             return googleSearchURL(query);
