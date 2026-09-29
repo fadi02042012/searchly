@@ -764,6 +764,15 @@
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 12px;
     }
+    .all-filter-group-extra { display: none; }
+    .all-filters-grid.show-more .all-filter-group-extra { display: block; }
+    .all-filters-more-btn {
+      width: 100%; margin-top: 12px; padding: 9px 14px;
+      border: 1px solid var(--border); border-radius: 10px;
+      background: var(--surface); color: var(--purple);
+      font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;
+    }
+    .all-filters-more-btn:hover { background: var(--surface-hover); border-color: var(--purple); }
 
     .all-filter-group {
       background: var(--bg-alt);
@@ -1062,6 +1071,7 @@
 
           <!-- ⭐ تُبنى هذه الشبكة تلقائياً من مصفوفة searches ⭐ -->
           <div class="all-filters-grid" id="allFiltersGrid"></div>
+           <button class="all-filters-more-btn" type="button" id="allFiltersMoreBtn" aria-expanded="false">إظهار المزيد ⌄</button>
         </div>
 
         <div class="all-filters-actions">
@@ -1677,10 +1687,19 @@
         const grid = document.getElementById('allFiltersGrid');
         if (!grid) return;
         grid.innerHTML = '';
+        grid.classList.remove('show-more');
+
         const groups = getSearchesByGroup();
-        Object.entries(groups).forEach(([groupName, items]) => {
+        const priorityGroups = ['أساسي', 'الترتيب', 'التاريخ', 'المدة', 'الجودة'];
+        const orderedGroups = Object.entries(groups).sort(([a], [b]) => {
+          const ai = priorityGroups.indexOf(a);
+          const bi = priorityGroups.indexOf(b);
+          return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+        });
+
+        orderedGroups.forEach(([groupName, items], groupIndex) => {
           const groupDiv = document.createElement('div');
-          groupDiv.className = 'all-filter-group';
+          groupDiv.className = 'all-filter-group' + (groupIndex >= priorityGroups.length ? ' all-filter-group-extra' : '');
           groupDiv.dataset.group = groupName;
           const icon = groupIcons[groupName] || '📌';
           groupDiv.innerHTML = `<div class="all-filter-group-title">${icon} ${groupName}</div>`;
@@ -1699,6 +1718,9 @@
           groupDiv.appendChild(itemsDiv);
           grid.appendChild(groupDiv);
         });
+
+        const moreBtn = document.getElementById('allFiltersMoreBtn');
+        if (moreBtn) moreBtn.style.display = orderedGroups.length > priorityGroups.length ? '' : 'none';
       }
 
       // =====================================================
@@ -2045,6 +2067,8 @@
         if (filterSearchInput) {
           filterSearchInput.addEventListener('input', (e) => {
             const q = e.target.value.trim().toLowerCase();
+            const grid = document.getElementById('allFiltersGrid');
+            if (grid) grid.classList.toggle('show-more', !!q);
             document.querySelectorAll('.all-filter-item').forEach(item => {
               const name = item.querySelector('.af-name').textContent.toLowerCase();
               item.style.display = q === '' || name.includes(q) ? '' : 'none';
@@ -2053,6 +2077,16 @@
               const visibleItems = Array.from(group.querySelectorAll('.all-filter-item')).filter(it => it.style.display !== 'none');
               group.style.display = visibleItems.length > 0 ? '' : 'none';
             });
+          });
+        }
+        const allFiltersMoreBtn = document.getElementById('allFiltersMoreBtn');
+        if (allFiltersMoreBtn) {
+          allFiltersMoreBtn.addEventListener('click', () => {
+            const grid = document.getElementById('allFiltersGrid');
+            if (!grid) return;
+            const expanded = grid.classList.toggle('show-more');
+            allFiltersMoreBtn.setAttribute('aria-expanded', String(expanded));
+            allFiltersMoreBtn.textContent = expanded ? 'إظهار أقل ⌃' : 'إظهار المزيد ⌄';
           });
         }
         const selectAllBtn = document.getElementById('afSelectAll');
