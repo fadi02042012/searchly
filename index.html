@@ -1990,6 +1990,30 @@
         ]
       };
 
+      function getSmartSpecialSuggestions(query) {
+        const lower = normalizeSmartQuery(query);
+        const instagramSchoolPhrases = [
+          'انستقرام ثانوية جمال عبدالناصر للمتفوقين',
+          'إنستقرام ثانوية جمال عبدالناصر للمتفوقين',
+          'انستقرام ثانويه جمال عبدالناصر للمتفوقين',
+          'إنستقرام ثانويه جمال عبدالناصر للمتفوقين'
+        ];
+        if (!instagramSchoolPhrases.some(phrase => lower.includes(normalizeSmartQuery(phrase)))) return [];
+
+        const linkIndex = searches.findIndex(item =>
+          item && item.name === '📷 البحث في Instagram (آخر 24 ساعة)'
+        );
+        if (linkIndex < 0) return [];
+
+        return [{
+          id: 'smart-instagram-jamal-abdelnasser',
+          icon: '📷',
+          label: 'Instagram',
+          linkIndex,
+          apply: () => {}
+        }];
+      }
+
       function getContextualSuggestions(modeKey) {
         return (contextualSuggestions[modeKey] || [])
           .map((suggestion, index) => ({ suggestion, index, usage: getFilterUsage(suggestion.id) }))
@@ -2697,10 +2721,13 @@
 
       function renderContextualFilters() {
         const mode = getActiveMode();
+        const query = currentQuery || searchInput.value || '';
         const modeKey = mode === 'smart'
-          ? (detectSearchMode(currentQuery || searchInput.value)?.mode || 'web')
+          ? (detectSearchMode(query)?.mode || 'web')
           : mode;
-        const suggestions = getContextualSuggestions(modeKey);
+        const specialSuggestions = mode === 'smart' ? getSmartSpecialSuggestions(query) : [];
+        const suggestions = [...specialSuggestions, ...getContextualSuggestions(modeKey)]
+          .filter((item, index, arr) => arr.findIndex(x => x.id === item.id) === index);
 
         if (!suggestions.length) {
           contextualFilters.classList.remove('show');
