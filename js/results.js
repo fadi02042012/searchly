@@ -9,9 +9,10 @@
           'news': 'news',
           'images': 'images',
           'maps': 'maps',
-          'videos': 'all-filters'
+          'videos': 'videos'
         };
-        const targetTab = modeToTabMap[modeId] || 'quick';
+        const detectedMode = modeId === 'smart' ? (detectSearchMode(currentQuery || '')?.mode || 'web') : modeId;
+        const targetTab = modeToTabMap[detectedMode] || 'quick';
         document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.filter-panel').forEach(p => p.classList.remove('active'));
         const tabBtn = document.querySelector(`.filter-tab[data-tab="${targetTab}"]`);
