@@ -24,6 +24,7 @@
       function createDefaultFilterState() {
         return {
           sort: 'date',
+          youtubePreset: '',
           type: [], duration: [], date: [], quality: [], feature: [],
           advAllWords: '', advExactPhrase: '', advAnyWords: '', advNoneWords: '',
           advNumbers: '', advSite: '', advFileType: '', advLastUpdate: '',
@@ -71,6 +72,7 @@
         if (!mode || !modeFilters[mode]) return;
         modeFilters[mode] = {
           sort: filterState.sort,
+          youtubePreset: filterState.youtubePreset || '',
           type: [...(filterState.type || [])],
           duration: [...(filterState.duration || [])],
           date: [...(filterState.date || [])],
@@ -104,6 +106,7 @@
         const s = modeFilters[modeId] || createDefaultFilterState();
         filterState = {
           sort: s.sort || 'date',
+          youtubePreset: s.youtubePreset || '',
           type: [...(s.type || [])], duration: [...(s.duration || [])],
           date: [...(s.date || [])], quality: [...(s.quality || [])],
           feature: [...(s.feature || [])]
