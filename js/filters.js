@@ -278,6 +278,18 @@
       // =====================================================
       function getActiveFilters() {
         const active = [];
+        if (filterState.youtubePreset) {
+          const presetLabels = {
+            long_views: 'YouTube: +20 دقيقة + الأكثر مشاهدة',
+            long_4k: 'YouTube: +20 دقيقة + 4K',
+            long_4k_hd: 'YouTube: +20 دقيقة + 4K + HD'
+          };
+          active.push({ key: 'youtubePreset', value: filterState.youtubePreset, label: presetLabels[filterState.youtubePreset] || ('YouTube: ' + filterState.youtubePreset), type: 'youtubePreset', multi: false });
+        }
+        if (filterState.videoPlatform && filterState.videoPlatform !== 'youtube') {
+          const platformLabels = { vimeo:'Vimeo', dailymotion:'Dailymotion', bilibili:'Bilibili', youku:'Youku', yandex:'Yandex Video' };
+          active.push({ key: 'videoPlatform', value: filterState.videoPlatform, label: 'منصة: ' + (platformLabels[filterState.videoPlatform] || filterState.videoPlatform), type: 'videoPlatform', multi: false });
+        }
         if (filterState.sort && filterState.sort !== 'relevance') {
           active.push({ key: 'sort', value: filterState.sort, label: 'ترتيب: ' + (filterLabels[currentLang].sort?.[filterState.sort] || filterState.sort), type: 'simple', multi: false });
         }
@@ -386,6 +398,13 @@
             } else if (filter.type === 'map') {
               mapState[filter.key] = ['rating', 'hours', 'price', 'sort'].includes(filter.key) ? (filter.key === 'sort' ? 'relevance' : (filter.key === 'rating' ? '0' : 'all')) : '';
               syncMapInputs();
+              saveCurrentStateToMode();
+            } else if (filter.type === 'youtubePreset') {
+              filterState.youtubePreset = '';
+              saveCurrentStateToMode();
+            } else if (filter.type === 'videoPlatform') {
+              filterState.videoPlatform = 'youtube';
+              document.querySelectorAll('[data-video-platform]').forEach(btn => btn.classList.toggle('active-filter', btn.dataset.videoPlatform === 'youtube'));
               saveCurrentStateToMode();
             } else if (filter.type === 'link') {
               delete selectedLinksState.selected[filter.value];
