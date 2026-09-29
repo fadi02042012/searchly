@@ -1,4 +1,4 @@
-// searchly — Advanced search link definitions
+// searchly — Advanced search link definitions (48 advanced filters + 1 normal search)
 // Extracted from app.js without changing the data or URLs.
 window.searchlySearches = [
         { name: "📺 البحث العادي", group: "أساسي", base: "https://www.youtube.com/results?search_query=", suffix: "" },
@@ -45,7 +45,7 @@ window.searchlySearches = [
         { name: "🎬 Youku", group: "منصات", base: "https://so.youku.com/search_video/q_", suffix: "?searchfrom=1" },
         { name: "📺 Bilibili", group: "منصات", base: "https://search.bilibili.com/all?keyword=", suffix: "&from_source=webtop_search" },
         { name: "📹 Bing Video", group: "منصات", base: "https://www.bing.com/videos/search?q=", suffix: "" },
-        { name: "📹 Yahoo Video", group: "منصات", base: "https://www.yahoo.com/video/search?p=", suffix: "" },
+        { name: "📹 Yahoo Video", group: "منصات", base: "https://video.search.yahoo.com/search/video?p=", suffix: "" },
         { name: "📹 AOL Video", group: "منصات", base: "https://search.aol.com/aol/video?q=", suffix: "" },
         { name: "📹 Yandex Video", group: "منصات", base: "https://yandex.com/video/search?text=", suffix: "" },
         { name: "🌍 EarthCam", group: "منصات", base: "https://www.earthcam.com/search/ft_search.php?term=", suffix: "" },
