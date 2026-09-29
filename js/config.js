@@ -79,6 +79,7 @@
           date: [...(filterState.date || [])],
           quality: [...(filterState.quality || [])],
           feature: [...(filterState.feature || [])],
+          videoPlatform: filterState.videoPlatform || 'youtube',
           advAllWords: advancedState.allWords, advExactPhrase: advancedState.exactPhrase,
           advAnyWords: advancedState.anyWords, advNoneWords: advancedState.noneWords,
           advNumbers: advancedState.numbers, advSite: advancedState.site,
@@ -110,7 +111,8 @@
           youtubePreset: s.youtubePreset || '',
           type: [...(s.type || [])], duration: [...(s.duration || [])],
           date: [...(s.date || [])], quality: [...(s.quality || [])],
-          feature: [...(s.feature || [])]
+          feature: [...(s.feature || [])],
+          videoPlatform: s.videoPlatform || 'youtube'
         };
         advancedState = {
           allWords: s.advAllWords || '', exactPhrase: s.advExactPhrase || '',
