@@ -13,6 +13,27 @@
 if (typeof buildAllFiltersGrid === "function") buildAllFiltersGrid();
 if (typeof attachAllFiltersListeners === "function") attachAllFiltersListeners();
 if (typeof updateAllFiltersUI === "function") updateAllFiltersUI();
+if (typeof setupAllFiltersMoreButton === "function") setupAllFiltersMoreButton();
+const __allFiltersSearch = document.getElementById('filterSearchInput');
+const __allFiltersMore = document.getElementById('allFiltersMoreBtn');
+if (__allFiltersSearch && !__allFiltersSearch.dataset.boundMore) {
+  __allFiltersSearch.dataset.boundMore = 'true';
+  __allFiltersSearch.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    const items = Array.from(document.querySelectorAll('#allFiltersGrid .all-filter-item'));
+    if (q) {
+      items.forEach(item => {
+        const match = item.textContent.toLowerCase().includes(q);
+        item.style.display = match ? '' : 'none';
+      });
+      if (__allFiltersMore) __allFiltersMore.hidden = true;
+    } else {
+      items.forEach(item => item.style.display = '');
+      if (typeof setupAllFiltersMoreButton === "function") setupAllFiltersMoreButton();
+    }
+  });
+}
+
 
 const __filterOverlay = document.getElementById('filterOverlay');
 const __filterBackdrop = document.getElementById('filterBackdrop');
