@@ -2982,6 +2982,17 @@
           selectedLinks.slice(0, 5).forEach(link => {
             window.open(link.url, '_blank');
           });
+
+          // تبويب "ذكي" يبدأ كل بحث بحالة جديدة ولا يرث الفلاتر المستخدمة سابقًا.
+          if (mode === 'smart') {
+            selectedLinksState.selected = {};
+            filterUsage = {};
+            saveFilterUsage();
+            saveCurrentStateToMode();
+            renderContextualFilters();
+            updateAllFiltersUI();
+          }
+
           emptyState.style.display = 'none';
           lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
           const modeInfo = searchModesConfig.find(m => m.id === mode);
