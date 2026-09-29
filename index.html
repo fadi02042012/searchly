@@ -1431,6 +1431,14 @@
         { name: "📂 قوائم تشغيل YouTube", group: "منصات", base: "https://www.google.com/search?q=", suffix: "+site:https://www.youtube.com/user/*/playlists" },
         { name: "📺 البحث داخل قناة TEDx", group: "قنوات محددة", base: "https://www.youtube.com/@TEDx/search?query=", suffix: "" },
         { name: "📷 البحث في Instagram (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.instagram.com+", suffix: "&num=10&tbs=qdr:d" },
+        { name: "📘 البحث في Facebook (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.facebook.com+", suffix: "&num=10&tbs=qdr:d" },
+        { name: "🎵 البحث في TikTok (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.tiktok.com+", suffix: "&num=10&tbs=qdr:d" },
+        { name: "𝕏 البحث في X (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://x.com+", suffix: "&num=10&tbs=qdr:d" },
+        { name: "👻 البحث في Snapchat (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.snapchat.com+", suffix: "&num=10&tbs=qdr:d" },
+        { name: "💼 البحث في LinkedIn (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.linkedin.com+", suffix: "&num=10&tbs=qdr:d" },
+        { name: "🟠 البحث في Reddit (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.reddit.com+", suffix: "&num=10&tbs=qdr:d" },
+        { name: "📌 البحث في Pinterest (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.pinterest.com+", suffix: "&num=10&tbs=qdr:d" },
+        { name: "🧵 البحث في Threads (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.threads.net+", suffix: "&num=10&tbs=qdr:d" },
         { name: "📺 البحث داخل قناة ArabicMOD", group: "قنوات محددة", base: "https://www.youtube.com/@ArabicMOD/search?query=", suffix: "" },
         { name: "📺 البحث داخل قناة Fortinet", group: "قنوات محددة", base: "https://www.youtube.com/@fortinet/search?query=", suffix: "" },
         { name: "😂 البحث داخل قناة Gags", group: "قنوات محددة", base: "https://www.youtube.com/@gags/search?query=", suffix: "" },
@@ -1990,28 +1998,25 @@
         ]
       };
 
-      function getSmartSpecialSuggestions(query) {
+            function getSmartSpecialSuggestions(query) {
         const lower = normalizeSmartQuery(query);
-        const instagramSchoolPhrases = [
-          'انستقرام ثانوية جمال عبدالناصر للمتفوقين',
-          'إنستقرام ثانوية جمال عبدالناصر للمتفوقين',
-          'انستقرام ثانويه جمال عبدالناصر للمتفوقين',
-          'إنستقرام ثانويه جمال عبدالناصر للمتفوقين'
+        const platforms = [
+          ['smart-instagram-24h','📷','البحث في Instagram (آخر 24 ساعة)','انستقرام|انستجرام|instagram'],
+          ['smart-facebook-24h','📘','البحث في Facebook (آخر 24 ساعة)','فيسبوك|فيس بوك|facebook|fb'],
+          ['smart-tiktok-24h','🎵','البحث في TikTok (آخر 24 ساعة)','تيك توك|تيكتوك|tiktok|tik tok'],
+          ['smart-x-24h','𝕏','البحث في X (آخر 24 ساعة)','تويتر|twitter|منصة اكس|منصة x|اكس'],
+          ['smart-snapchat-24h','👻','البحث في Snapchat (آخر 24 ساعة)','سناب شات|سناب|snapchat'],
+          ['smart-linkedin-24h','💼','البحث في LinkedIn (آخر 24 ساعة)','لينكد ان|لينكدإن|linkedin'],
+          ['smart-reddit-24h','🟠','البحث في Reddit (آخر 24 ساعة)','ريديت|reddit'],
+          ['smart-pinterest-24h','📌','البحث في Pinterest (آخر 24 ساعة)','بنترست|pinterest'],
+          ['smart-threads-24h','🧵','البحث في Threads (آخر 24 ساعة)','ثريدز|threads']
         ];
-        if (!instagramSchoolPhrases.some(phrase => lower.includes(normalizeSmartQuery(phrase)))) return [];
-
-        const linkIndex = searches.findIndex(item =>
-          item && item.name === '📷 البحث في Instagram (آخر 24 ساعة)'
-        );
-        if (linkIndex < 0) return [];
-
-        return [{
-          id: 'smart-instagram-jamal-abdelnasser',
-          icon: '📷',
-          label: 'Instagram',
-          linkIndex,
-          apply: () => {}
-        }];
+        for (const [id, icon, label, rawPhrases] of platforms) {
+          if (!rawPhrases.split('|').some(p => lower.includes(normalizeSmartQuery(p)))) continue;
+          const linkIndex = searches.findIndex(item => item && item.name === icon + ' ' + label);
+          if (linkIndex >= 0) return [{ id, icon, label, linkIndex, apply: () => {} }];
+        }
+        return [];
       }
 
       function getContextualSuggestions(modeKey) {
