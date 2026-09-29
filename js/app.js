@@ -11,6 +11,70 @@
     const source = "const searches = window.searchlySearches; const groupIcons = window.searchlyGroupIcons;\n" + parts.join('\n\n');
     new Function(source + `
 if (typeof buildAllFiltersGrid === "function") buildAllFiltersGrid();
+function __renderSearchlyPresetsAndActive() {
+  const pb = document.getElementById('presetsBar');
+  if (pb && typeof renderPresets === 'function') {
+    renderPresets();
+    pb.style.display = 'flex';
+  }
+
+  const bar = document.getElementById('activeFiltersBar');
+  if (!bar) return;
+  bar.innerHTML = '';
+  const addChip = (label, onRemove) => {
+    const chip = document.createElement('span');
+    chip.className = 'active-filter-chip';
+    chip.innerHTML = '<span>' + label + '</span><span class="chip-close" role="button">×</span>';
+    chip.querySelector('.chip-close').addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      onRemove();
+      __renderSearchlyPresetsAndActive();
+      if (typeof setFilterButtonVisuals === 'function') setFilterButtonVisuals(filterState);
+      if (typeof updateFilterSummary === 'function') updateFilterSummary();
+      if (typeof saveCurrentStateToMode === 'function') saveCurrentStateToMode();
+    });
+    bar.appendChild(chip);
+  };
+
+  let count = 0;
+  if (typeof getActiveMode === 'function' && getActiveMode() === 'images' && typeof imageState !== 'undefined') {
+    if (imageState.color && imageState.color !== 'all') {
+      const label = 'صور: لون: ' + imageState.color;
+      addChip(label, () => { imageState.color = 'all'; });
+      count++;
+    }
+    if (imageState.size && imageState.size !== 'all') {
+      addChip('صور: الحجم: ' + imageState.size, () => { imageState.size = 'all'; });
+      count++;
+    }
+    if (imageState.type && imageState.type !== 'all') {
+      addChip('صور: النوع: ' + imageState.type, () => { imageState.type = 'all'; });
+      count++;
+    }
+  }
+
+  if (typeof filterState !== 'undefined') {
+    const labels = {type:'النوع', duration:'المدة', date:'التاريخ', quality:'الجودة', feature:'الميزة'};
+    Object.keys(labels).forEach(key => {
+      (filterState[key] || []).forEach(value => {
+        addChip('فيديو: ' + labels[key] + ': ' + value, () => {
+          filterState[key] = (filterState[key] || []).filter(v => v !== value);
+        });
+        count++;
+      });
+    });
+  }
+
+  if (typeof getActiveMode === 'function' && getActiveMode() === 'videos' && typeof filterState !== 'undefined' && filterState.sort) {
+    addChip('فيديو: الترتيب: ' + filterState.sort, () => { filterState.sort = 'date'; });
+    count++;
+  }
+
+  bar.classList.toggle('show', count > 0);
+}
+
+__renderSearchlyPresetsAndActive();
 if (typeof attachAllFiltersListeners === "function") attachAllFiltersListeners();
 if (typeof updateAllFiltersUI === "function") updateAllFiltersUI();
 
