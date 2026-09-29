@@ -137,6 +137,7 @@
         <button class="filter-tab" data-tab="news"><span>📰</span> أخبار</button>
         <button class="filter-tab" data-tab="images"><span>🖼️</span> صور</button>
         <button class="filter-tab" data-tab="maps"><span>🗺️</span> خرائط</button>
+        <button class="filter-tab" data-tab="videos"><span>🎬</span> فيديو</button>
         <button class="filter-tab" data-tab="all-filters" style="background: linear-gradient(135deg, #a142f4, #7c3aed); color: white;">
           <span>🎛️</span> كافة الفلاتر (48)
         </button>
@@ -399,6 +400,58 @@
             <button class="filter-btn img-safe-btn active-filter" data-img-safe="all">إظهار الكل</button>
             <button class="filter-btn img-safe-btn" data-img-safe="active">تصفية الصريح</button>
           </div>
+        </div>
+      </div>
+
+      <!-- VIDEOS -->
+      <div class="filter-panel" data-panel="videos">
+        <div class="advanced-section">
+          <div class="advanced-section-title">🎬 نوع الفيديو <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="type">
+            <button class="filter-btn" data-filter-type="video">فيديو</button>
+            <button class="filter-btn" data-filter-type="playlist">قائمة تشغيل</button>
+            <button class="filter-btn" data-filter-type="live">بث مباشر</button>
+            <button class="filter-btn" data-filter-type="shorts">Shorts</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">⏱️ مدة الفيديو <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="duration">
+            <button class="filter-btn" data-filter-duration="short">قصير (≤ 4 دق)</button>
+            <button class="filter-btn" data-filter-duration="medium">متوسط (4-20 دق)</button>
+            <button class="filter-btn" data-filter-duration="long">طويل (≥ 20 دق)</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">📅 تاريخ النشر <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="date">
+            <button class="filter-btn" data-filter-date="hour">الساعة</button>
+            <button class="filter-btn" data-filter-date="today">اليوم</button>
+            <button class="filter-btn" data-filter-date="week">هذا الأسبوع</button>
+            <button class="filter-btn" data-filter-date="month">هذا الشهر</button>
+            <button class="filter-btn" data-filter-date="year">هذا العام</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🎥 الجودة <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="quality">
+            <button class="filter-btn" data-filter-quality="4k">4K</button>
+            <button class="filter-btn" data-filter-quality="hd">HD</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">✨ الميزات <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="feature">
+            <button class="filter-btn" data-filter-feature="360">360°</button>
+            <button class="filter-btn" data-filter-feature="vr180">VR180</button>
+            <button class="filter-btn" data-filter-feature="3d">ثلاثي الأبعاد</button>
+            <button class="filter-btn" data-filter-feature="hdr">HDR</button>
+            <button class="filter-btn" data-filter-feature="cc">ترجمة</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🎛️ فلاتر متقدمة إضافية</div>
+          <p style="color:var(--muted);font-size:12px;margin:0;">للوصول إلى روابط الفلاتر المتقدمة الـ48، استخدم تبويب «كافة الفلاتر».</p>
         </div>
       </div>
 
