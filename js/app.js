@@ -18,9 +18,10 @@ document.addEventListener('click', function(e) {
   e.preventDefault();
   const preset = btn.dataset.youtubePreset || '';
   if (typeof filterState === 'undefined') return;
-  if (preset === 'film') {
+  if (preset === 'film' || preset === 'channel') {
     filterState.youtubePreset = '';
-    filterState.type = Array.from(new Set([...(filterState.type || []).filter(v => v !== 'film'), 'film']));
+    filterState.type = Array.from(new Set([...(filterState.type || []).filter(v => v !== 'film' && v !== 'channel'), preset]));
+    filterState.videoPlatform = 'youtube';
   } else if (preset) {
     filterState.youtubePreset = preset;
   }
