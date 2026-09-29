@@ -210,17 +210,22 @@
               };
               const quality = (fs.quality || []).find(v => qualitySp[v]);
 
-              const sp = [typeSp[type], durationSp[duration], dateSp[date], qualitySp[quality]].filter(Boolean);
-              const sortSp = {
-                views: 'CAMSAhAB',
-                rating: 'CAESAhAB',
-                date: 'CAI%3D'
-              };
-              if (fs.sort && sortSp[fs.sort]) sp.push(sortSp[fs.sort]);
-
+              // YouTube يستخدم رمز sp واحداً لكل تركيبة فلترة.
+              // نعطي "بث مباشر" أولوية صريحة حتى لا يضيع الفلتر.
               const q = encodeURIComponent(parts[0]).replace(/%20/g, '+');
               let url = 'https://www.youtube.com/results?search_query=' + q;
-              if (sp.length) url += '&sp=' + sp[0];
+
+              if (type === 'live') {
+                // 🔴 بث مباشر في YouTube
+                url += '&sp=EgJAAQ%3D%3D';
+                return url;
+              }
+
+              // لباقي الفلاتر نستخدم رمز الفلتر المحدد الأول.
+              const sp = [typeSp[type], durationSp[duration], dateSp[date], qualitySp[quality]].filter(Boolean);
+              if (sp.length) {
+                url += '&sp=' + sp[0];
+              }
               return url;
             }
             return googleSearchURL(query);
