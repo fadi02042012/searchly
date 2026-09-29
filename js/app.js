@@ -11,8 +11,5 @@
     new Function(parts.join('\n\n'))();
   } catch(error) {
     console.error('searchly: modular loader failed',error);
-    const fallback=document.createElement('script');
-    fallback.src='./js/app-fallback.js';
-    document.head.appendChild(fallback);
   }
 })();
