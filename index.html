@@ -2014,7 +2014,7 @@
             return [{
               id: 'smart-file-' + item.type,
               icon: item.icon,
-              label: 'ويب: نوع ملف: ' + item.type,
+              label: 'ويب: نوع ملف: ' + item.type.toUpperCase(),
               fileType: item.type,
               apply: () => { advancedState.fileType = item.type; }
             }];
@@ -2398,7 +2398,19 @@
         }
         if (advancedState.numbers) parts.push(advancedState.numbers.trim());
         if (advancedState.site) parts.push('site:' + advancedState.site.trim());
-        if (advancedState.fileType) parts.push(advancedState.fileType === 'xls' ? '(filetype:xls OR filetype:xlsx)' : 'filetype:' + advancedState.fileType);
+        if (advancedState.fileType) {
+          const fileTypeGroups = {
+            pdf: ['pdf'],
+            doc: ['doc', 'docx'],
+            xls: ['xls', 'xlsx'],
+            ppt: ['ppt', 'pptx'],
+            txt: ['txt']
+          };
+          const extensions = fileTypeGroups[advancedState.fileType] || [advancedState.fileType];
+          parts.push(extensions.length === 1
+            ? 'filetype:' + extensions[0]
+            : '(' + extensions.map(ext => 'filetype:' + ext).join(' OR ') + ')');
+        }
         if (parts.length === 0) return baseQuery;
         if (baseQuery && !advancedState.allWords && !advancedState.exactPhrase && !advancedState.anyWords && !advancedState.numbers) {
           parts.unshift(baseQuery);
