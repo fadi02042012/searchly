@@ -2,6 +2,18 @@
       // =====================================================
       // ⭐⭐⭐ بناء شبكة "كافة الفلاتر" ديناميكياً من searches ⭐⭐⭐
       // =====================================================
+      function getSearchesByGroup() {
+        const groups = {};
+        (searches || []).forEach((item, index) => {
+          // "البحث العادي" هو المدخل الأساسي وليس أحد الفلاتر الـ48.
+          if (item.group === 'أساسي') return;
+          const group = item.group || 'أخرى';
+          if (!groups[group]) groups[group] = [];
+          groups[group].push({ ...item, index });
+        });
+        return groups;
+      }
+
       function buildAllFiltersGrid() {
         const grid = document.getElementById('allFiltersGrid');
         if (!grid) return;
