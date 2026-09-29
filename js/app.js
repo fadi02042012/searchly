@@ -8,7 +8,8 @@
       if(!response.ok) throw new Error('Failed to load '+file+' ('+response.status+')');
       return response.text();
     }));
-    new Function(parts.join('\n\n'))();
+    const source = "const searches = window.searchlySearches; const groupIcons = window.searchlyGroupIcons;\n" + parts.join('\n\n');
+    new Function(source)();
   } catch(error) {
     console.error('searchly: modular loader failed',error);
   }
