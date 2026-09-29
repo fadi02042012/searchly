@@ -11,6 +11,28 @@
     const source = "const searches = window.searchlySearches; const groupIcons = window.searchlyGroupIcons;\n" + parts.join('\n\n');
     new Function(source + `
 if (typeof buildAllFiltersGrid === "function") buildAllFiltersGrid();
+
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-youtube-preset]');
+  if (!btn) return;
+  e.preventDefault();
+  const preset = btn.dataset.youtubePreset || '';
+  if (typeof filterState === 'undefined') return;
+  if (preset === 'film') {
+    filterState.youtubePreset = '';
+    filterState.type = Array.from(new Set([...(filterState.type || []).filter(v => v !== 'film'), 'film']));
+  } else if (preset) {
+    filterState.youtubePreset = preset;
+  }
+  document.querySelectorAll('[data-youtube-preset]').forEach(b => b.classList.toggle('active-filter', b === btn));
+  if (typeof saveCurrentStateToMode === 'function') saveCurrentStateToMode();
+  if (typeof setFilterButtonVisuals === 'function') setFilterButtonVisuals(filterState);
+  if (typeof updateFilterSummary === 'function') updateFilterSummary();
+  if (typeof renderActiveFiltersBar === 'function') renderActiveFiltersBar();
+  if (typeof __renderSearchlyPresetsAndActive === 'function') __renderSearchlyPresetsAndActive();
+});
+
+
 function __renderSearchlyPresetsAndActive() {
   const pb = document.getElementById('presetsBar');
   if (pb && typeof renderPresets === 'function') {
