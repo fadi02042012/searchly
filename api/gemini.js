@@ -1,5 +1,5 @@
 /**
- * Searchly + Gemini serverless endpoint for Vercel.
+ * Searchly + Gemini query-understanding endpoint for Vercel.
  * The Gemini API key stays server-side in process.env.GEMINI_API_KEY.
  */
 module.exports = async function handler(req, res) {
@@ -11,14 +11,14 @@ module.exports = async function handler(req, res) {
     const language = body.language || 'ar';
     const currentMode = body.currentMode || 'smart';
 
-    if (typeof query !== 'string' || !query.trim()) {
-      return res.status(400).json({ error: 'Query is required' });
+    if (typeof query !== 'string' || !query.trim() || query.length > 4000) {
+      return res.status(400).json({ error: 'Invalid query' });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return res.status(500).json({ error: 'GEMINI_API_KEY is not configured' });
 
-    const model = 'gemini-3.6-flash';
+    const model = 'gemini-3.8-flash';
     const prompt = [
       'You are the query-understanding layer for a web search engine named Searchly.',
       'Analyze the user search query and return ONLY valid JSON.',
@@ -38,8 +38,8 @@ module.exports = async function handler(req, res) {
       '- If the query is already clear, keep it nearly unchanged.',
       '- JSON only, no markdown.',
       '',
-      'Language: ' + language,
-      'Current mode: ' + currentMode,
+      'Language: ' + String(language).slice(0, 12),
+      'Current mode: ' + String(currentMode).slice(0, 12),
       'User query: ' + query.trim()
     ].join('\n');
 
@@ -50,7 +50,11 @@ module.exports = async function handler(req, res) {
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0, responseMimeType: 'application/json' }
+          generationConfig: {
+            temperature: 0,
+            maxOutputTokens: 120,
+            responseMimeType: 'application/json'
+          }
         })
       }
     );
