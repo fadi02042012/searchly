@@ -3425,13 +3425,60 @@
       }
 
       // =====================================================
-      // SEARCH — ⭐ يستخدم الروابط المختارة من searches
+      // GEMINI — فهم الاستعلام قبل البحث الذكي
       // =====================================================
-      function performSearch(term) {
-        const query = (term || searchInput.value).trim();
+      async function analyzeQueryWithGemini(query, currentMode) {
+        if (!query || currentMode !== 'smart') return { query, mode: currentMode };
+
+        try {
+          const response = await fetch('/api/gemini', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query, language: currentLang, currentMode })
+          });
+
+          if (!response.ok) throw new Error('Gemini request failed');
+
+          const data = await response.json();
+          const result = data && data.result ? data.result : {};
+          const allowedModes = new Set(['web', 'news', 'images', 'maps', 'videos', 'smart']);
+          const nextMode = allowedModes.has(result.mode) ? result.mode : currentMode;
+          const nextQuery = typeof result.query === 'string' && result.query.trim()
+            ? result.query.trim()
+            : query;
+
+          return { query: nextQuery, mode: nextMode };
+        } catch (error) {
+          console.warn('Gemini analysis unavailable; using normal Searchly flow.', error);
+          return { query, mode: currentMode };
+        }
+      }
+
+      // =====================================================
+      // SEARCH — يستخدم الروابط المختارة + Gemini في الوضع الذكي
+      // =====================================================
+      async function performSearch(term) {
+        let query = (term || searchInput.value).trim();
         if (!query) { showToast(langStrings[currentLang].toastEmpty); return; }
+
         currentQuery = query;
-        const mode = getActiveMode();
+        let mode = getActiveMode();
+
+        // Gemini يحلل الاستعلام في الوضع الذكي فقط، ثم نستخدم النتيجة مع محرك Searchly الحالي.
+        if (mode === 'smart') {
+          const analyzed = await analyzeQueryWithGemini(query, mode);
+          query = analyzed.query;
+          mode = analyzed.mode;
+
+          if (query !== currentQuery) {
+            currentQuery = query;
+            searchInput.value = query;
+          }
+
+          if (mode !== 'smart' && mode !== getActiveMode()) {
+            switchMode(mode);
+          }
+        }
 
         // ⭐ إذا كانت هناك روابط مختارة → افتحها كلها
         const selectedLinks = buildSelectedLinksURLs(query);
@@ -3455,7 +3502,7 @@
           const modeInfo = searchModesConfig.find(m => m.id === mode);
           if (modeInfo) {
             const label = currentLang === 'ar' ? modeInfo.label : modeInfo.labelEn;
-            showToast(`${langStrings[currentLang].toastSearchIn}${label} (${selectedLinks.length})`);
+            showToast(langStrings[currentLang].toastSearchIn + label + ' (' + selectedLinks.length + ')');
           }
           return;
         }
