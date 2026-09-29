@@ -1998,8 +1998,23 @@
         ]
       };
 
-            function getSmartSpecialSuggestions(query) {
+                  function getSmartSpecialSuggestions(query) {
         const lower = normalizeSmartQuery(query);
+
+        const fileTypes = [
+          { type: 'pdf', icon: '📄', label: 'ويب: نوع ملف: pdf', phrases: ['ملف pdf', 'pdf', 'بي دي اف', 'ملفات بي دي اف'] },
+          { type: 'doc', icon: '📝', label: 'ويب: نوع ملف: doc', phrases: ['ملف doc', 'ملف docx', 'doc', 'docx', 'وورد', 'word'] },
+          { type: 'xls', icon: '📊', label: 'ويب: نوع ملف: xls', phrases: ['ملف xls', 'ملف xlsx', 'xls', 'xlsx', 'اكسل', 'excel'] },
+          { type: 'ppt', icon: '📽️', label: 'ويب: نوع ملف: ppt', phrases: ['ملف ppt', 'ملف pptx', 'ppt', 'pptx', 'باوربوينت', 'powerpoint'] },
+          { type: 'txt', icon: '📃', label: 'ويب: نوع ملف: txt', phrases: ['ملف txt', 'txt', 'نص txt', 'ملف نصي'] }
+        ];
+
+        for (const item of fileTypes) {
+          if (item.phrases.some(phrase => lower.includes(normalizeSmartQuery(phrase)))) {
+            return [{ id: 'smart-file-' + item.type, icon: item.icon, label: item.label, fileType: item.type, apply: () => { advancedState.fileType = item.type; } }];
+          }
+        }
+
         const platforms = [
           ['smart-instagram-24h','📷','البحث في Instagram (أي وقت)','انستقرام|انستجرام|instagram'],
           ['smart-facebook-24h','📘','البحث في Facebook (أي وقت)','فيسبوك|فيس بوك|facebook|fb'],
@@ -2734,12 +2749,21 @@
         const suggestions = [...specialSuggestions, ...getContextualSuggestions(modeKey)]
           .filter((item, index, arr) => arr.findIndex(x => x.id === item.id) === index);
 
-        // تفعيل فلتر Instagram الموجود أصلًا تلقائيًا عند جملة المدرسة.
-        if (mode === 'smart' && specialSuggestions.length > 0 && specialSuggestions[0].linkIndex !== undefined) {
-          selectedLinksState.selected = {};
-          selectedLinksState.selected['link:' + specialSuggestions[0].linkIndex] = true;
-          saveCurrentStateToMode();
-          updateAllFiltersUI();
+        // تفعيل الفلتر الذكي المناسب تلقائيًا، سواء كان فلتر منصة أو نوع ملف ويب.
+        if (mode === 'smart' && specialSuggestions.length > 0) {
+          const special = specialSuggestions[0];
+          if (special.linkIndex !== undefined) {
+            selectedLinksState.selected = {};
+            selectedLinksState.selected['link:' + special.linkIndex] = true;
+            saveCurrentStateToMode();
+            updateAllFiltersUI();
+          } else if (special.fileType) {
+            advancedState.fileType = special.fileType;
+            saveCurrentStateToMode();
+            syncAdvancedInputs();
+            renderActiveFiltersBar();
+            updateAllFiltersUI();
+          }
         }
 
         if (!suggestions.length) {
