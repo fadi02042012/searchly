@@ -35,78 +35,9 @@ document.addEventListener('click', function(e) {
 
 
 function __renderSearchlyPresetsAndActive() {
-  const pb = document.getElementById('presetsBar');
-  if (pb && typeof renderPresets === 'function') {
-    renderPresets();
-    pb.style.display = 'flex';
-  }
-
-  const bar = document.getElementById('activeFiltersBar');
-  if (!bar) return;
-  bar.innerHTML = '';
-  const addChip = (label, onRemove) => {
-    const chip = document.createElement('span');
-    chip.className = 'active-filter-chip';
-    chip.innerHTML = '<span>' + label + '</span><span class="chip-close" role="button">×</span>';
-    chip.querySelector('.chip-close').addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      onRemove();
-      __renderSearchlyPresetsAndActive();
-      if (typeof setFilterButtonVisuals === 'function') setFilterButtonVisuals(filterState);
-      if (typeof updateFilterSummary === 'function') updateFilterSummary();
-      if (typeof saveCurrentStateToMode === 'function') saveCurrentStateToMode();
-    });
-    bar.appendChild(chip);
-  };
-
-  let count = 0;
-  if (typeof getActiveMode === 'function' && getActiveMode() === 'images' && typeof imageState !== 'undefined') {
-    if (imageState.color && imageState.color !== 'all') {
-      const label = 'صور: لون: ' + imageState.color;
-      addChip(label, () => { imageState.color = 'all'; });
-      count++;
-    }
-    if (imageState.size && imageState.size !== 'all') {
-      addChip('صور: الحجم: ' + imageState.size, () => { imageState.size = 'all'; });
-      count++;
-    }
-    if (imageState.type && imageState.type !== 'all') {
-      addChip('صور: النوع: ' + imageState.type, () => { imageState.type = 'all'; });
-      count++;
-    }
-  }
-
-  if (typeof filterState !== 'undefined') {
-    if (filterState.youtubePreset) {
-      const ytLabels = {film:'🎬 أفلام', long_views:'🏆 +20 دقيقة + الأكثر مشاهدة', long_4k:'🎞 +20 دقيقة + 4K', long_4k_hd:'💎 +20 دقيقة + 4K + HD'};
-      addChip('YouTube: ' + (ytLabels[filterState.youtubePreset] || filterState.youtubePreset), () => { filterState.youtubePreset = ''; });
-      count++;
-    }
-    const labels = {type:'النوع', duration:'المدة', date:'التاريخ', quality:'الجودة', feature:'الميزة'};
-    Object.keys(labels).forEach(key => {
-      (filterState[key] || []).forEach(value => {
-        addChip('فيديو: ' + labels[key] + ': ' + value, () => {
-          filterState[key] = (filterState[key] || []).filter(v => v !== value);
-        });
-        count++;
-      });
-    });
-  }
-
-  if (typeof filterState !== 'undefined' && filterState.sort && filterState.sort !== 'relevance') {
-    const sortLabels = {views:'🔥 الأكثر مشاهدة', rating:'⭐ الأعلى تقييماً', date:'📅 الأحدث', title:'📝 في العنوان', relevance:'الأكثر صلة'};
-    const sortLabel = sortLabels[filterState.sort] || filterState.sort;
-    addChip('فيديو: ' + sortLabel, () => {
-      filterState.sort = 'relevance';
-      document.querySelectorAll('[data-filter-sort]').forEach(btn => btn.classList.toggle('active-filter', btn.dataset.filterSort === 'relevance'));
-    });
-    count++;
-  }
-
-  bar.classList.toggle('show', count > 0);
+  if (typeof renderPresets === 'function') renderPresets();
+  if (typeof renderActiveFiltersBar === 'function') renderActiveFiltersBar();
 }
-
 __renderSearchlyPresetsAndActive();
 if (typeof attachAllFiltersListeners === "function") attachAllFiltersListeners();
 if (typeof updateAllFiltersUI === "function") updateAllFiltersUI();
