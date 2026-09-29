@@ -13,6 +13,27 @@
 if (typeof buildAllFiltersGrid === "function") buildAllFiltersGrid();
 if (typeof attachAllFiltersListeners === "function") attachAllFiltersListeners();
 if (typeof updateAllFiltersUI === "function") updateAllFiltersUI();
+
+document.addEventListener('click', function(e) {
+  const sortBtn = e.target.closest('.filter-btn[data-filter-sort]');
+  if (!sortBtn) return;
+  e.preventDefault();
+  e.stopPropagation();
+
+  const value = sortBtn.dataset.filterSort || 'relevance';
+  if (typeof filterState !== 'undefined') filterState.sort = value;
+
+  document.querySelectorAll('.filter-btn[data-filter-sort]').forEach(btn => {
+    btn.classList.toggle('active-filter', btn === sortBtn);
+  });
+
+  if (typeof saveCurrentStateToMode === 'function') saveCurrentStateToMode();
+  if (typeof setFilterButtonVisuals === 'function') setFilterButtonVisuals(filterState);
+  if (typeof syncAllInputs === 'function') syncAllInputs();
+  if (typeof updateFilterSummary === 'function') updateFilterSummary();
+  if (typeof renderActiveFiltersBar === 'function') renderActiveFiltersBar();
+  if (typeof updateAllFiltersUI === 'function') updateAllFiltersUI();
+});
 if (typeof setupAllFiltersMoreButton === "function") setupAllFiltersMoreButton();
 const __allFiltersSearch = document.getElementById('filterSearchInput');
 const __allFiltersMore = document.getElementById('allFiltersMoreBtn');
