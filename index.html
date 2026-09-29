@@ -3559,35 +3559,99 @@
       }
 
       // =====================================================
-      // GEMINI — فهم الاستعلام قبل البحث الذكي
+      // GEMINI — فهم الاستعلام والفلاتر قبل البحث الذكي
       // =====================================================
-      async function analyzeQueryWithGemini(query, currentMode) {
-        if (!query || currentMode !== 'smart') return { query, mode: currentMode };
-
-        try {
-          const response = await fetch('/api/gemini', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query, language: currentLang, currentMode })
-          });
-
-          if (!response.ok) throw new Error('Gemini request failed');
-
-          const data = await response.json();
-          const result = data && data.result ? data.result : {};
-          const allowedModes = new Set(['web', 'news', 'images', 'maps', 'videos', 'smart']);
-          const nextMode = allowedModes.has(result.mode) ? result.mode : currentMode;
-          const nextQuery = typeof result.query === 'string' && result.query.trim()
-            ? result.query.trim()
-            : query;
-
-          return { query: nextQuery, mode: nextMode };
-        } catch (error) {
-          console.warn('Gemini analysis unavailable; using normal Searchly flow.', error);
-          return { query, mode: currentMode };
+      function applyGeminiFilters(mode, filters) {
+        if (!filters || typeof filters !== 'object') return;
+        if (mode === 'web' && filters.web) {
+          const f=filters.web;
+          advancedState.allWords=String(f.allWords||'').trim();
+          advancedState.exactPhrase=String(f.exactPhrase||'').trim();
+          advancedState.anyWords=String(f.anyWords||'').trim();
+          advancedState.noneWords=String(f.noneWords||'').trim();
+          advancedState.numbers=String(f.numbers||'').trim();
+          advancedState.site=String(f.site||'').trim();
+          advancedState.fileType=['pdf','doc','xls','ppt','txt'].includes(f.fileType)?f.fileType:'';
+          advancedState.lastUpdate=['d','w','m','y'].includes(f.lastUpdate)?f.lastUpdate:'';
+          advancedState.lang=['ar','en','fr','de','es'].includes(f.lang)?f.lang:'';
+          advancedState.usageRights=['f','fc','fm'].includes(f.usageRights)?f.usageRights:'';
         }
+        if (mode === 'news' && filters.news) {
+          const f=filters.news;
+          newsState.allWords=String(f.allWords||'').trim();
+          newsState.exactPhrase=String(f.exactPhrase||'').trim();
+          newsState.site=String(f.site||'').trim();
+          newsState.time=['all','h','h24','d7','d30','y1','archive'].includes(f.time)?f.time:'all';
+          newsState.sort=['relevance','date'].includes(f.sort)?f.sort:'relevance';
+        }
+        if (mode === 'images' && filters.images) {
+          const f=filters.images;
+          imageState.allWords=String(f.allWords||'').trim();
+          imageState.site=String(f.site||'').trim();
+          imageState.fileType=String(f.fileType||'').trim();
+          imageState.size=['all','l','m','i','2mp','8mp','20mp'].includes(f.size)?f.size:'all';
+          imageState.exactWidth=String(f.exactWidth||'').replace(/[^0-9]/g,'').slice(0,6);
+          imageState.exactHeight=String(f.exactHeight||'').replace(/[^0-9]/g,'').slice(0,6);
+          imageState.aspect=['all','tall','square','wide','panoramic'].includes(f.aspect)?f.aspect:'all';
+          imageState.color=['all','red','orange','yellow','green','teal','blue','purple','pink','white','gray','black','brown'].includes(f.color)?f.color:'all';
+          imageState.colorType=['all','color','gray','trans'].includes(f.colorType)?f.colorType:'all';
+          imageState.type=['all','face','photo','clipart','lineart','animated'].includes(f.type)?f.type:'all';
+          imageState.rights=['all','f','fc','fm'].includes(f.rights)?f.rights:'all';
+          imageState.time=['all','d','w','m','y'].includes(f.time)?f.time:'all';
+          imageState.lang=String(f.lang||'').trim().slice(0,8);
+          imageState.region=String(f.region||'').trim().slice(0,8);
+          imageState.safe=['all','active'].includes(f.safe)?f.safe:'all';
+        }
+        if (mode === 'maps' && filters.maps) {
+          const f=filters.maps;
+          mapState.place=String(f.place||'').trim();
+          mapState.near=String(f.near||'').trim();
+          mapState.rating=['0','3','4','4.5'].includes(String(f.rating))?String(f.rating):'0';
+          mapState.hours=['all','open','24h'].includes(f.hours)?f.hours:'all';
+          mapState.price=['all','1','2','3','4'].includes(String(f.price))?String(f.price):'all';
+          mapState.category=String(f.category||'');
+          mapState.sort=['relevance','rating','reviews'].includes(f.sort)?f.sort:'relevance';
+        }
+        if (mode === 'videos' && filters.videos) {
+          const allowed={type:['video','playlist','live','shorts'],duration:['short','medium','long'],date:['hour','today','week','month','year'],quality:['4k','hd'],feature:['360','vr180','3d','hdr','cc']};
+          Object.keys(allowed).forEach(key=>{
+            filterState[key]=Array.isArray(filters.videos[key])?[...new Set(filters.videos[key].filter(v=>allowed[key].includes(v)))].slice(0,4):[];
+          });
+        }
+        syncAllInputs();
+        setFilterButtonVisuals(filterState);
+        saveCurrentStateToMode();
+        updateFilterSummary();
+        renderActiveFiltersBar();
+        updateAllFiltersUI();
       }
 
+      async function analyzeQueryWithGemini(query,currentMode) {
+        if (!query || currentMode !== 'smart') return { query, mode: currentMode, filters: null };
+        try {
+          const controller=new AbortController();
+          const timeout=setTimeout(()=>controller.abort(),8000);
+          const response=await fetch('/api/gemini',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({query,language:currentLang,currentMode}),
+            signal:controller.signal
+          });
+          clearTimeout(timeout);
+          if(!response.ok) throw new Error('Gemini request failed');
+          const data=await response.json();
+          const result=data&&data.result?data.result:{};
+          const allowedModes=new Set(['web','news','images','maps','videos','smart']);
+          return {
+            query:typeof result.query==='string'&&result.query.trim()?result.query.trim():query,
+            mode:allowedModes.has(result.mode)?result.mode:currentMode,
+            filters:result.filters||null
+          };
+        } catch(error) {
+          console.warn('Gemini analysis unavailable; using normal Searchly flow.',error);
+          return {query,mode:currentMode,filters:null};
+        }
+      }
       // =====================================================
       // SEARCH — يستخدم الروابط المختارة + Gemini في الوضع الذكي
       // =====================================================
@@ -3612,6 +3676,7 @@
           if (mode !== 'smart' && mode !== getActiveMode()) {
             switchMode(mode);
           }
+          if (analyzed.filters) applyGeminiFilters(mode, analyzed.filters);
         }
 
         // ⭐ إذا كانت هناك روابط مختارة → افتحها كلها
