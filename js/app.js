@@ -55,6 +55,11 @@ function __renderSearchlyPresetsAndActive() {
   }
 
   if (typeof filterState !== 'undefined') {
+    if (filterState.youtubePreset) {
+      const ytLabels = {film:'🎬 أفلام', long_views:'🏆 +20 دقيقة + الأكثر مشاهدة', long_4k:'🎞 +20 دقيقة + 4K', long_4k_hd:'💎 +20 دقيقة + 4K + HD'};
+      addChip('YouTube: ' + (ytLabels[filterState.youtubePreset] || filterState.youtubePreset), () => { filterState.youtubePreset = ''; });
+      count++;
+    }
     const labels = {type:'النوع', duration:'المدة', date:'التاريخ', quality:'الجودة', feature:'الميزة'};
     Object.keys(labels).forEach(key => {
       (filterState[key] || []).forEach(value => {
@@ -104,6 +109,20 @@ document.addEventListener('click', function(e) {
   if (typeof updateAllFiltersUI === 'function') updateAllFiltersUI();
 });
 if (typeof setupAllFiltersMoreButton === "function") setupAllFiltersMoreButton();
+
+const __ytMoreBtn = document.getElementById('youtubeMoreBtn');
+if (__ytMoreBtn && !__ytMoreBtn.dataset.bound) {
+  __ytMoreBtn.dataset.bound = 'true';
+  const extras = Array.from(document.querySelectorAll('.youtube-extra-filter'));
+  extras.forEach(b => b.hidden = true);
+  __ytMoreBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const open = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', String(!open));
+    extras.forEach(b => b.hidden = open);
+    this.textContent = open ? '➕ إظهار المزيد' : '➖ إظهار أقل';
+  });
+}
 const __allFiltersSearch = document.getElementById('filterSearchInput');
 const __allFiltersMore = document.getElementById('allFiltersMoreBtn');
 if (__allFiltersSearch && !__allFiltersSearch.dataset.boundMore) {
