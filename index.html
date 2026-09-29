@@ -2057,9 +2057,26 @@
       }
 
       function handleAllFilterClick(item) {
-        const idx = item.dataset.linkIndex;
+        const idx = Number(item.dataset.linkIndex);
+        const current = searches[idx];
+        if (!current) return;
         const key = 'link:' + idx;
-        selectedLinksState.selected[key] = !selectedLinksState.selected[key];
+
+        // داخل نفس المجموعة: اختيار واحد فقط.
+        // يمكن الجمع بين مجموعات مختلفة، لكن لا يمكن اختيار فلترين من نفس المجموعة.
+        const sameGroupKeys = Object.keys(selectedLinksState.selected).filter(k => {
+          if (!selectedLinksState.selected[k] || k === key) return false;
+          const otherIdx = Number(k.replace('link:', ''));
+          return searches[otherIdx] && searches[otherIdx].group === current.group;
+        });
+
+        if (selectedLinksState.selected[key]) {
+          delete selectedLinksState.selected[key];
+        } else {
+          sameGroupKeys.forEach(k => delete selectedLinksState.selected[k]);
+          selectedLinksState.selected[key] = true;
+        }
+
         updateAllFiltersUI();
         saveCurrentStateToMode();
       }
