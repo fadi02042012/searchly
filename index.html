@@ -1480,6 +1480,24 @@
       let langTouched = false;
       let currentQuery = '';
       let cmdActiveIndex = 0;
+      const FILTER_USAGE_KEY = 'sh_filter_usage_v1';
+      let filterUsage = {};
+      function loadFilterUsage() {
+        try {
+          const saved = localStorage.getItem(FILTER_USAGE_KEY);
+          const parsed = saved ? JSON.parse(saved) : {};
+          filterUsage = parsed && typeof parsed === 'object' ? parsed : {};
+        } catch (e) { filterUsage = {}; }
+      }
+      function saveFilterUsage() {
+        try { localStorage.setItem(FILTER_USAGE_KEY, JSON.stringify(filterUsage)); } catch (e) {}
+      }
+      function recordFilterUsage(filterId) {
+        if (!filterId) return;
+        filterUsage[filterId] = (Number(filterUsage[filterId]) || 0) + 1;
+        saveFilterUsage();
+      }
+      function getFilterUsage(filterId) { return Number(filterUsage[filterId]) || 0; }
 
       function getActiveMode() {
         const activeTab = document.querySelector('.mode-tab.active');
@@ -1727,34 +1745,41 @@
 
       const contextualSuggestions = {
         maps: [
-          { icon: '⭐', label: '4+ نجوم', apply: () => { mapState.rating = '4'; } },
-          { icon: '🕐', label: 'مفتوح الآن', apply: () => { mapState.hours = 'open'; } },
-          { icon: '💰', label: 'اقتصادي', apply: () => { mapState.price = '1'; } },
-          { icon: '🍽️', label: 'مطاعم', apply: () => { mapState.category = 'restaurants'; } }
+          { id: 'maps-rating-4', icon: '⭐', label: '4+ نجوم', apply: () => { mapState.rating = '4'; } },
+          { id: 'maps-open-now', icon: '🕐', label: 'مفتوح الآن', apply: () => { mapState.hours = 'open'; } },
+          { id: 'maps-budget', icon: '💰', label: 'اقتصادي', apply: () => { mapState.price = '1'; } },
+          { id: 'maps-restaurants', icon: '🍽️', label: 'مطاعم', apply: () => { mapState.category = 'restaurants'; } }
         ],
         news: [
-          { icon: '⏰', label: 'آخر ساعة', apply: () => { newsState.time = 'h'; } },
-          { icon: '📅', label: 'اليوم', apply: () => { newsState.time = 'h24'; } },
-          { icon: '📆', label: 'هذا الأسبوع', apply: () => { newsState.time = 'd7'; } },
-          { icon: '🔥', label: 'الأحدث', apply: () => { newsState.sort = 'date'; } }
+          { id: 'news-last-hour', icon: '⏰', label: 'آخر ساعة', apply: () => { newsState.time = 'h'; } },
+          { id: 'news-today', icon: '📅', label: 'اليوم', apply: () => { newsState.time = 'h24'; } },
+          { id: 'news-week', icon: '📆', label: 'هذا الأسبوع', apply: () => { newsState.time = 'd7'; } },
+          { id: 'news-latest', icon: '🔥', label: 'الأحدث', apply: () => { newsState.sort = 'date'; } }
         ],
         images: [
-          { icon: '📐', label: 'كبير', apply: () => { imageState.size = 'l'; } },
-          { icon: '🎨', label: 'ملون', apply: () => { imageState.colorType = 'color'; } },
-          { icon: '👤', label: 'وجه', apply: () => { imageState.type = 'face'; } },
-          { icon: '⚖️', label: 'مجاني', apply: () => { imageState.rights = 'f'; } }
+          { id: 'images-large', icon: '📐', label: 'كبير', apply: () => { imageState.size = 'l'; } },
+          { id: 'images-color', icon: '🎨', label: 'ملون', apply: () => { imageState.colorType = 'color'; } },
+          { id: 'images-face', icon: '👤', label: 'وجه', apply: () => { imageState.type = 'face'; } },
+          { id: 'images-free', icon: '⚖️', label: 'مجاني', apply: () => { imageState.rights = 'f'; } }
         ],
         videos: [
-          { icon: '⏱️', label: 'قصير', apply: () => { filterState.duration = ['short']; } },
-          { icon: '🎥', label: 'HD', apply: () => { filterState.quality = ['hd']; } },
-          { icon: '🔴', label: 'مباشر', apply: () => { filterState.type = ['live']; } }
+          { id: 'videos-short', icon: '⏱️', label: 'قصير', linkIndex: 10, apply: () => { filterState.duration = ['short']; } },
+          { id: 'videos-hd', icon: '🎥', label: 'HD', linkIndex: 15, apply: () => { filterState.quality = ['hd']; } },
+          { id: 'videos-live', icon: '🔴', label: 'مباشر', linkIndex: 26, apply: () => { filterState.type = ['live']; } }
         ],
         web: [
-          { icon: '📄', label: 'PDF', apply: () => { advancedState.fileType = 'pdf'; } },
-          { icon: '📅', label: 'هذا العام', apply: () => { filterState.date = ['year']; } },
-          { icon: '📰', label: 'أخبار', apply: () => { advancedState.allWords = 'أخبار'; } }
+          { id: 'web-pdf', icon: '📄', label: 'PDF', apply: () => { advancedState.fileType = 'pdf'; } },
+          { id: 'web-year', icon: '📅', label: 'هذا العام', apply: () => { filterState.date = ['year']; } },
+          { id: 'web-news', icon: '📰', label: 'أخبار', apply: () => { advancedState.allWords = 'أخبار'; } }
         ]
       };
+
+      function getContextualSuggestions(modeKey) {
+        return (contextualSuggestions[modeKey] || [])
+          .map((suggestion, index) => ({ suggestion, index, usage: getFilterUsage(suggestion.id) }))
+          .sort((a, b) => b.usage - a.usage || a.index - b.index)
+          .map(item => item.suggestion);
+      }
 
       // =====================================================
       // DOM ELEMENTS
@@ -2427,26 +2452,62 @@
 
       function renderContextualFilters() {
         const mode = getActiveMode();
-        let modeKey = mode === 'smart' ? (detectSearchMode(currentQuery)?.mode || 'web') : mode;
-        const suggestions = contextualSuggestions[modeKey];
-        if (!suggestions || suggestions.length === 0) {
+        const modeKey = mode === 'smart'
+          ? (detectSearchMode(currentQuery || searchInput.value)?.mode || 'web')
+          : mode;
+        const suggestions = getContextualSuggestions(modeKey);
+
+        if (!suggestions.length) {
           contextualFilters.classList.remove('show');
           return;
         }
+
         contextualFilters.classList.add('show');
         cfLabelText.textContent = langStrings[currentLang].cfLabelText;
         cfChips.innerHTML = '';
-        suggestions.forEach(sug => {
+
+        suggestions.slice(0, 4).forEach(sug => {
           const chip = document.createElement('button');
           chip.className = 'cf-chip';
-          chip.innerHTML = `<span class="chip-icon">${sug.icon}</span><span>${sug.label}</span>`;
+          chip.dataset.filterId = sug.id;
+          const usage = getFilterUsage(sug.id);
+          chip.innerHTML = `
+            <span class="chip-icon">${sug.icon}</span>
+            <span>${sug.label}</span>
+            ${usage > 0 ? `<span style="font-size:10px;opacity:.65">×${usage}</span>` : ''}
+          `;
+
           chip.addEventListener('click', () => {
             sug.apply();
+
+            if (sug.linkIndex !== undefined) {
+              selectedLinksState.selected = {};
+              selectedLinksState.selected['link:' + sug.linkIndex] = true;
+            }
+
+            recordFilterUsage(sug.id);
             saveCurrentStateToMode();
-            chip.classList.toggle('active');
+            syncAllInputs();
             updateFilterSummary();
             renderActiveFiltersBar();
+
+            const query = (searchInput.value || currentQuery || '').trim();
+            if (query) {
+              performSearch(query);
+            } else {
+              showToast(currentLang === 'ar'
+                ? '✏️ اكتب كلمة أولاً ثم اختر الفلتر'
+                : '✏️ Enter a search term first');
+            }
+
+            renderContextualFilters();
           });
+
+          if (usage > 0) {
+            chip.title = currentLang === 'ar'
+              ? `استخدمت هذا الفلتر ${usage} مرة`
+              : `Used ${usage} times`;
+          }
           cfChips.appendChild(chip);
         });
       }
@@ -2994,7 +3055,7 @@
         strings.quickSuggestions.forEach(text => {
           const chip = document.createElement('button');
           chip.textContent = text;
-          chip.addEventListener('click', () => { searchInput.value = text; performSearch(text); });
+          chip.addEventListener('click', () => { searchInput.value = text; currentQuery = text; const detected = detectSearchMode(text); if (detected) switchMode(detected.mode); performSearch(text); });
           quickSuggestions.appendChild(chip);
         });
       }
@@ -3006,7 +3067,7 @@
       searchInput.addEventListener('input', () => {
         showSuggestions();
         updateSmartIndicator();
-        if (getActiveMode() === 'smart') renderContextualFilters();
+        if (getActiveMode() === 'smart') { currentQuery = searchInput.value.trim(); renderContextualFilters(); }
       });
       searchInput.addEventListener('focus', showSuggestions);
       searchInput.addEventListener('blur', hideSuggestions);
@@ -3164,6 +3225,8 @@
       function init() {
         // ⭐ بناء شبكة كافة الفلاتر من searches
         buildAllFiltersGrid();
+
+        loadFilterUsage();
 
         const savedTheme = localStorage.getItem('sh_theme');
         if (savedTheme === 'dark') {
