@@ -1735,50 +1735,96 @@
       // =====================================================
       const smartPatterns = {
         maps: {
-          keywords: ['مطعم', 'مطاعم', 'فندق', 'فنادق', 'مقهى', 'مقاهي', 'صيدلية', 'صيدليات', 'مستشفى', 'مستشفيات', 'بنك', 'بنوك', 'صراف', 'محطة', 'محطات', 'بقالة', 'سوبر ماركت', 'مول', 'مركز تجاري', 'قريب', 'قريبة', 'بالقرب', 'nearby', 'restaurant', 'hotel', 'cafe', 'pharmacy', 'hospital', 'bank', 'atm', 'gas station', 'supermarket', 'mall'],
-          icon: '🗺️', label: 'خرائط',
-          weight: 3
+          keywords: [
+            'مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','صيدليات','مستشفى','مستشفيات',
+            'بنك','بنوك','صراف','محطة','محطات','بقالة','سوبر ماركت','مول','مركز تجاري',
+            'أماكن','مكان','موقع','عنوان','اتجاهات','طريق','قريب','قريبة','بالقرب','حولي','حولّي',
+            'أقرب','nearest','nearby','near me','restaurant','restaurants','hotel','hotels',
+            'cafe','cafes','pharmacy','hospital','bank','atm','gas station','supermarket','mall',
+            'location','locations','map','maps','directions'
+          ],
+          phrases: ['قريب مني','قريبة مني','بالقرب مني','حولّي','حولي','أقرب مكان','أين أقرب','near me','nearby','closest to me'],
+          icon:'🗺️', label:'خرائط', weight:3
         },
         news: {
-          keywords: ['أخبار', 'خبر', 'عاجل', 'سياسة', 'اقتصاد', 'رياضة', 'اليوم', 'اليوم عاجل', 'news', 'breaking', 'politics', 'economy', 'latest news'],
-          icon: '📰', label: 'أخبار',
-          weight: 3
+          keywords: [
+            'أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','اليوم','الآن','آخر الأخبار',
+            'أخبار اليوم','خبر اليوم','الأخبار العاجلة','news','breaking','politics','economy',
+            'sports news','latest news','today news','breaking news'
+          ],
+          phrases: ['آخر أخبار','أخبار اليوم','خبر عاجل','الأخبار العاجلة','latest news','breaking news','today news'],
+          icon:'📰', label:'أخبار', weight:3
         },
         images: {
-          keywords: ['صورة', 'صور', 'خلفية', 'خلفيات', 'شعار', 'تصميم', 'صورة لـ', 'صور لـ', 'image', 'images', 'wallpaper', 'logo', 'picture', 'photo'],
-          icon: '🖼️', label: 'صور',
-          weight: 3
+          keywords: [
+            'صورة','صور','خلفية','خلفيات','شعار','شعارات','تصميم','تصاميم','صورة لـ','صور لـ',
+            'image','images','wallpaper','wallpapers','logo','logos','picture','pictures','photo','photos',
+            'png','jpg','jpeg','4k wallpaper'
+          ],
+          phrases: ['صور لـ','صورة لـ','خلفيات للهاتف','خلفيات للكمبيوتر','wallpaper 4k','phone wallpapers'],
+          icon:'🖼️', label:'صور', weight:3
         },
         videos: {
-          keywords: ['فيديو', 'فيديوهات', 'يوتيوب', 'مقطع', 'مقاطع', 'حلقة', 'مشاهدة', 'شاهد', 'video', 'videos', 'youtube', 'watch', 'clip'],
-          icon: '🎬', label: 'فيديو',
-          weight: 3
+          keywords: [
+            'فيديو','فيديوهات','يوتيوب','مقطع','مقاطع','حلقة','حلقات','مشاهدة','شاهد',
+            'video','videos','youtube','watch','clip','clips','shorts','tutorial video'
+          ],
+          phrases: ['فيديو عن','فيديوهات','مشاهدة مباراة','شاهد فيديو','youtube','youtube tutorial','programming videos'],
+          icon:'🎬', label:'فيديو', weight:3
         }
       };
 
+      function normalizeSmartQuery(query) {
+        return (query || '')
+          .toLowerCase()
+          .replace(/[إأآ]/g, 'ا')
+          .replace(/ة/g, 'ه')
+          .replace(/[ًٌٍَُِّْـ]/g, '')
+          .replace(/[؟?!.,،؛:()[\]{}"']/g, ' ')
+          .replace(/\\s+/g, ' ')
+          .trim();
+      }
+
       function detectSearchMode(query) {
-        if (!query || query.trim().length < 2) return null;
-        const lower = query.toLowerCase().trim();
-        const scores = Object.entries(smartPatterns).map(([mode, config]) => {
+        const lower = normalizeSmartQuery(query);
+        if (lower.length < 2) return null;
+
+        const candidates = Object.entries(smartPatterns).map(([mode, config]) => {
           let score = 0;
           const matches = [];
-          config.keywords.forEach(keyword => {
-            const k = keyword.toLowerCase();
-            if (lower.includes(k)) {
-              const exactPhraseBonus = lower === k ? 3 : (lower.startsWith(k + ' ') || lower.endsWith(' ' + k) ? 1 : 0);
-              score += config.weight + exactPhraseBonus;
-              matches.push(keyword);
+
+          // العبارات المركبة أقوى من الكلمات المفردة لأنها تعبّر عن نية أوضح.
+          (config.phrases || []).forEach(phrase => {
+            const p = normalizeSmartQuery(phrase);
+            if (p && lower.includes(p)) {
+              score += config.weight * 3;
+              matches.push(phrase);
             }
           });
-          return { mode, config, score, matches };
+
+          // الكلمات العامة تعطي إشارة، لكن بوزن أقل.
+          (config.keywords || []).forEach(keyword => {
+            const k = normalizeSmartQuery(keyword);
+            if (!k || !lower.includes(k)) return;
+            const alreadyMatched = (config.phrases || []).some(phrase => normalizeSmartQuery(phrase) === k);
+            score += config.weight + (alreadyMatched ? 0 : 1);
+            matches.push(keyword);
+          });
+
+          // وجود أكثر من إشارة مختلفة لنفس النية يزيد الثقة.
+          const uniqueMatches = [...new Set(matches)];
+          if (uniqueMatches.length > 1) score += Math.min(uniqueMatches.length - 1, 3);
+
+          return { mode, config, score, matches: uniqueMatches };
         }).sort((a, b) => b.score - a.score);
 
-        const best = scores[0];
-        if (!best || best.score <= 0) return null;
+        const best = candidates[0];
+        const second = candidates[1];
 
-        // لا نختار وضعًا متخصصًا عند وجود تعادل أو إشارة ضعيفة جدًا.
-        const second = scores[1];
-        if (second && second.score === best.score) return null;
+        if (!best || best.score < 4) return null;
+
+        // إذا كانت نيتان واضحتان بنفس القوة، لا نخمن.
+        if (second && second.score >= best.score && second.mode !== best.mode) return null;
 
         return {
           mode: best.mode,
