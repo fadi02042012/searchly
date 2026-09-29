@@ -66,8 +66,13 @@ function __renderSearchlyPresetsAndActive() {
     });
   }
 
-  if (typeof getActiveMode === 'function' && getActiveMode() === 'videos' && typeof filterState !== 'undefined' && filterState.sort) {
-    addChip('فيديو: الترتيب: ' + filterState.sort, () => { filterState.sort = 'date'; });
+  if (typeof filterState !== 'undefined' && filterState.sort && filterState.sort !== 'relevance') {
+    const sortLabels = {views:'🔥 الأكثر مشاهدة', rating:'⭐ الأعلى تقييماً', date:'📅 الأحدث', title:'📝 في العنوان', relevance:'الأكثر صلة'};
+    const sortLabel = sortLabels[filterState.sort] || filterState.sort;
+    addChip('فيديو: ' + sortLabel, () => {
+      filterState.sort = 'relevance';
+      document.querySelectorAll('[data-filter-sort]').forEach(btn => btn.classList.toggle('active-filter', btn.dataset.filterSort === 'relevance'));
+    });
     count++;
   }
 
@@ -182,6 +187,7 @@ function resetAllFilters() {
   if (typeof updateAllFiltersUI === 'function') updateAllFiltersUI();
   if (typeof updateFilterSummary === 'function') updateFilterSummary();
   if (typeof renderActiveFiltersBar === 'function') renderActiveFiltersBar();
+  if (typeof __renderSearchlyPresetsAndActive === 'function') __renderSearchlyPresetsAndActive();
   if (typeof renderContextualFilters === 'function') renderContextualFilters();
   if (typeof showToast === 'function') showToast((typeof langStrings !== 'undefined' && langStrings[currentLang]?.toastResetFilters) || '🔄 تم إعادة الضبط');
 }
