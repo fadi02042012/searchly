@@ -61,6 +61,67 @@ const __filterBackdrop = document.getElementById('filterBackdrop');
 const __openFiltersBtn = document.getElementById('openFiltersBtn');
 const __closeFiltersBtn = document.getElementById('closeFiltersBtn');
 
+function resetAllFilters() {
+  const defaults = (typeof createDefaultFilterState === 'function')
+    ? createDefaultFilterState()
+    : {sort:'date',type:[],duration:[],date:[],quality:[],feature:[]};
+
+  if (typeof filterState !== 'undefined') {
+    Object.keys(defaults).forEach(k => {
+      filterState[k] = Array.isArray(defaults[k]) ? [...defaults[k]] : defaults[k];
+    });
+  }
+
+  if (typeof modeFilters !== 'undefined') {
+    Object.keys(modeFilters).forEach(mode => {
+      modeFilters[mode] = (typeof createDefaultFilterState === 'function')
+        ? createDefaultFilterState()
+        : {sort:'date',type:[],duration:[],date:[],quality:[],feature:[]};
+    });
+  }
+
+  if (typeof advancedState !== 'undefined') Object.assign(advancedState, {
+    allWords:'', exactPhrase:'', anyWords:'', noneWords:'', numbers:'',
+    site:'', fileType:'', lastUpdate:'', lang:'', usageRights:''
+  });
+  if (typeof newsState !== 'undefined') Object.assign(newsState, {
+    allWords:'', exactPhrase:'', site:'', time:'all', sort:'relevance'
+  });
+  if (typeof imageState !== 'undefined') Object.assign(imageState, {
+    allWords:'', site:'', fileType:'', size:'all', exactWidth:'', exactHeight:'',
+    aspect:'all', color:'all', colorType:'all', type:'all', rights:'all',
+    time:'all', lang:'', region:'', safe:'active'
+  });
+  if (typeof mapState !== 'undefined') Object.assign(mapState, {
+    place:'', near:'', category:'', rating:'0', hours:'all', price:'all', sort:'relevance'
+  });
+  if (typeof selectedLinksState !== 'undefined') selectedLinksState.selected = {};
+
+  if (typeof saveCurrentStateToMode === 'function') saveCurrentStateToMode();
+  if (typeof syncAdvancedInputs === 'function') syncAdvancedInputs();
+  if (typeof syncNewsInputs === 'function') syncNewsInputs();
+  if (typeof syncImageInputs === 'function') syncImageInputs();
+  if (typeof syncMapInputs === 'function') syncMapInputs();
+  if (typeof syncAllInputs === 'function') syncAllInputs();
+  if (typeof setFilterButtonVisuals === 'function') setFilterButtonVisuals(filterState);
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active-filter'));
+  const defaultSort = document.querySelector('.filter-btn[data-filter-sort="date"]');
+  if (defaultSort) defaultSort.classList.add('active-filter');
+  const defaultMapSort = document.querySelector('.map-sort-btn[data-map-sort="relevance"]');
+  if (defaultMapSort) defaultMapSort.classList.add('active-filter');
+  const defaultRating = document.querySelector('.map-rating-btn[data-map-rating="0"]');
+  if (defaultRating) defaultRating.classList.add('active-filter');
+  const defaultHours = document.querySelector('.map-hours-btn[data-map-hours="all"]');
+  if (defaultHours) defaultHours.classList.add('active-filter');
+  const defaultPrice = document.querySelector('.map-price-btn[data-map-price="all"]');
+  if (defaultPrice) defaultPrice.classList.add('active-filter');
+  if (typeof updateAllFiltersUI === 'function') updateAllFiltersUI();
+  if (typeof updateFilterSummary === 'function') updateFilterSummary();
+  if (typeof renderActiveFiltersBar === 'function') renderActiveFiltersBar();
+  if (typeof renderContextualFilters === 'function') renderContextualFilters();
+  if (typeof showToast === 'function') showToast((typeof langStrings !== 'undefined' && langStrings[currentLang]?.toastResetFilters) || '🔄 تم إعادة الضبط');
+}
+
 function __openAdvancedFilters() {
   if (typeof openFilterDrawer === "function") {
     openFilterDrawer();
