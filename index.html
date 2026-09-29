@@ -2398,7 +2398,7 @@
         }
         if (advancedState.numbers) parts.push(advancedState.numbers.trim());
         if (advancedState.site) parts.push('site:' + advancedState.site.trim());
-        if (advancedState.fileType) parts.push('filetype:' + advancedState.fileType);
+        if (advancedState.fileType) parts.push(advancedState.fileType === 'xls' ? '(filetype:xls OR filetype:xlsx)' : 'filetype:' + advancedState.fileType);
         if (parts.length === 0) return baseQuery;
         if (baseQuery && !advancedState.allWords && !advancedState.exactPhrase && !advancedState.anyWords && !advancedState.numbers) {
           parts.unshift(baseQuery);
