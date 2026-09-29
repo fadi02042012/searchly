@@ -31,6 +31,7 @@
             const itemDiv = document.createElement('div');
             itemDiv.className = 'all-filter-item';
             itemDiv.dataset.linkIndex = String(item.index);
+            itemDiv.dataset.filterOrder = String(document.querySelectorAll('#allFiltersGrid .all-filter-item').length + 1);
             const parts = item.name.trim().split(' ');
             const itemIcon = parts[0];
             const itemName = parts.slice(1).join(' ');
@@ -40,6 +41,34 @@
           groupDiv.appendChild(itemsDiv);
           grid.appendChild(groupDiv);
         });
+        if (typeof setupAllFiltersMoreButton === 'function') setupAllFiltersMoreButton();
+      }
+
+      function setupAllFiltersMoreButton() {
+        const grid = document.getElementById('allFiltersGrid');
+        const button = document.getElementById('allFiltersMoreBtn');
+        if (!grid || !button) return;
+        const items = Array.from(grid.querySelectorAll('.all-filter-item'));
+        items.forEach((item, i) => item.classList.toggle('af-extra-filter', i >= 12));
+        const extraCount = Math.max(0, items.length - 12);
+        let expanded = button.getAttribute('aria-expanded') === 'true';
+        if (!extraCount) {
+          button.hidden = true;
+          return;
+        }
+        button.hidden = false;
+        button.setAttribute('aria-expanded', String(expanded));
+        button.textContent = expanded ? '➖ إظهار أقل' : '➕ إظهار المزيد (' + extraCount + ')';
+        items.forEach((item, i) => item.classList.toggle('af-extra-hidden', !expanded && i >= 12));
+        if (!button.dataset.bound) {
+          button.dataset.bound = 'true';
+          button.addEventListener('click', () => {
+            const open = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', String(!open));
+            button.textContent = open ? '➕ إظهار المزيد (' + extraCount + ')' : '➖ إظهار أقل';
+            items.forEach((item, i) => item.classList.toggle('af-extra-hidden', open && i >= 12));
+          });
+        }
       }
 
       // =====================================================
