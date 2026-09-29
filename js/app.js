@@ -172,9 +172,8 @@ const __openFiltersBtn = document.getElementById('openFiltersBtn');
 const __closeFiltersBtn = document.getElementById('closeFiltersBtn');
 
 function resetAllFilters() {
-  const defaults = (typeof createDefaultFilterState === 'function')
-    ? createDefaultFilterState()
-    : {sort:'date',type:[],duration:[],date:[],quality:[],feature:[]};
+  // Reset means no active filters; do not restore the newest/date sort.
+  const defaults = {sort:'relevance',type:[],duration:[],date:[],quality:[],feature:[],youtubePreset:''};
 
   if (typeof filterState !== 'undefined') {
     Object.keys(defaults).forEach(k => {
@@ -184,9 +183,7 @@ function resetAllFilters() {
 
   if (typeof modeFilters !== 'undefined') {
     Object.keys(modeFilters).forEach(mode => {
-      modeFilters[mode] = (typeof createDefaultFilterState === 'function')
-        ? createDefaultFilterState()
-        : {sort:'date',type:[],duration:[],date:[],quality:[],feature:[]};
+      modeFilters[mode] = {sort:'relevance',type:[],duration:[],date:[],quality:[],feature:[],youtubePreset:''};
     });
   }
 
@@ -215,7 +212,7 @@ function resetAllFilters() {
   if (typeof syncAllInputs === 'function') syncAllInputs();
   if (typeof setFilterButtonVisuals === 'function') setFilterButtonVisuals(filterState);
   document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active-filter'));
-  const defaultSort = document.querySelector('.filter-btn[data-filter-sort="date"]');
+  const defaultSort = document.querySelector('.filter-btn[data-filter-sort="relevance"]');
   if (defaultSort) defaultSort.classList.add('active-filter');
   const defaultMapSort = document.querySelector('.map-sort-btn[data-map-sort="relevance"]');
   if (defaultMapSort) defaultMapSort.classList.add('active-filter');
