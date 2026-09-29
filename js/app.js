@@ -56,7 +56,26 @@ function __closeAdvancedFilters() {
   __filterOverlay.setAttribute('aria-hidden', 'true');
 }
 const __searchBtn = document.getElementById('searchBtn');
-if (__searchBtn) __searchBtn.addEventListener('click', () => performSearch());
+if (__searchBtn) __searchBtn.addEventListener('click', () => {
+  if (typeof performSearch === 'function') {
+    performSearch();
+  } else {
+    const input = document.getElementById('searchInput');
+    const query = input ? input.value.trim() : '';
+    if (!query) return;
+    const active = document.querySelector('.mode-tab.active');
+    const mode = active ? active.dataset.mode : 'web';
+    const urls = {
+      web: 'https://www.google.com/search?q=',
+      news: 'https://www.google.com/search?tbm=nws&q=',
+      images: 'https://www.google.com/search?tbm=isch&q=',
+      videos: 'https://www.youtube.com/results?search_query=',
+      maps: 'https://www.google.com/maps/search/'
+    };
+    const base = urls[mode] || urls.web;
+    window.open(base + encodeURIComponent(query), '_blank');
+  }
+});
 if (__openFiltersBtn) __openFiltersBtn.addEventListener('click', __openAdvancedFilters);
 if (__closeFiltersBtn) __closeFiltersBtn.addEventListener('click', __closeAdvancedFilters);
 if (__filterBackdrop) __filterBackdrop.addEventListener('click', __closeAdvancedFilters);
