@@ -9,7 +9,7 @@
       return response.text();
     }));
     const source = "const searches = window.searchlySearches; const groupIcons = window.searchlyGroupIcons;\n" + parts.join('\n\n');
-    new Function(source)();
+    new Function(source + '\nif (typeof buildAllFiltersGrid === "function") buildAllFiltersGrid();')();
   } catch(error) {
     console.error('searchly: modular loader failed',error);
   }
