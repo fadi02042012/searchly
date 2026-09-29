@@ -49,24 +49,28 @@
         const button = document.getElementById('allFiltersMoreBtn');
         if (!grid || !button) return;
         const items = Array.from(grid.querySelectorAll('.all-filter-item'));
-        items.forEach((item, i) => item.classList.toggle('af-extra-filter', i >= 12));
         const extraCount = Math.max(0, items.length - 12);
         let expanded = button.getAttribute('aria-expanded') === 'true';
+
         if (!extraCount) {
           button.hidden = true;
+          items.forEach(item => item.classList.remove('af-extra-hidden'));
           return;
         }
+
         button.hidden = false;
         button.setAttribute('aria-expanded', String(expanded));
         button.textContent = expanded ? '➖ إظهار أقل' : '➕ إظهار المزيد (' + extraCount + ')';
         items.forEach((item, i) => item.classList.toggle('af-extra-hidden', !expanded && i >= 12));
+
         if (!button.dataset.bound) {
           button.dataset.bound = 'true';
           button.addEventListener('click', () => {
             const open = button.getAttribute('aria-expanded') === 'true';
-            button.setAttribute('aria-expanded', String(!open));
-            button.textContent = open ? '➕ إظهار المزيد (' + extraCount + ')' : '➖ إظهار أقل';
-            items.forEach((item, i) => item.classList.toggle('af-extra-hidden', open && i >= 12));
+            const next = !open;
+            button.setAttribute('aria-expanded', String(next));
+            button.textContent = next ? '➖ إظهار أقل' : '➕ إظهار المزيد (' + extraCount + ')';
+            items.forEach((item, i) => item.classList.toggle('af-extra-hidden', !next && i >= 12));
           });
         }
       }
