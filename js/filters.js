@@ -210,21 +210,25 @@
               };
               const quality = (fs.quality || []).find(v => qualitySp[v]);
 
-              // YouTube يستخدم رمز sp واحداً لكل تركيبة فلترة.
-              // نعطي "بث مباشر" أولوية صريحة حتى لا يضيع الفلتر.
+              // YouTube يدعم رمز sp واحداً لكل حالة فلترة. لا نرسل عدة sp
+              // حتى لا يصبح الرابط غير صالح؛ نختار الفلتر الأكثر تحديداً.
               const q = encodeURIComponent(parts[0]).replace(/%20/g, '+');
               let url = 'https://www.youtube.com/results?search_query=' + q;
 
-              if (type === 'live') {
-                // 🔴 بث مباشر في YouTube
-                url += '&sp=EgJAAQ%3D%3D';
-                return url;
-              }
+              // ترتيب النتائج في YouTube: sp=CAASAH... ليس ثابتاً عبر الواجهة،
+              // لذلك نترك الترتيب للواجهة ولا نخترع رمزاً غير موثوق.
+              // فلتر النوع/المدة/التاريخ/الجودة: نستخدم رموز YouTube الموثقة
+              // الموجودة في بيانات الفلاتر الحالية.
+              const candidates = [
+                ['type', typeSp[type]],
+                ['duration', durationSp[duration]],
+                ['date', dateSp[date]],
+                ['quality', qualitySp[quality]]
+              ].filter(([, value]) => Boolean(value));
 
-              // لباقي الفلاتر نستخدم رمز الفلتر المحدد الأول.
-              const sp = [typeSp[type], durationSp[duration], dateSp[date], qualitySp[quality]].filter(Boolean);
-              if (sp.length) {
-                url += '&sp=' + sp[0];
+              if (candidates.length) {
+                // أولوية: النوع ثم المدة ثم التاريخ ثم الجودة.
+                url += '&sp=' + candidates[0][1];
               }
               return url;
             }
