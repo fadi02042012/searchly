@@ -131,6 +131,18 @@ document.addEventListener('click', function(e) {
   if (typeof renderActiveFiltersBar === 'function') renderActiveFiltersBar();
   if (typeof updateAllFiltersUI === 'function') updateAllFiltersUI();
 });
+document.addEventListener('click', function(e) {
+  const platformBtn = e.target.closest('[data-video-platform]');
+  if (!platformBtn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  if (typeof filterState === 'undefined') return;
+  filterState.videoPlatform = platformBtn.dataset.videoPlatform || 'youtube';
+  document.querySelectorAll('[data-video-platform]').forEach(btn => btn.classList.toggle('active-filter', btn === platformBtn));
+  if (typeof saveCurrentStateToMode === 'function') saveCurrentStateToMode();
+  if (typeof updateFilterSummary === 'function') updateFilterSummary();
+  if (typeof renderActiveFiltersBar === 'function') renderActiveFiltersBar();
+});
 if (typeof setupAllFiltersMoreButton === "function") setupAllFiltersMoreButton();
 
 const __ytMoreBtn = document.getElementById('youtubeMoreBtn');
