@@ -165,10 +165,8 @@
             if (effectiveMode === 'news') return newsSearchURL(query);
             if (effectiveMode === 'maps') return mapSearchURL(query);
             if (effectiveMode === 'videos' || mode === 'videos') {
-              // ⭐ استخدم أول رابط مختار أو الرابط الافتراضي
-              const selected = buildSelectedLinksURLs(query);
-              if (selected.length > 0) return selected[0].url;
-              return generateAdvancedLink(query, 0);
+              // 🎬 وضع الفيديو = YouTube فقط
+              return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(String(query || '').trim());
             }
             return googleSearchURL(query);
           }
