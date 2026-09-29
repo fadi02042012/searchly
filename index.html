@@ -930,7 +930,312 @@
       .mode-tab { padding: 8px 12px; font-size: 12px; }
       .color-swatch { width: 32px; height: 32px; }
     }
-  </style>
+  
+
+    /* =========================================================
+       📱 Responsive Layout v2 — تنظيم موحّد لكل المقاسات
+       ========================================================= */
+    :root {
+      --page-gutter: clamp(12px, 3vw, 32px);
+      --content-max: 1120px;
+    }
+
+    body {
+      width: 100%;
+      max-width: 100%;
+      padding-inline: var(--page-gutter);
+      overflow-x: hidden;
+    }
+
+    .header,
+    .hero,
+    .search-modes,
+    .search-container,
+    .contextual-filters,
+    .presets-bar,
+    .active-filters-bar,
+    .quick-suggestions,
+    .empty-state,
+    .footer {
+      width: min(100%, var(--content-max));
+      max-width: var(--content-max);
+    }
+
+    .header { min-height: 44px; }
+    .search-modes { align-items: center; padding-inline: 2px; }
+    .search-modes::-webkit-scrollbar { height: 3px; }
+
+    .search-box {
+      width: 100%;
+      min-height: 58px;
+    }
+
+    .search-box .search-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    .search-box input { min-width: 80px; }
+
+    .contextual-filters,
+    .presets-bar,
+    .active-filters-bar {
+      align-content: center;
+    }
+
+    .cf-chips { min-width: 0; }
+    .cf-chip,
+    .preset-chip,
+    .filter-btn,
+    .all-filter-item {
+      max-width: 100%;
+    }
+
+    .cf-chip span:not(.chip-icon),
+    .preset-chip span:not(.preset-close):not(:first-child),
+    .all-filter-item .af-name {
+      overflow-wrap: anywhere;
+    }
+
+    .filter-overlay {
+      width: min(1120px, calc(100vw - 24px));
+    }
+
+    .filter-drawer {
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .all-filters-grid {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    }
+
+    @media (min-width: 1400px) {
+      :root { --content-max: 1180px; }
+      body { padding-top: 28px; }
+      .hero { margin-bottom: 24px; }
+      .hero h1 { font-size: clamp(42px, 4vw, 58px); }
+    }
+
+    @media (max-width: 900px) {
+      .header { margin-bottom: 18px; }
+      .hero { margin-bottom: 16px; }
+      .mode-tab { padding: 9px 15px; }
+      .search-box { min-height: 54px; }
+      .filter-drawer { padding: 20px; }
+    }
+
+    @media (max-width: 700px) {
+      body { padding-block: 12px 20px; }
+
+      .header {
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .logo { font-size: 18px; }
+      .logo-icon { width: 34px; height: 34px; }
+      .header-actions { margin-inline-start: auto; }
+
+      .hero h1 {
+        font-size: clamp(25px, 8vw, 34px);
+        letter-spacing: -0.8px;
+      }
+      .hero p { font-size: 13px; }
+
+      .search-modes {
+        gap: 6px;
+        padding-bottom: 6px;
+        scroll-snap-type: x proximity;
+      }
+      .mode-tab {
+        scroll-snap-align: start;
+        padding: 9px 13px;
+        font-size: 12px;
+      }
+
+      .search-container { margin-bottom: 12px; }
+      .search-box {
+        min-height: 52px;
+        padding: 4px 5px 4px 12px;
+        gap: 6px;
+        border-radius: 18px;
+      }
+      .search-icon { font-size: 16px; }
+      .search-box input {
+        font-size: 15px;
+        padding-block: 11px;
+      }
+      .search-box .search-actions {
+        gap: 4px;
+      }
+      .search-box .search-actions .btn-primary {
+        padding: 9px 13px;
+      }
+      .search-box .filter-main-btn {
+        padding: 9px 11px;
+      }
+      .lang-tool,
+      .btn-translate { width: 40px; min-width: 40px; height: 40px; }
+
+      .contextual-filters {
+        padding: 10px 12px;
+        gap: 7px;
+        border-radius: 14px;
+      }
+      .cf-label { width: 100%; }
+      .cf-chips { width: 100%; }
+      .cf-chip { font-size: 11px; padding: 7px 10px; }
+
+      .presets-bar,
+      .active-filters-bar,
+      .quick-suggestions {
+        justify-content: flex-start;
+      }
+
+      .filter-overlay {
+        width: calc(100vw - 16px);
+        max-height: calc(100vh - 16px);
+      }
+      .filter-drawer {
+        max-height: calc(100vh - 16px);
+        padding: 15px;
+        border-radius: 16px;
+      }
+      .filter-drawer-head h3 { font-size: 17px; }
+      .filter-tabs { margin-bottom: 15px; }
+      .filter-tab { padding: 8px 11px; font-size: 11px; }
+
+      .advanced-field { margin-bottom: 12px; }
+      .advanced-field input,
+      .advanced-field select { min-height: 42px; }
+      .filter-btn { padding: 8px 11px; }
+
+      .all-filters-grid { grid-template-columns: 1fr; gap: 9px; }
+      .all-filter-group { padding: 11px; }
+      .all-filter-item { min-height: 40px; padding: 8px 11px; }
+
+      .filter-drawer-actions,
+      .all-filters-actions {
+        position: sticky;
+        bottom: -15px;
+        z-index: 2;
+        background: var(--surface);
+        margin-inline: -15px;
+        padding: 12px 15px;
+      }
+      .filter-apply-btn,
+      .filter-reset-btn,
+      .all-filters-actions button {
+        min-height: 42px;
+      }
+
+      .suggestions-dropdown {
+        max-height: min(52vh, 360px);
+      }
+      .suggestion-item { padding: 11px 13px; }
+
+      .cmd-palette {
+        width: calc(100vw - 20px);
+        top: 6vh;
+        max-height: 78vh;
+        border-radius: 14px;
+      }
+
+      .empty-state { padding: 44px 12px; }
+    }
+
+    @media (max-width: 480px) {
+      :root { --page-gutter: 9px; }
+
+      .header { align-items: flex-start; }
+      .header-actions { gap: 5px; }
+      .icon-btn { width: 36px; height: 36px; }
+      .lang-group { padding: 3px; }
+      .lang-btn { padding: 5px 7px; }
+
+      .hero h1 { font-size: 25px; }
+      .hero p { line-height: 1.5; }
+
+      /* يحافظ على شريط البحث مرتبًا بدل خروج الأزرار عن الشاشة. */
+      .search-box {
+        flex-wrap: wrap;
+        border-radius: 16px;
+        padding: 5px;
+      }
+      .search-box .search-icon { margin-inline-start: 7px; }
+      .search-box input {
+        flex: 1 1 calc(100% - 40px);
+        min-width: 0;
+      }
+      .search-box .search-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto auto;
+        gap: 5px;
+        padding-top: 2px;
+      }
+      .search-box .search-actions > * { min-width: 0; }
+      .search-box .search-actions .btn-primary {
+        width: 100%;
+        justify-content: center;
+      }
+      .search-box .filter-main-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .search-box .filter-main-btn .filter-label-text { display: inline; }
+
+      .quick-suggestions button { padding: 7px 10px; }
+      .cf-chip { max-width: 100%; }
+
+      .filter-overlay {
+        width: calc(100vw - 10px);
+      }
+      .filter-drawer {
+        padding: 12px;
+        border-radius: 14px;
+      }
+      .filter-drawer-actions,
+      .all-filters-actions {
+        margin-inline: -12px;
+        padding-inline: 12px;
+      }
+      .filter-drawer-actions > *,
+      .all-filters-actions > * {
+        flex: 1 1 100%;
+      }
+
+      .toast { bottom: 16px; padding: 10px 15px; font-size: 12px; }
+    }
+
+    @media (max-width: 360px) {
+      body { padding-inline: 7px; }
+      .logo { font-size: 16px; }
+      .logo-icon { width: 32px; height: 32px; font-size: 18px; }
+      .header-actions .icon-btn { display: none; }
+      .hero h1 { font-size: 22px; }
+      .hero p { font-size: 11px; }
+      .mode-tab { padding: 8px 10px; }
+      .search-box .search-actions {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+      }
+      .search-box .search-actions .btn-translate { display: none; }
+      .search-box .filter-main-btn .filter-label-text { display: none; }
+      .search-box .filter-main-btn { min-width: 42px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+</style>
   <!-- HEADER -->
   <header class="header">
     <a href="#" class="logo">
