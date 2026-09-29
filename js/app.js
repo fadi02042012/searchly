@@ -41,22 +41,13 @@ const __openFiltersBtn = document.getElementById('openFiltersBtn');
 const __closeFiltersBtn = document.getElementById('closeFiltersBtn');
 
 function __openAdvancedFilters() {
+  if (typeof openFilterDrawer === "function") {
+    openFilterDrawer();
+    return;
+  }
   if (!__filterOverlay) return;
   __filterOverlay.classList.add('open');
   __filterOverlay.setAttribute('aria-hidden', 'false');
-  const tabs = document.querySelectorAll('.filter-tab');
-  const panels = document.querySelectorAll('.filter-panel');
-  tabs.forEach(t => t.classList.remove('active'));
-  panels.forEach(p => p.classList.remove('active'));
-  const videoTab = document.querySelector('.filter-tab[data-tab="videos"]');
-  const videoPanel = document.querySelector('.filter-panel[data-panel="videos"]');
-  const allPanel = document.querySelector('.filter-panel[data-panel="all-filters"]');
-  if (videoTab) videoTab.classList.add('active');
-  if (videoPanel) videoPanel.classList.add('active');
-  if (allPanel) allPanel.classList.add('active');
-  if (typeof buildAllFiltersGrid === "function") buildAllFiltersGrid();
-  if (typeof attachAllFiltersListeners === "function") attachAllFiltersListeners();
-  if (typeof updateAllFiltersUI === "function") updateAllFiltersUI();
 }
 
 function __closeAdvancedFilters() {
