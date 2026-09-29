@@ -138,7 +138,7 @@
         <button class="filter-tab" data-tab="images"><span>🖼️</span> صور</button>
         <button class="filter-tab" data-tab="maps"><span>🗺️</span> خرائط</button>
         <button class="filter-tab" data-tab="videos"><span>🎬</span> فيديو</button>
-        <button class="filter-tab" data-tab="all-filters" style="background: linear-gradient(135deg, #a142f4, #7c3aed); color: white;">
+        <button class="filter-tab" data-tab="all-filters" type="button" style="background: linear-gradient(135deg, #a142f4, #7c3aed); color: white;" onclick="event.preventDefault();event.stopImmediatePropagation();document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.filter-panel').forEach(p=>p.classList.remove('active'));this.classList.add('active');const p=document.querySelector('.filter-panel[data-panel=\'all-filters\']');if(p)p.classList.add('active');">
           <span>🎛️</span> كافة الفلاتر (48)
         </button>
         
