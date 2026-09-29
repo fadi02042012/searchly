@@ -23,7 +23,7 @@
 
       function createDefaultFilterState() {
         return {
-          sort: 'date',
+          sort: 'relevance',
           youtubePreset: '',
           type: [], duration: [], date: [], quality: [], feature: [],
           advAllWords: '', advExactPhrase: '', advAnyWords: '', advNoneWords: '',
@@ -35,6 +35,7 @@
           imgSize: 'all', imgExactWidth: '', imgExactHeight: '', imgAspect: 'all',
           imgColor: 'all', imgColorType: 'all', imgType: 'all', imgRights: 'all',
           imgTime: 'all', imgLang: '', imgRegion: '', imgSafe: 'all',
+          videoPlatform: 'youtube',
           mapPlace: '', mapNear: '', mapRating: '0', mapHours: 'all',
           mapPrice: 'all', mapCategory: '', mapSort: 'relevance',
           selectedLinks: {}  // ⭐ مفاتيح الروابط المختارة من searches
@@ -105,7 +106,7 @@
       function loadStateFromMode(modeId) {
         const s = modeFilters[modeId] || createDefaultFilterState();
         filterState = {
-          sort: s.sort || 'date',
+          sort: s.sort || 'relevance',
           youtubePreset: s.youtubePreset || '',
           type: [...(s.type || [])], duration: [...(s.duration || [])],
           date: [...(s.date || [])], quality: [...(s.quality || [])],
