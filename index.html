@@ -1888,6 +1888,12 @@
             "شاهد الفيديو كامل",
             "ابحث عن مقاطع",
             "اعرض فيديوهات",
+            "فيلم",
+            "أفلام",
+            "فيلم وثائقي",
+            "أفلام وثائقية",
+            "وثائقي",
+            "documentary",
             "best videos",
             "latest videos",
             "full tutorial",
@@ -3409,8 +3415,21 @@
       searchInput.addEventListener('input', () => {
         showSuggestions();
         updateSmartIndicator();
-        if (getActiveMode() === 'smart') { currentQuery = searchInput.value.trim(); renderContextualFilters(); }
+        if (getActiveMode() === 'smart') {
+          const nextQuery = searchInput.value.trim();
+
+          // كل استعلام ذكي يبدأ بدون فلتر رابط مركب قديم.
+          if (nextQuery !== currentQuery) {
+            selectedLinksState.selected = {};
+            saveCurrentStateToMode();
+            updateAllFiltersUI();
+          }
+
+          currentQuery = nextQuery;
+          renderContextualFilters();
+        }
       });
+
       searchInput.addEventListener('focus', showSuggestions);
       searchInput.addEventListener('blur', hideSuggestions);
       searchInput.addEventListener('keydown', (e) => {
