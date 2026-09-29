@@ -55,6 +55,8 @@ function __closeAdvancedFilters() {
   __filterOverlay.classList.remove('open');
   __filterOverlay.setAttribute('aria-hidden', 'true');
 }
+const __searchBtn = document.getElementById('searchBtn');
+if (__searchBtn) __searchBtn.addEventListener('click', () => performSearch());
 if (__openFiltersBtn) __openFiltersBtn.addEventListener('click', __openAdvancedFilters);
 if (__closeFiltersBtn) __closeFiltersBtn.addEventListener('click', __closeAdvancedFilters);
 if (__filterBackdrop) __filterBackdrop.addEventListener('click', __closeAdvancedFilters);
