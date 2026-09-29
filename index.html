@@ -1987,8 +1987,11 @@
           { id: 'images-free', icon: '⚖️', label: 'مجاني', apply: () => { imageState.rights = 'f'; } }
         ],
         videos: [
+          { id: 'videos-long', icon: '🎬', label: 'أكثر من 20 دقيقة', linkIndex: 12, apply: () => { filterState.duration = ['long']; } },
+          { id: 'videos-4k', icon: '🎥', label: '4K', linkIndex: 13, apply: () => { filterState.quality = ['4k']; } },
+          { id: 'videos-hd', icon: '📺', label: 'HD', linkIndex: 15, apply: () => { filterState.quality = ['hd']; } },
+          { id: 'videos-long-4k-hd', icon: '💎', label: 'أكثر من 20 دقيقة + 4K + HD', linkIndex: 21, apply: () => {} },
           { id: 'videos-short', icon: '⏱️', label: 'قصير', linkIndex: 10, apply: () => { filterState.duration = ['short']; } },
-          { id: 'videos-hd', icon: '🎥', label: 'HD', linkIndex: 15, apply: () => { filterState.quality = ['hd']; } },
           { id: 'videos-live', icon: '🔴', label: 'مباشر', linkIndex: 26, apply: () => { filterState.type = ['live']; } }
         ],
         web: [
