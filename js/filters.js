@@ -234,6 +234,17 @@
 
               // الفلاتر المركبة المحفوظة/الإضافية لها أولوية.
               const preset = fs.youtubePreset || '';
+              const platform = fs.videoPlatform || 'youtube';
+              if (platform !== 'youtube') {
+                const platformMap = {
+                  vimeo: 'https://www.google.com/search?q=site%3Avimeo.com+',
+                  dailymotion: 'https://www.dailymotion.com/search/',
+                  bilibili: 'https://search.bilibili.com/all?keyword=',
+                  youku: 'https://so.youku.com/search_video/q_',
+                  yandex: 'https://yandex.com/video/search?text='
+                };
+                if (platformMap[platform]) return platformMap[platform] + encodeURIComponent(String(query || '').trim()) + (platform === 'vimeo' ? '&tbm=vid' : platform === 'dailymotion' ? '/videos' : platform === 'bilibili' ? '&from_source=webtop_search' : platform === 'youku' ? '?searchfrom=1' : '');
+              }
               if (preset && compositeSp[preset]) {
                 url += '&sp=' + compositeSp[preset];
                 return url;
@@ -267,7 +278,7 @@
       // =====================================================
       function getActiveFilters() {
         const active = [];
-        if (filterState.sort && filterState.sort !== 'date') {
+        if (filterState.sort && filterState.sort !== 'relevance') {
           active.push({ key: 'sort', value: filterState.sort, label: 'ترتيب: ' + (filterLabels[currentLang].sort?.[filterState.sort] || filterState.sort), type: 'simple', multi: false });
         }
         (filterState.type || []).forEach(v => active.push({ key: 'type', value: v, label: 'نوع: ' + (filterLabels[currentLang].type?.[v] || v), type: 'simple', multi: true }));
@@ -298,6 +309,7 @@
         };
         Object.entries(imageState).forEach(([k, v]) => {
           if (!v || v === 'all') return;
+          if (k === 'safe' && v === 'active') return;
           active.push({ key: k, value: v, label: (imgMap[k] || k) + ': ' + v, type: 'image' });
         });
 
