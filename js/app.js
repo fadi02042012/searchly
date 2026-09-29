@@ -9,7 +9,7 @@
       return response.text();
     }));
     const source = "const searches = window.searchlySearches; const groupIcons = window.searchlyGroupIcons;\n" + parts.join('\n\n');
-    new Function(source + '\nif (typeof buildAllFiltersGrid === "function") buildAllFiltersGrid();')();
+    new Function(source + '\nif (typeof buildAllFiltersGrid === "function") buildAllFiltersGrid();\nif (typeof attachAllFiltersListeners === "function") attachAllFiltersListeners();\nif (typeof updateAllFiltersUI === "function") updateAllFiltersUI();')();
   } catch(error) {
     console.error('searchly: modular loader failed',error);
   }
