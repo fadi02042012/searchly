@@ -19,12 +19,11 @@
         if (tabBtn) tabBtn.classList.add('active');
         const panel = document.querySelector(`.filter-panel[data-panel="${targetTab}"]`);
         if (panel) panel.classList.add('active');
-        if (targetTab === 'videos') {
-          const allFiltersPanel = document.querySelector('.filter-panel[data-panel="all-filters"]');
-          if (allFiltersPanel) allFiltersPanel.classList.add('active');
+        if (targetTab === 'all-filters') {
           if (typeof buildAllFiltersGrid === 'function') buildAllFiltersGrid();
           if (typeof attachAllFiltersListeners === 'function') attachAllFiltersListeners();
           if (typeof updateAllFiltersUI === 'function') updateAllFiltersUI();
+          if (typeof setupAllFiltersMoreButton === 'function') setupAllFiltersMoreButton();
         }
       }
 
@@ -56,12 +55,11 @@
           document.querySelectorAll('.filter-panel').forEach(p => p.classList.remove('active'));
           const panel = document.querySelector(`.filter-panel[data-panel="${tabName}"]`);
           if (panel) panel.classList.add('active');
-          if (tabName === 'videos') {
-            const allFiltersPanel = document.querySelector('.filter-panel[data-panel="all-filters"]');
-            if (allFiltersPanel) allFiltersPanel.classList.add('active');
+          if (tabName === 'all-filters') {
             if (typeof buildAllFiltersGrid === 'function') buildAllFiltersGrid();
             if (typeof attachAllFiltersListeners === 'function') attachAllFiltersListeners();
             if (typeof updateAllFiltersUI === 'function') updateAllFiltersUI();
+            if (typeof setupAllFiltersMoreButton === 'function') setupAllFiltersMoreButton();
           }
         });
       }
