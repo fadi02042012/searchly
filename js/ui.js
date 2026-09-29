@@ -10,7 +10,9 @@
 
         // 🎬 وضع الفيديو = YouTube فقط، ولا يستخدم روابط الفلاتر القديمة
         if (mode === 'videos') {
-          window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(query), '_blank');
+          // 🎬 YouTube فقط + تطبيق الفلاتر المحددة
+          const videoUrl = buildSearchURL('videos', query);
+          window.open(videoUrl, '_blank');
           emptyState.style.display = 'none';
           lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
           showToast(langStrings[currentLang].toastSearchIn + 'YouTube');
