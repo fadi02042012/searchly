@@ -1736,31 +1736,56 @@
       const smartPatterns = {
         maps: {
           keywords: ['مطعم', 'مطاعم', 'فندق', 'فنادق', 'مقهى', 'مقاهي', 'صيدلية', 'صيدليات', 'مستشفى', 'مستشفيات', 'بنك', 'بنوك', 'صراف', 'محطة', 'محطات', 'بقالة', 'سوبر ماركت', 'مول', 'مركز تجاري', 'قريب', 'قريبة', 'بالقرب', 'nearby', 'restaurant', 'hotel', 'cafe', 'pharmacy', 'hospital', 'bank', 'atm', 'gas station', 'supermarket', 'mall'],
-          icon: '🗺️', label: 'خرائط'
+          icon: '🗺️', label: 'خرائط',
+          weight: 3
         },
         news: {
-          keywords: ['أخبار', 'خبر', 'عاجل', 'سياسة', 'اقتصاد', 'رياضة', 'news', 'breaking', 'politics', 'economy'],
-          icon: '📰', label: 'أخبار'
+          keywords: ['أخبار', 'خبر', 'عاجل', 'سياسة', 'اقتصاد', 'رياضة', 'اليوم', 'اليوم عاجل', 'news', 'breaking', 'politics', 'economy', 'latest news'],
+          icon: '📰', label: 'أخبار',
+          weight: 3
         },
         images: {
-          keywords: ['صورة', 'صور', 'خلفية', 'خلفيات', 'شعار', 'تصميم', 'image', 'images', 'wallpaper', 'logo', 'picture'],
-          icon: '🖼️', label: 'صور'
+          keywords: ['صورة', 'صور', 'خلفية', 'خلفيات', 'شعار', 'تصميم', 'صورة لـ', 'صور لـ', 'image', 'images', 'wallpaper', 'logo', 'picture', 'photo'],
+          icon: '🖼️', label: 'صور',
+          weight: 3
         },
         videos: {
-          keywords: ['فيديو', 'يوتيوب', 'مقطع', 'حلقة', 'video', 'youtube', 'watch', 'clip'],
-          icon: '🎬', label: 'فيديو'
+          keywords: ['فيديو', 'فيديوهات', 'يوتيوب', 'مقطع', 'مقاطع', 'حلقة', 'مشاهدة', 'شاهد', 'video', 'videos', 'youtube', 'watch', 'clip'],
+          icon: '🎬', label: 'فيديو',
+          weight: 3
         }
       };
 
       function detectSearchMode(query) {
         if (!query || query.trim().length < 2) return null;
-        const lower = query.toLowerCase();
-        for (const [mode, config] of Object.entries(smartPatterns)) {
-          for (const keyword of config.keywords) {
-            if (lower.includes(keyword.toLowerCase())) return { mode, config };
-          }
-        }
-        return null;
+        const lower = query.toLowerCase().trim();
+        const scores = Object.entries(smartPatterns).map(([mode, config]) => {
+          let score = 0;
+          const matches = [];
+          config.keywords.forEach(keyword => {
+            const k = keyword.toLowerCase();
+            if (lower.includes(k)) {
+              const exactPhraseBonus = lower === k ? 3 : (lower.startsWith(k + ' ') || lower.endsWith(' ' + k) ? 1 : 0);
+              score += config.weight + exactPhraseBonus;
+              matches.push(keyword);
+            }
+          });
+          return { mode, config, score, matches };
+        }).sort((a, b) => b.score - a.score);
+
+        const best = scores[0];
+        if (!best || best.score <= 0) return null;
+
+        // لا نختار وضعًا متخصصًا عند وجود تعادل أو إشارة ضعيفة جدًا.
+        const second = scores[1];
+        if (second && second.score === best.score) return null;
+
+        return {
+          mode: best.mode,
+          config: best.config,
+          score: best.score,
+          matches: best.matches
+        };
       }
 
       const searchModesConfig = [
