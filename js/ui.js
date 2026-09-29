@@ -8,12 +8,19 @@
         currentQuery = query;
         const mode = getActiveMode();
 
-        // ⭐ إذا كانت هناك روابط مختارة → افتحها كلها
+        // 🎬 وضع الفيديو = YouTube فقط، ولا يستخدم روابط الفلاتر القديمة
+        if (mode === 'videos') {
+          window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(query), '_blank');
+          emptyState.style.display = 'none';
+          lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
+          showToast(langStrings[currentLang].toastSearchIn + 'YouTube');
+          return;
+        }
+
+        // الروابط المختارة تعمل فقط في الوضع الذكي
         const selectedLinks = buildSelectedLinksURLs(query);
-        if (selectedLinks.length > 0 && (mode === 'videos' || mode === 'smart')) {
-          selectedLinks.slice(0, 5).forEach(link => {
-            window.open(link.url, '_blank');
-          });
+        if (selectedLinks.length > 0 && mode === 'smart') {
+          selectedLinks.slice(0, 5).forEach(link => window.open(link.url, '_blank'));
           emptyState.style.display = 'none';
           lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
           const modeInfo = searchModesConfig.find(m => m.id === mode);
