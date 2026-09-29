@@ -76,7 +76,7 @@
 </select>
         </div>
         <button class="btn btn-primary" id="searchBtn">🔍 بحث</button>
-        <button class="filter-main-btn" id="openFiltersBtn" title="بحث متقدم" onclick="(function(){var o=document.getElementById('filterOverlay'),p=document.querySelector('.filter-panel[data-panel=\'all-filters\']');if(o)o.classList.add('open');if(o)o.setAttribute('aria-hidden','false');document.querySelectorAll('.filter-panel').forEach(function(x){x.classList.remove('active')});if(p)p.classList.add('active');document.querySelectorAll('.filter-tab').forEach(function(x){x.classList.remove('active')});var t=document.querySelector('.filter-tab[data-tab=\'all-filters\']');if(t)t.classList.add('active')})()">
+        <button class="filter-main-btn" id="openFiltersBtn" title="بحث متقدم" type="button">
           <span>🎛️</span>
           <span class="filter-label-text" id="filterBtnLabel">بحث متقدم</span>
           <span class="badge-count" id="filterBadge" style="display:none;">0</span>
