@@ -2011,7 +2011,13 @@
 
         for (const item of fileTypes) {
           if (item.phrases.some(phrase => lower.includes(normalizeSmartQuery(phrase)))) {
-            return [{ id: 'smart-file-' + item.type, icon: item.icon, label: item.label, fileType: item.type, apply: () => { advancedState.fileType = item.type; } }];
+            return [{
+              id: 'smart-file-' + item.type,
+              icon: item.icon,
+              label: 'ويب: نوع ملف: ' + item.type,
+              fileType: item.type,
+              apply: () => { advancedState.fileType = item.type; }
+            }];
           }
         }
 
@@ -2758,6 +2764,7 @@
             saveCurrentStateToMode();
             updateAllFiltersUI();
           } else if (special.fileType) {
+            // غيّر نوع الملف مباشرة حسب النوع الذي اكتشفه البحث الذكي.
             advancedState.fileType = special.fileType;
             saveCurrentStateToMode();
             syncAdvancedInputs();
