@@ -192,12 +192,16 @@
 
       function attachAllFiltersListeners() {
         document.querySelectorAll('.all-filter-item').forEach(item => {
+          if (item.dataset.bound === 'true') return;
+          item.dataset.bound = 'true';
           item.addEventListener('click', (e) => {
             e.stopPropagation();
             handleAllFilterClick(item);
           });
         });
+        if (filterSearchInput && filterSearchInput.dataset.bound === 'true') return;
         if (filterSearchInput) {
+          filterSearchInput.dataset.bound = 'true';
           filterSearchInput.addEventListener('input', (e) => {
             const q = e.target.value.trim().toLowerCase();
             document.querySelectorAll('.all-filter-item').forEach(item => {
