@@ -165,8 +165,63 @@
             if (effectiveMode === 'news') return newsSearchURL(query);
             if (effectiveMode === 'maps') return mapSearchURL(query);
             if (effectiveMode === 'videos' || mode === 'videos') {
-              // 🎬 وضع الفيديو = YouTube فقط
-              return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(String(query || '').trim());
+              // 🎬 وضع الفيديو = YouTube فقط + تطبيق إعدادات الفلاتر
+              const parts = [String(query || '').trim()];
+              const fs = filterState || {};
+
+              // بحث داخل العنوان
+              if ((fs.type || []).includes('title')) parts[0] = 'intitle:' + parts[0];
+
+              // نوع المحتوى
+              const typeSp = {
+                video: 'EgIQAQ%3D%3D',
+                playlist: 'EgIQAw%3D%3D',
+                live: 'EgJAAQ%3D%3D',
+                channel: 'EgIQAg%3D%3D'
+              };
+              const type = (fs.type || []).find(v => typeSp[v]);
+
+              // المدة
+              const durationSp = {
+                short: 'EgIYAQ%3D%3D',
+                medium: 'EgIYAw%3D%3D',
+                long: 'EgIYAg%3D%3D'
+              };
+              const duration = (fs.duration || []).find(v => durationSp[v]);
+
+              // التاريخ
+              const dateSp = {
+                hour: 'EgIIAQ%3D%3D',
+                today: 'EgQIAhAB',
+                week: 'EgQIAxAB',
+                month: 'EgQIBBAB',
+                year: 'EgQIBRAB'
+              };
+              const date = (fs.date || []).find(v => dateSp[v]);
+
+              // الجودة / خصائص الفيديو
+              const qualitySp = {
+                '4k': 'EgJwAQ%3D%3D',
+                hdr: 'EgPIAQE%3D',
+                hd: 'EgIgAQ%3D%3D',
+                '360': 'EgJ4AQ%3D%3D',
+                vr180: 'EgPQAQE%3D',
+                '3d': 'EgI4AQ%3D%3D'
+              };
+              const quality = (fs.quality || []).find(v => qualitySp[v]);
+
+              const sp = [typeSp[type], durationSp[duration], dateSp[date], qualitySp[quality]].filter(Boolean);
+              const sortSp = {
+                views: 'CAMSAhAB',
+                rating: 'CAESAhAB',
+                date: 'CAI%3D'
+              };
+              if (fs.sort && sortSp[fs.sort]) sp.push(sortSp[fs.sort]);
+
+              const q = encodeURIComponent(parts[0]).replace(/%20/g, '+');
+              let url = 'https://www.youtube.com/results?search_query=' + q;
+              if (sp.length) url += '&sp=' + sp[0];
+              return url;
             }
             return googleSearchURL(query);
           }
