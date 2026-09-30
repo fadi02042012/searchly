@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "settings": {
     "phraseWeight": 6,
     "keywordWeight": 1,
@@ -2766,6 +2766,556 @@
         "barbecue"
       ],
       "priority": 45
+    },
+    {
+      "id": "tourism-destinations",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🗺️",
+      "label": "وجهات سياحية",
+      "value": "tourism",
+      "phrases": [
+        "أماكن سياحية",
+        "مكان سياحي",
+        "اماكن سياحية",
+        "وجهة سياحية",
+        "وجهات سياحية",
+        "معالم سياحية",
+        "مناطق سياحية",
+        "موقع سياحي",
+        "سياحة",
+        "سياحي",
+        "tourist attractions",
+        "tourist destination",
+        "tourism",
+        "travel destination"
+      ],
+      "keywords": [
+        "سياحة",
+        "سياحي",
+        "وجهة",
+        "وجهات",
+        "معالم",
+        "tourism",
+        "tourist"
+      ],
+      "priority": 55
+    },
+    {
+      "id": "nature-landscapes",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏞️",
+      "label": "مناظر طبيعية",
+      "value": "nature",
+      "phrases": [
+        "مناظر طبيعية",
+        "منظر طبيعي",
+        "أماكن طبيعية",
+        "مكان طبيعي",
+        "طبيعة جميلة",
+        "طبيعة خلابة",
+        "مناظر خلابة",
+        "مناطق طبيعية",
+        "أماكن للاستمتاع بالطبيعة",
+        "nature",
+        "natural landscapes",
+        "scenic places",
+        "beautiful nature",
+        "landscape"
+      ],
+      "keywords": [
+        "طبيعة",
+        "طبيعي",
+        "مناظر",
+        "منظر",
+        "خلابة",
+        "nature",
+        "landscape"
+      ],
+      "priority": 55
+    },
+    {
+      "id": "mountains",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "⛰️",
+      "label": "جبال",
+      "value": "mountains",
+      "phrases": [
+        "جبال",
+        "جبل",
+        "منطقة جبلية",
+        "مناطق جبلية",
+        "رحلة جبلية",
+        "مناظر الجبال",
+        "mountains",
+        "mountain",
+        "mountainous area",
+        "mountain trip"
+      ],
+      "keywords": [
+        "جبل",
+        "جبال",
+        "جبلية",
+        "mountains"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "waterfalls",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "💦",
+      "label": "شلالات",
+      "value": "waterfalls",
+      "phrases": [
+        "شلال",
+        "شلالات",
+        "منطقة شلالات",
+        "شلالات طبيعية",
+        "waterfall",
+        "waterfalls"
+      ],
+      "keywords": [
+        "شلال",
+        "شلالات",
+        "waterfall"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "beaches",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏖️",
+      "label": "شواطئ",
+      "value": "beaches",
+      "phrases": [
+        "شاطئ",
+        "شواطئ",
+        "شاطئ جميل",
+        "شاطئ سياحي",
+        "ساحل",
+        "سواحل",
+        "شاطئ للسباحة",
+        "beach",
+        "beaches",
+        "coast",
+        "coastal"
+      ],
+      "keywords": [
+        "شاطئ",
+        "شواطئ",
+        "ساحل",
+        "سواحل",
+        "beach",
+        "coast"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "parks",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🌳",
+      "label": "حدائق ومنتزهات",
+      "value": "parks",
+      "phrases": [
+        "حديقة",
+        "حدائق",
+        "منتزه",
+        "منتزهات",
+        "منتزه طبيعي",
+        "متنزه",
+        "متنزهات",
+        "park",
+        "parks",
+        "nature park"
+      ],
+      "keywords": [
+        "حديقة",
+        "حدائق",
+        "منتزه",
+        "متنزه",
+        "park"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "valleys",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏜️",
+      "label": "أودية ووديان",
+      "value": "valleys",
+      "phrases": [
+        "وادي",
+        "وديان",
+        "أودية",
+        "منطقة وادي",
+        "وادي جميل",
+        "valley",
+        "valleys"
+      ],
+      "keywords": [
+        "وادي",
+        "وديان",
+        "أودية",
+        "valley"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "deserts",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏜️",
+      "label": "صحارى وكثبان",
+      "value": "desert",
+      "phrases": [
+        "صحراء",
+        "صحارى",
+        "كثبان رملية",
+        "رمال",
+        "منطقة صحراوية",
+        "رحلة للصحراء",
+        "desert",
+        "deserts",
+        "sand dunes"
+      ],
+      "keywords": [
+        "صحراء",
+        "صحارى",
+        "رمال",
+        "كثبان",
+        "desert"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "lakes",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏞️",
+      "label": "بحيرات",
+      "value": "lakes",
+      "phrases": [
+        "بحيرة",
+        "بحيرات",
+        "بحيرة طبيعية",
+        "بحيرة جميلة",
+        "lake",
+        "lakes"
+      ],
+      "keywords": [
+        "بحيرة",
+        "بحيرات",
+        "lake"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "forests",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🌲",
+      "label": "غابات",
+      "value": "forests",
+      "phrases": [
+        "غابة",
+        "غابات",
+        "منطقة غابات",
+        "غابة طبيعية",
+        "forest",
+        "forests",
+        "woodland"
+      ],
+      "keywords": [
+        "غابة",
+        "غابات",
+        "forest"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "caves",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🪨",
+      "label": "كهوف ومغارات",
+      "value": "caves",
+      "phrases": [
+        "كهف",
+        "كهوف",
+        "مغارة",
+        "مغارات",
+        "كهف طبيعي",
+        "cave",
+        "caves"
+      ],
+      "keywords": [
+        "كهف",
+        "كهوف",
+        "مغارة",
+        "مغارات",
+        "cave"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "viewpoints",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🔭",
+      "label": "إطلالات ونقاط مشاهدة",
+      "value": "viewpoints",
+      "phrases": [
+        "إطلالة",
+        "إطلالات",
+        "نقطة مشاهدة",
+        "نقاط مشاهدة",
+        "مكان بإطلالة",
+        "منظر بانورامي",
+        "مكان للتصوير",
+        "viewpoint",
+        "viewpoints",
+        "scenic viewpoint",
+        "panoramic view"
+      ],
+      "keywords": [
+        "إطلالة",
+        "إطلالات",
+        "مشاهدة",
+        "بانورامي",
+        "تصوير",
+        "viewpoint"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "camping",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "⛺",
+      "label": "التخييم والرحلات",
+      "value": "camping",
+      "phrases": [
+        "مكان للتخييم",
+        "التخييم",
+        "مخيم",
+        "مخيمات",
+        "رحلة تخييم",
+        "تخييم في الطبيعة",
+        "camping",
+        "camp",
+        "campsite"
+      ],
+      "keywords": [
+        "تخييم",
+        "مخيم",
+        "مخيمات",
+        "camping"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "hiking",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🥾",
+      "label": "المشي والهايكنج",
+      "value": "hiking",
+      "phrases": [
+        "هايكنج",
+        "هايكينج",
+        "المشي الجبلي",
+        "مسار مشي",
+        "مسارات المشي",
+        "رحلة مشي",
+        "مسار طبيعي",
+        "hiking",
+        "hike",
+        "walking trail",
+        "trail"
+      ],
+      "keywords": [
+        "هايكنج",
+        "هايكينج",
+        "مشي",
+        "مسار",
+        "مسارات",
+        "hiking",
+        "trail"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "historical-tourism",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏛️",
+      "label": "المعالم التاريخية",
+      "value": "historical",
+      "phrases": [
+        "أماكن تاريخية",
+        "معالم تاريخية",
+        "موقع تاريخي",
+        "مواقع تاريخية",
+        "مدينة تاريخية",
+        "قرية تاريخية",
+        "آثار",
+        "موقع أثري",
+        "مواقع أثرية",
+        "historical sites",
+        "historic places",
+        "archaeological site"
+      ],
+      "keywords": [
+        "تاريخية",
+        "تاريخي",
+        "آثار",
+        "أثري",
+        "archaeological",
+        "historic"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "museums",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏛️",
+      "label": "متاحف",
+      "value": "museums",
+      "phrases": [
+        "متحف",
+        "متاحف",
+        "متحف تاريخي",
+        "متحف تراثي",
+        "museum",
+        "museums"
+      ],
+      "keywords": [
+        "متحف",
+        "متاحف",
+        "museum"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "castles",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏰",
+      "label": "قلاع وحصون",
+      "value": "castles",
+      "phrases": [
+        "قلعة",
+        "قلاع",
+        "حصن",
+        "حصون",
+        "قصر تاريخي",
+        "قلعة تاريخية",
+        "castle",
+        "castles",
+        "fort",
+        "fortress"
+      ],
+      "keywords": [
+        "قلعة",
+        "قلاع",
+        "حصن",
+        "حصون",
+        "castle",
+        "fortress"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "tourist-trip",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🚗",
+      "label": "رحلات سياحية",
+      "value": "tourism",
+      "phrases": [
+        "رحلة سياحية",
+        "رحلات سياحية",
+        "رحلة يوم",
+        "رحلة يومية",
+        "رحلة نهاية الأسبوع",
+        "أماكن للرحلات",
+        "أماكن للزيارة",
+        "برنامج سياحي",
+        "travel trip",
+        "day trip",
+        "weekend trip",
+        "places to visit"
+      ],
+      "keywords": [
+        "رحلة",
+        "رحلات",
+        "زيارة",
+        "زيارات",
+        "سياحية",
+        "travel",
+        "trip"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "family-tourism",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "👨‍👩‍👧‍👦",
+      "label": "أماكن عائلية",
+      "value": "family",
+      "phrases": [
+        "أماكن عائلية",
+        "مكان مناسب للعائلة",
+        "أماكن للعوائل",
+        "أماكن للأطفال",
+        "أماكن مناسبة للأطفال",
+        "رحلة عائلية",
+        "family places",
+        "family friendly",
+        "places for kids"
+      ],
+      "keywords": [
+        "عائلية",
+        "العائلة",
+        "أطفال",
+        "للأطفال",
+        "family"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "photography-spots",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "📸",
+      "label": "أماكن للتصوير",
+      "value": "photography",
+      "phrases": [
+        "أماكن تصوير",
+        "مكان للتصوير",
+        "أفضل أماكن التصوير",
+        "تصوير الطبيعة",
+        "أماكن جميلة للتصوير",
+        "photo spots",
+        "photography spots",
+        "nature photography"
+      ],
+      "keywords": [
+        "تصوير",
+        "صور",
+        "كاميرا",
+        "photography",
+        "photo"
+      ],
+      "priority": 40
     }
   ],
   "combinations": [
@@ -2876,6 +3426,41 @@
         "أين أجد ملابس شعبية؟",
         "مطعم أكل شعبي",
         "أفضل مكان لفطور شعبي"
+      ]
+    },
+    "tourismAndNature": {
+      "categories": [
+        "tourism",
+        "nature",
+        "mountains",
+        "waterfalls",
+        "beaches",
+        "parks",
+        "valleys",
+        "desert",
+        "lakes",
+        "forests",
+        "caves",
+        "viewpoints",
+        "camping",
+        "hiking",
+        "historical",
+        "museums",
+        "castles",
+        "family",
+        "photography"
+      ],
+      "examples": [
+        "أين أجد مناظر طبيعية جميلة؟",
+        "أماكن سياحية قريبة مني",
+        "أريد رحلة إلى الجبال",
+        "أفضل شلالات قريبة",
+        "أين يوجد شاطئ جميل؟",
+        "أماكن للتخييم في الطبيعة",
+        "مسارات للمشي والهايكنج",
+        "أماكن تاريخية للزيارة",
+        "أماكن عائلية سياحية",
+        "أفضل أماكن للتصوير"
       ]
     }
   }
