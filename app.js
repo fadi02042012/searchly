@@ -114,9 +114,15 @@
       }
 
       function setActiveMode(mode) {
-        document.querySelectorAll('.mode-tab').forEach(tab => {
-          tab.classList.toggle('active', tab.dataset.mode === mode);
+        const validMode = searchModesConfig.some(item => item.id === mode) ? mode : 'web';
+        document.querySelectorAll('.search-modes .mode-tab[data-mode]').forEach(tab => {
+          const isActive = tab.dataset.mode === validMode;
+          tab.classList.toggle('active', isActive);
+          tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
+        const geminiTab = document.getElementById('geminiTab');
+        if (geminiTab) geminiTab.classList.remove('active');
+        return validMode;
       }
 
       function createDefaultFilterState() {
@@ -254,14 +260,19 @@
       loadModeFilters();
 
       function switchMode(newMode) {
+        const validMode = searchModesConfig.some(item => item.id === newMode) ? newMode : 'web';
         const oldMode = getActiveMode();
-        if (oldMode === newMode) return;
-        saveStateToMode(oldMode);
-        setActiveMode(newMode);
-        localStorage.setItem('sh_mode', newMode);
-        loadStateFromMode(newMode);
+
+        if (oldMode !== validMode) {
+          saveStateToMode(oldMode);
+          localStorage.setItem('sh_mode', validMode);
+          loadStateFromMode(validMode);
+        }
+
+        setGeminiView(false);
+        setActiveMode(validMode);
         renderContextualFilters();
-        syncFilterTabWithMode(newMode);
+        syncFilterTabWithMode(validMode);
         syncAllInputs();
         setFilterButtonVisuals(filterState);
         updateFilterSummary();
@@ -1020,18 +1031,24 @@
       }
 
       function attachModeTabListeners() {
-        const modeTabs = searchModes.querySelectorAll('.mode-tab');
-        modeTabs.forEach(tab => {
-          tab.addEventListener('click', () => {
-            const modeId = tab.dataset.mode;
-            if (getActiveMode() === modeId) return;
-            switchMode(modeId);
-            const modeInfo = searchModesConfig.find(m => m.id === modeId);
-            if (modeInfo) {
-              const label = currentLang === 'ar' ? modeInfo.label : modeInfo.labelEn;
-              showToast(langStrings[currentLang].toastModeSwitched + label);
-            }
-          });
+        if (!searchModes || searchModes.dataset.modeTabsInitialized === '1') return;
+        searchModes.dataset.modeTabsInitialized = '1';
+
+        searchModes.addEventListener('click', (e) => {
+          const tab = e.target.closest('.mode-tab[data-mode]');
+          if (!tab || !searchModes.contains(tab)) return;
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const modeId = tab.dataset.mode;
+          const modeInfo = searchModesConfig.find(m => m.id === modeId);
+          if (!modeInfo) return;
+
+          switchMode(modeId);
+
+          const label = currentLang === 'ar' ? modeInfo.label : modeInfo.labelEn;
+          showToast(langStrings[currentLang].toastModeSwitched + label);
         });
       }
 
@@ -1764,9 +1781,6 @@
           clearGeminiChat();
         });
 
-        document.querySelectorAll('.search-modes .mode-tab').forEach(modeTab => {
-          modeTab.addEventListener('click', () => setGeminiView(false));
-        });
         updateGeminiUIStrings();
       }
 
