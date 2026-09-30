@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "settings": {
     "phraseWeight": 6,
     "keywordWeight": 1,
@@ -3631,6 +3631,234 @@
       "value": "channel",
       "linkIndex": 25,
       "priority": 30
+    },
+    {
+      "id": "tourism-scenery-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏞️",
+      "label": "مناظر طبيعية: 4K + HD",
+      "phrases": [
+        "مناظر طبيعية",
+        "مناظر طبيعية في",
+        "مناظر خلابة",
+        "مناظر جميلة",
+        "طبيعة جميلة",
+        "طبيعة خلابة",
+        "أماكن طبيعية",
+        "مشاهد طبيعية",
+        "مناظر بانورامية",
+        "natural scenery",
+        "natural landscapes",
+        "beautiful nature",
+        "scenic views",
+        "landscape"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 46
+    },
+    {
+      "id": "tourism-destinations-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🗺️",
+      "label": "وجهات سياحية: 4K + HD",
+      "phrases": [
+        "أماكن سياحية",
+        "أماكن سياحية في",
+        "وجهات سياحية",
+        "وجهة سياحية",
+        "معالم سياحية",
+        "معالم سياحية في",
+        "مناطق سياحية",
+        "أماكن للزيارة",
+        "أفضل الأماكن السياحية",
+        "tourist attractions",
+        "tourist destinations",
+        "places to visit",
+        "travel destinations"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 45
+    },
+    {
+      "id": "tourism-beaches-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏖️",
+      "label": "شواطئ: 4K + HD",
+      "phrases": [
+        "شواطئ",
+        "شاطئ",
+        "شواطئ في",
+        "شاطئ في",
+        "أجمل الشواطئ",
+        "شواطئ سياحية",
+        "beaches",
+        "beach scenery",
+        "beautiful beaches"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 45
+    },
+    {
+      "id": "tourism-mountains-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⛰️",
+      "label": "جبال: 4K + HD",
+      "phrases": [
+        "جبال",
+        "جبال في",
+        "مناظر الجبال",
+        "الجبال والطبيعة",
+        "رحلة إلى الجبال",
+        "mountains",
+        "mountain scenery",
+        "mountain landscapes"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 45
+    },
+    {
+      "id": "tourism-waterfalls-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "💦",
+      "label": "شلالات: 4K + HD",
+      "phrases": [
+        "شلالات",
+        "شلال",
+        "شلالات في",
+        "شلالات طبيعية",
+        "أجمل الشلالات",
+        "waterfalls",
+        "waterfall scenery"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 45
+    },
+    {
+      "id": "tourism-forests-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🌲",
+      "label": "غابات: 4K + HD",
+      "phrases": [
+        "غابات",
+        "غابة",
+        "غابات في",
+        "غابات طبيعية",
+        "مناظر الغابات",
+        "forests",
+        "forest scenery"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 44
+    },
+    {
+      "id": "tourism-deserts-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏜️",
+      "label": "صحارى: 4K + HD",
+      "phrases": [
+        "صحارى",
+        "صحراء",
+        "كثبان رملية",
+        "مناظر صحراوية",
+        "الصحراء في",
+        "desert scenery",
+        "sand dunes"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 44
+    },
+    {
+      "id": "tourism-lakes-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏞️",
+      "label": "بحيرات: 4K + HD",
+      "phrases": [
+        "بحيرات",
+        "بحيرة",
+        "بحيرات في",
+        "بحيرة طبيعية",
+        "مناظر البحيرات",
+        "lakes",
+        "lake scenery"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 44
+    },
+    {
+      "id": "tourism-parks-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🌳",
+      "label": "حدائق ومنتزهات: 4K + HD",
+      "phrases": [
+        "حدائق",
+        "حديقة",
+        "منتزهات",
+        "منتزه",
+        "حدائق في",
+        "مناظر الحدائق",
+        "parks",
+        "nature parks"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 43
+    },
+    {
+      "id": "tourism-historical-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏛️",
+      "label": "معالم تاريخية: 4K + HD",
+      "phrases": [
+        "أماكن تاريخية",
+        "معالم تاريخية",
+        "مواقع تاريخية",
+        "آثار",
+        "مواقع أثرية",
+        "historical sites",
+        "historic places"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 43
+    },
+    {
+      "id": "tourism-viewpoints-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔭",
+      "label": "إطلالات: 4K + HD",
+      "phrases": [
+        "إطلالات",
+        "إطلالة",
+        "نقاط مشاهدة",
+        "منظر بانورامي",
+        "أماكن للتصوير",
+        "إطلالات في",
+        "viewpoints",
+        "panoramic views",
+        "scenic viewpoints"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 43
     }
   ],
   "combinations": [
