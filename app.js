@@ -256,6 +256,8 @@
         }
       }
       loadModeFilters();
+      // تحميل القواعد الخارجية مبكرًا؛ القواعد الاحتياطية تعمل فورًا حتى يكتمل التحميل.
+      loadSmartRules();
 
       function switchMode(newMode) {
         const validMode = searchModesConfig.some(item => item.id === newMode) ? newMode : 'web';
@@ -332,72 +334,239 @@
           .trim();
       }
 
-      const smartPatterns = {
-        maps: {
-          phrases: ['مطاعم قريبه','مطاعم قريبة','مطعم قريب','فنادق قريبه','فنادق قريبة','مقاهي قريبه','صيدليات قريبه','مستشفيات قريبه','بالقرب مني','بالقرب من','قريب مني','قريبة مني','near me','nearby','restaurants near','hotels near'],
-          keywords: ['مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','صيدليات','مستشفى','مستشفيات','بنك','بنوك','صراف','محطة','محطات','بقالة','سوبر ماركت','مول','مركز تجاري','restaurant','hotel','cafe','pharmacy','hospital','bank','atm','gas station','supermarket','mall'],
-          icon: '🗺️', label: 'خرائط'
+      // =====================================================
+      // ✨ SMART RULE ENGINE
+      // القواعد قابلة للتعديل من smart-rules.json دون تعديل هذا الملف.
+      // =====================================================
+      const DEFAULT_SMART_RULES = {
+        version: 1,
+        settings: { phraseWeight: 5, keywordWeight: 1, tieMinScore: 5, maxSuggestions: 8 },
+        modes: {
+          maps: { icon: '🗺️', label: 'خرائط', phrases: ['near me','nearby','مطاعم قريبه','فنادق قريبه','بالقرب مني'], keywords: ['مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','مستشفى','بنك','محطة','restaurant','hotel','cafe','pharmacy','hospital','bank'] },
+          news: { icon: '📰', label: 'أخبار', phrases: ['اخبار اليوم','آخر الأخبار','خبر عاجل','latest news','breaking news'], keywords: ['اخبار','أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','انتخابات','news','breaking','politics','economy','sports'] },
+          images: { icon: '🖼️', label: 'صور', phrases: ['صور عالية الجودة','خلفيات عالية الدقة','صور png','صور مجانية','صور كبيرة'], keywords: ['صورة','صور','صوره','خلفية','خلفيات','شعار','تصميم','png','jpg','jpeg','wallpaper','image','images','picture','logo'] },
+          videos: { icon: '🎬', label: 'فيديو', phrases: ['فيديو تعليمي','فيديو كامل','فيديو مباشر','بث مباشر','فيلم كامل','مسلسل كامل','شرح كامل','شرح بالتفصيل','خطوة بخطوة','طريقة صنع','كيفية صنع','كيف اصنع','كيف اسوي','مراجعة','مقارنة','tutorial','how to','how to make','documentary'], keywords: ['فيديو','يوتيوب','مقطع','مشاهدة','شاهد','حلقة','فيلم','أفلام','مسلسل','شرح','تعلم','دروس','طريقة','كيفية','مراجعة','مقارنة','وثائقي','video','youtube','watch','tutorial','documentary'] }
         },
-        news: {
-          phrases: ['اخبار اليوم','أخبار اليوم','اخر الاخبار','آخر الأخبار','خبر عاجل','اخبار عاجله','هذا الخبر','ما الجديد في','latest news','breaking news','today news'],
-          keywords: ['اخبار','أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','انتخابات','news','breaking','politics','economy','sports'],
-          icon: '📰', label: 'أخبار'
-        },
-        images: {
-          phrases: ['صور عاليه الجوده','صور عالية الجودة','خلفيات عاليه الدقه','خلفيات عالية الدقة','صور png','صور مجانية','صورة مجانية','صور كبيره','صور كبيرة','صور مربعة','صور عريضه','صور عريضة'],
-          keywords: ['صورة','صور','صوره','خلفية','خلفيات','شعار','تصميم','png','jpg','jpeg','wallpaper','image','images','picture','logo'],
-          icon: '🖼️', label: 'صور'
-        },
-        videos: {
-          phrases: [
-            'فيديو تعليمي','فيديو كامل','فيديو مباشر','بث مباشر','فيلم كامل','فيلم مترجم','فيلم مدبلج',
-            'مسلسل كامل','مسلسل مترجم','جميع الحلقات','الحلقة كاملة','حلقة كاملة','فيديو 4k',
-            'فيديو hd','شرح كامل','شرح بالتفصيل','شرح للمبتدئين','خطوة بخطوة','طريقة صنع','طريقة صناعة',
-            'كيفية صنع','كيفية صناعة','كيف يصنع','كيف تصنع','كيف اصنع','كيف اسوي','كيف اعمل',
-            'طريقة عمل','طريقة استخدام','طريقة تركيب','طريقة اصلاح','طريقة إصلاح','حل مشكلة',
-            'مراجعة','مراجعات','مقارنة','مقارنات','تجربة','تجارب','دروس','درس','تعلم','tutorial',
-            'how to','how do i','how to make','how to use','step by step','beginner guide',
-            'full tutorial','review','reviews','comparison','guide','documentary','فيلم وثائقي','فيلم وثائقية',
-            'أفلام وثائقية','افلام وثائقية','وثائقي','وثائقيات','مسلسل','مسلسلات','حلقة','موسم','أنمي','انمي','كرتون'
-          ],
-          keywords: ['فيديو','يوتيوب','مقطع','مشاهدة','شاهد','حلقة','فيلم','أفلام','مسلسل','مسلسلات','شرح','تعلم','دروس','طريقة','كيفية','مراجعة','مقارنة','وثائقي','انمي','أنمي','كرتون','video','youtube','watch','clip','tutorial','documentary'],
-          icon: '🎬', label: 'فيديو'
-        }
+        filters: [
+          {id:'file-pdf',mode:'web',action:'advancedFileType',icon:'📄',label:'ويب: نوع ملف: PDF',phrases:['ملف pdf','pdf','بي دي اف'],value:'pdf',priority:10},
+          {id:'file-doc',mode:'web',action:'advancedFileType',icon:'📄',label:'ويب: نوع ملف: DOC + DOCX',phrases:['ملف doc','ملف docx','doc','docx','وورد','word'],value:'doc',priority:10},
+          {id:'file-xls',mode:'web',action:'advancedFileType',icon:'📄',label:'ويب: نوع ملف: XLS + XLSX',phrases:['ملف xls','ملف xlsx','xls','xlsx','اكسل','excel'],value:'xls',priority:10},
+          {id:'file-ppt',mode:'web',action:'advancedFileType',icon:'📄',label:'ويب: نوع ملف: PPT + PPTX',phrases:['ملف ppt','ملف pptx','ppt','pptx','باوربوينت','powerpoint'],value:'ppt',priority:10},
+          {id:'file-txt',mode:'web',action:'advancedFileType',icon:'📄',label:'ويب: نوع ملف: TXT',phrases:['ملف txt','txt','ملف نصي'],value:'txt',priority:10},
+          {id:'free-images',mode:'images',action:'imageRights',icon:'⚖️',label:'صور: مجاني',phrases:['صور مجانية','صورة مجانية'],keywords:['مجاني','free'],value:'f',priority:20},
+          {id:'free-web',mode:'web',action:'advancedUsageRights',icon:'⚖️',label:'ويب: مجاني للاستخدام',phrases:['مجاني','free','royalty free'],value:'f',priority:5},
+          {id:'4k',mode:'videos',action:'link',icon:'🎥',label:'4K',phrases:['4k','فيديو 4k','دقة 4k'],value:'4k',priority:20},
+          {id:'hd',mode:'videos',action:'link',icon:'📺',label:'HD',phrases:['hd','فيديو hd'],value:'hd',priority:20},
+          {id:'hdr',mode:'videos',action:'link',icon:'✨',label:'HDR',phrases:['hdr'],value:'hdr',priority:20},
+          {id:'360',mode:'videos',action:'link',icon:'🌍',label:'360°',phrases:['360'],value:'360',priority:20},
+          {id:'vr180',mode:'videos',action:'link',icon:'🥽',label:'VR180',phrases:['vr180','vr 180'],value:'vr180',priority:20},
+          {id:'3d',mode:'videos',action:'link',icon:'🎞️',label:'3D',phrases:['ثلاثي الابعاد','ثلاثي الأبعاد','3d'],value:'3d',priority:20},
+          {id:'long',mode:'videos',action:'link',icon:'🎬',label:'أكثر من 20 دقيقة',phrases:['اكثر من 20 دقيقه','أكثر من 20 دقيقة','20 دقيقة','20 دقيقه','long'],value:'long',priority:20},
+          {id:'short',mode:'videos',action:'link',icon:'⏱️',label:'أقل من 4 دقائق',phrases:['اقل من 4 دقائق','أقل من 4 دقائق','short'],value:'short',priority:20},
+          {id:'medium',mode:'videos',action:'link',icon:'⌛',label:'بين 4 و20 دقيقة',phrases:['بين 4 و20','4-20','4 الى 20','medium'],value:'medium',priority:20},
+          {id:'views',mode:'videos',action:'link',icon:'🔥',label:'الترتيب حسب عدد المشاهدات',phrases:['الاكثر مشاهدة','الأكثر مشاهدة','عدد المشاهدات','مشاهدات','most viewed','views'],value:'views',priority:30},
+          {id:'rating',mode:'videos',action:'link',icon:'⭐',label:'الترتيب حسب التقييم',phrases:['الأعلى تقييما','الأعلى تقييمًا','اعلى تقييم','تقييم','rating'],value:'rating',priority:20},
+          {id:'hour',mode:'videos',action:'link',icon:'🕐',label:'آخر ساعة',phrases:['آخر ساعة','اخر ساعه','الساعة الماضية','last hour'],value:'hour',priority:20},
+          {id:'today',mode:'videos',action:'link',icon:'📆',label:'اليوم',phrases:['اليوم','today','24 ساعة','24h'],value:'today',priority:20},
+          {id:'week',mode:'videos',action:'link',icon:'📅',label:'هذا الأسبوع',phrases:['هذا الاسبوع','هذا الأسبوع','this week'],value:'week',priority:20},
+          {id:'month',mode:'videos',action:'link',icon:'🗓️',label:'هذا الشهر',phrases:['هذا الشهر','this month'],value:'month',priority:20},
+          {id:'year',mode:'videos',action:'link',icon:'📖',label:'هذا العام',phrases:['هذا العام','هذه السنة','this year'],value:'year',priority:20},
+          {id:'live',mode:'videos',action:'link',icon:'🔴',label:'مباشر',phrases:['بث مباشر','مباشر','live'],value:'live',priority:25},
+          {id:'shorts',mode:'videos',action:'link',icon:'🎬',label:'YouTube Shorts',phrases:['shorts','شورتس','شورت'],value:'shorts',priority:25},
+          {id:'playlist',mode:'videos',action:'link',icon:'📂',label:'قوائم تشغيل',phrases:['قائمة تشغيل','قوائم تشغيل','playlist','playlists'],value:'playlist',priority:25},
+          {id:'channel',mode:'videos',action:'link',icon:'📺',label:'قنوات',phrases:['قناة','قنوات','channel','channels'],value:'channel',priority:25},
+          {id:'movie',mode:'videos',action:'link',icon:'🎬',label:'أفلام',phrases:['فيلم','افلام','أفلام','movie','movies'],value:'movie',priority:25},
+          {id:'video',mode:'videos',action:'link',icon:'🎥',label:'فيديوهات فقط',phrases:['فيديو','فيديوهات','video','videos'],value:'video',priority:10},
+          {id:'instagram',mode:'videos',action:'link',icon:'📷',label:'البحث في Instagram',phrases:['انستقرام','انستجرام','instagram'],value:'instagram',priority:15},
+          {id:'instructional',mode:'videos',action:'link',icon:'🔥',label:'الترتيب حسب عدد المشاهدات',phrases:['كيف اصنع','كيف اسوي','كيف اعمل','طريقة صنع','طريقة صناعة','كيفية صنع','كيفية صناعة','كيف يصنع','كيف تصنع','شرح','شرح كامل','شرح بالتفصيل','شرح للمبتدئين','خطوة بخطوة','طريقة عمل','طريقة استخدام','طريقة تركيب','طريقة اصلاح','طريقة إصلاح','حل مشكلة','تعلم','دروس','درس','tutorial','how to','how do i','how to make','how to use','step by step','beginner guide','full tutorial','guide'],value:'views',priority:40},
+          {id:'map-restaurants',mode:'maps',action:'mapCategory',icon:'🍽️',label:'مطاعم',phrases:['مطعم','مطاعم','restaurant'],value:'restaurants',priority:20},
+          {id:'map-hotels',mode:'maps',action:'mapCategory',icon:'🏨',label:'فنادق',phrases:['فندق','فنادق','hotel'],value:'hotels',priority:20},
+          {id:'map-cafes',mode:'maps',action:'mapCategory',icon:'☕',label:'مقاهي',phrases:['مقهى','مقاهي','cafe'],value:'cafes',priority:20},
+          {id:'map-pharmacies',mode:'maps',action:'mapCategory',icon:'💊',label:'صيدليات',phrases:['صيدلية','صيدليات','pharmacy'],value:'pharmacies',priority:20},
+          {id:'map-hospitals',mode:'maps',action:'mapCategory',icon:'🏥',label:'مستشفيات',phrases:['مستشفى','مستشفيات','hospital'],value:'hospitals',priority:20},
+          {id:'map-banks',mode:'maps',action:'mapCategory',icon:'🏦',label:'بنوك',phrases:['بنك','بنوك','bank'],value:'banks',priority:20},
+          {id:'map-rating',mode:'maps',action:'mapRating',icon:'⭐',label:'4+ نجوم',phrases:['4+ نجوم','أربع نجوم','4 نجوم'],value:'4',priority:20},
+          {id:'map-open',mode:'maps',action:'mapHours',icon:'🕐',label:'مفتوح الآن',phrases:['مفتوح الآن','open now'],value:'open',priority:20},
+          {id:'map-budget',mode:'maps',action:'mapPrice',icon:'💰',label:'اقتصادي',phrases:['اقتصادي','رخيص','cheap','budget'],value:'1',priority:20},
+          {id:'news-hour',mode:'news',action:'newsTime',icon:'⏰',label:'آخر ساعة',phrases:['آخر ساعة','اخر ساعه','last hour'],value:'h',priority:20},
+          {id:'news-today',mode:'news',action:'newsTime',icon:'📅',label:'اليوم',phrases:['اليوم','today'],value:'h24',priority:20},
+          {id:'news-week',mode:'news',action:'newsTime',icon:'📆',label:'هذا الأسبوع',phrases:['هذا الاسبوع','هذا الأسبوع','this week'],value:'d7',priority:20},
+          {id:'news-month',mode:'news',action:'newsTime',icon:'🗓️',label:'هذا الشهر',phrases:['هذا الشهر','this month'],value:'d30',priority:20},
+          {id:'news-latest',mode:'news',action:'newsSort',icon:'🔥',label:'الأحدث',phrases:['الأحدث','الاحدث','latest'],value:'date',priority:20},
+          {id:'image-large',mode:'images',action:'imageSize',icon:'📐',label:'كبير',phrases:['كبير','كبيرة','large'],value:'l',priority:20},
+          {id:'image-color',mode:'images',action:'imageColorType',icon:'🎨',label:'ملون',phrases:['ملون','ملونة','color'],value:'color',priority:20},
+          {id:'image-gray',mode:'images',action:'imageColorType',icon:'⚫',label:'أبيض وأسود',phrases:['ابيض واسود','أبيض وأسود','gray','black and white'],value:'gray',priority:20},
+          {id:'image-face',mode:'images',action:'imageType',icon:'👤',label:'وجه',phrases:['وجه','faces','face'],value:'face',priority:20},
+          {id:'image-free',mode:'images',action:'imageRights',icon:'⚖️',label:'مجاني',phrases:['مجاني','free'],value:'f',priority:20},
+          {id:'image-transparent',mode:'images',action:'imageColorType',icon:'🪟',label:'شفاف',phrases:['شفاف','transparent'],value:'trans',priority:20},
+          {id:'image-png',mode:'images',action:'imageFileType',icon:'🖼️',label:'PNG',phrases:['png'],value:'png',priority:20},
+          {id:'image-jpg',mode:'images',action:'imageFileType',icon:'🖼️',label:'JPG',phrases:['jpg','jpeg'],value:'jpg',priority:20}
+        ],
+        combinations: [
+          {id:'long-4k-hd',mode:'videos',requires:['long','4k','hd'],target:'long4kHd',priority:100,icon:'💎',label:'أكثر من 20 دقيقة + 4K + HD'},
+          {id:'long-4k',mode:'videos',requires:['long','4k'],target:'long4k',priority:90,icon:'🎞️',label:'أكثر من 20 دقيقة + 4K'},
+          {id:'long-views',mode:'videos',requires:['long','views'],target:'longViews',priority:85,icon:'🏆',label:'أكثر من 20 دقيقة + الأعلى مشاهدة'}
+        ]
       };
+
+      let smartRules = DEFAULT_SMART_RULES;
+      let smartRulesLoaded = false;
+
+      function normalizeSmartRules(payload) {
+        if (!payload || typeof payload !== 'object') return DEFAULT_SMART_RULES;
+        const modes = payload.modes && typeof payload.modes === 'object' ? payload.modes : DEFAULT_SMART_RULES.modes;
+        const filters = Array.isArray(payload.filters) ? payload.filters.filter(r => r && r.id && r.action) : DEFAULT_SMART_RULES.filters;
+        const combinations = Array.isArray(payload.combinations) ? payload.combinations.filter(r => r && Array.isArray(r.requires) && r.target) : DEFAULT_SMART_RULES.combinations;
+        return { version: payload.version || 1, settings: { ...DEFAULT_SMART_RULES.settings, ...(payload.settings || {}) }, modes, filters, combinations };
+      }
+
+      async function loadSmartRules() {
+        try {
+          const response = await fetch('./smart-rules.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error('smart-rules-' + response.status);
+          smartRules = normalizeSmartRules(await response.json());
+          smartRulesLoaded = true;
+        } catch (error) {
+          smartRules = DEFAULT_SMART_RULES;
+          smartRulesLoaded = false;
+          console.warn('تعذر تحميل smart-rules.json، تم استخدام القواعد الاحتياطية.', error);
+        }
+        if (typeof renderContextualFilters === 'function') renderContextualFilters();
+        if (typeof updateSmartIndicator === 'function') updateSmartIndicator();
+      }
 
       function scoreSmartMode(query, mode, config) {
         const lower = normalizeSmartQuery(query);
         let score = 0;
         const matched = [];
-        config.phrases.forEach(phrase => {
+        (config.phrases || []).forEach(phrase => {
           const p = normalizeSmartQuery(phrase);
-          if (p && lower.includes(p)) {
-            score += 5;
-            matched.push(p);
-          }
+          if (p && lower.includes(p)) { score += Number(smartRules.settings.phraseWeight) || 5; matched.push(p); }
         });
-        config.keywords.forEach(keyword => {
+        (config.keywords || []).forEach(keyword => {
           const k = normalizeSmartQuery(keyword);
-          if (k && lower.includes(k)) {
-            score += 1;
-            matched.push(k);
-          }
+          if (k && lower.includes(k)) { score += Number(smartRules.settings.keywordWeight) || 1; matched.push(k); }
         });
         return { mode, config, score, matched: [...new Set(matched)] };
       }
 
       function detectSearchMode(query) {
         if (!query || normalizeSmartQuery(query).length < 2) return null;
-        const results = Object.entries(smartPatterns)
+        const results = Object.entries(smartRules.modes || {})
           .map(([mode, config]) => scoreSmartMode(query, mode, config))
           .filter(result => result.score > 0)
-          .sort((a, b) => b.score - a.score);
-
+          .sort((a,b) => b.score - a.score);
         if (!results.length) return null;
-        const best = results[0];
-        const second = results[1];
-        if (second && best.score === second.score && best.score < 5) return null;
+        const best = results[0], second = results[1];
+        const tieMin = Number(smartRules.settings.tieMinScore) || 5;
+        if (second && best.score === second.score && best.score < tieMin) return null;
         return best;
+      }
+
+      function smartHas(lower, values) {
+        return (values || []).some(value => lower.includes(normalizeSmartQuery(value)));
+      }
+
+      function getMatchedSmartRules(query) {
+        const lower = normalizeSmartQuery(query);
+        if (!lower) return [];
+        return (smartRules.filters || [])
+          .map(rule => {
+            const phrases = Array.isArray(rule.phrases) ? rule.phrases : [];
+            const keywords = Array.isArray(rule.keywords) ? rule.keywords : [];
+            let score = 0;
+            phrases.forEach(p => { if (p && lower.includes(normalizeSmartQuery(p))) score += Number(rule.phraseWeight || smartRules.settings.phraseWeight || 5); });
+            keywords.forEach(k => { if (k && lower.includes(normalizeSmartQuery(k))) score += Number(rule.keywordWeight || smartRules.settings.keywordWeight || 1); });
+            return { rule, score };
+          })
+          .filter(item => item.score > 0)
+          .sort((a,b) => (Number(b.rule.priority)||0) - (Number(a.rule.priority)||0) || b.score - a.score);
+      }
+
+      const smartFilterLinks = {
+        views: 1, rating: 2, uploaded: 3, title: 4, hour: 5, today: 6, week: 7, month: 8, year: 9,
+        short: 10, medium: 11, long: 12, '4k': 13, hdr: 14, hd: 15, '360': 16, vr180: 17, '3d': 18,
+        longViews: 19, long4k: 20, long4kHd: 21, video: 22, channel: 23, playlist: 24, movie: 25,
+        live: 26, shorts: 27, youtubeShorts: 27, instagram: 33
+      };
+
+      function applySmartRule(rule) {
+        if (!rule) return;
+        const action = rule.action, value = rule.value;
+        if (action === 'link') {
+          const index = smartFilterLinks[value];
+          if (index !== undefined) selectSmartLink(index);
+        } else if (action === 'advancedFileType') advancedState.fileType = value;
+        else if (action === 'advancedUsageRights') advancedState.usageRights = value;
+        else if (action === 'imageRights') imageState.rights = value;
+        else if (action === 'imageSize') imageState.size = value;
+        else if (action === 'imageColorType') imageState.colorType = value;
+        else if (action === 'imageType') imageState.type = value;
+        else if (action === 'imageFileType') imageState.fileType = value;
+        else if (action === 'mapCategory') mapState.category = value;
+        else if (action === 'mapRating') mapState.rating = value;
+        else if (action === 'mapHours') mapState.hours = value;
+        else if (action === 'mapPrice') mapState.price = value;
+        else if (action === 'newsTime') newsState.time = value;
+        else if (action === 'newsSort') newsState.sort = value;
+      }
+
+      function getSmartSpecialSuggestions(query) {
+        const matched = getMatchedSmartRules(query);
+        const suggestions = matched.map(({rule}) => ({
+          id: 'smart-' + rule.id, icon: rule.icon || '✨', label: rule.label || rule.id,
+          linkIndex: rule.action === 'link' ? smartFilterLinks[rule.value] : undefined,
+          auto: true, apply: () => applySmartRule(rule)
+        }));
+        return suggestions.slice(0, Number(smartRules.settings.maxSuggestions) || 8);
+      }
+
+      function selectSmartLink(index) {
+        selectedLinksState.selected = {};
+        selectedLinksState.selected['link:' + index] = true;
+      }
+
+      function applySmartIntent(query, options = {}) {
+        const lower = normalizeSmartQuery(query);
+        if (!lower) { if (options.reset !== false) resetSmartAutoState(); return null; }
+        resetSmartAutoState();
+        const detected = detectSearchMode(query);
+        const matched = getMatchedSmartRules(query);
+        const suggestions = getSmartSpecialSuggestions(query);
+
+        if (detected?.mode === 'maps') {
+          mapState.place = query;
+          matched.filter(({rule}) => rule.mode === 'maps').forEach(({rule}) => applySmartRule(rule));
+        } else if (detected?.mode === 'news') {
+          newsState.allWords = query;
+          matched.filter(({rule}) => rule.mode === 'news').forEach(({rule}) => applySmartRule(rule));
+        } else if (detected?.mode === 'images') {
+          imageState.allWords = query;
+          matched.filter(({rule}) => rule.mode === 'images').forEach(({rule}) => applySmartRule(rule));
+        }
+
+        if (detected?.mode === 'videos') {
+          const ids = new Set(matched.filter(({rule}) => rule.mode === 'videos').map(({rule}) => rule.id));
+          const combo = (smartRules.combinations || []).slice().sort((a,b) => (Number(b.priority)||0)-(Number(a.priority)||0)).find(c => c.mode === 'videos' && c.requires.every(id => ids.has(id)));
+          if (combo) selectSmartLink(smartFilterLinks[combo.target]);
+          else {
+            const videoRules = matched.filter(({rule}) => rule.mode === 'videos' && rule.action === 'link');
+            const instructional = ids.has('instructional');
+            const target = videoRules.find(({rule}) => rule.id === 'views' || rule.id === 'instructional');
+            if (target) selectSmartLink(smartFilterLinks[target.rule.value]);
+            else if (videoRules.length) selectSmartLink(smartFilterLinks[videoRules[0].rule.value]);
+            else if (instructional) selectSmartLink(smartFilterLinks.views);
+          }
+        } else if (detected?.mode === 'web' || !detected) {
+          const webRule = matched.find(({rule}) => rule.mode === 'web' && rule.action !== 'advancedUsageRights');
+          if (webRule) applySmartRule(webRule.rule);
+          else {
+            const link = matched.find(({rule}) => rule.action === 'link');
+            if (link) selectSmartLink(smartFilterLinks[link.rule.value]);
+          }
+        }
+
+        return { detected, suggestions, loaded: smartRulesLoaded };
       }
 
       const searchModesConfig = [
@@ -875,9 +1044,20 @@
       }
 
       function handleAllFilterClick(item) {
-        const idx = item.dataset.linkIndex;
+        const idx = Number(item.dataset.linkIndex);
+        const current = searches[idx];
+        if (!current) return;
         const key = 'link:' + idx;
-        selectedLinksState.selected[key] = !selectedLinksState.selected[key];
+        const sameGroupKeys = Object.keys(selectedLinksState.selected).filter(k => {
+          if (!selectedLinksState.selected[k] || k === key) return false;
+          const otherIdx = Number(k.replace('link:', ''));
+          return searches[otherIdx] && searches[otherIdx].group === current.group;
+        });
+        if (selectedLinksState.selected[key]) delete selectedLinksState.selected[key];
+        else {
+          sameGroupKeys.forEach(k => delete selectedLinksState.selected[k]);
+          selectedLinksState.selected[key] = true;
+        }
         updateAllFiltersUI();
         saveCurrentStateToMode();
       }
