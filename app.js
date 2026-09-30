@@ -1133,23 +1133,39 @@
 
       function renderContextualFilters() {
         const mode = getActiveMode();
-        let modeKey = mode === 'smart' ? (detectSearchMode(currentQuery)?.mode || 'web') : mode;
-        const suggestions = contextualSuggestions[modeKey];
-        if (!suggestions || suggestions.length === 0) {
+        let suggestions = [];
+        if (mode === 'smart') {
+          const smart = getSmartSpecialSuggestions(currentQuery || '').filter(s => s && s.label);
+          const seen = new Set();
+          suggestions = smart.filter(s => {
+            const key = s.linkIndex !== undefined ? 'link:' + s.linkIndex : s.id;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          }).slice(0, Number(smartRules.settings.maxSuggestions) || 10);
+          if (!suggestions.length) {
+            const modeKey = detectSearchMode(currentQuery)?.mode || 'web';
+            suggestions = contextualSuggestions[modeKey] || [];
+          }
+        } else {
+          suggestions = contextualSuggestions[mode] || [];
+        }
+        if (!suggestions.length) {
           contextualFilters.classList.remove('show');
           return;
         }
         contextualFilters.classList.add('show');
-        cfLabelText.textContent = langStrings[currentLang].cfLabelText;
+        cfLabelText.textContent = currentLang === 'ar' ? 'فلاتر ذكية مقترحة' : 'Suggested smart filters';
         cfChips.innerHTML = '';
         suggestions.forEach(sug => {
           const chip = document.createElement('button');
           chip.className = 'cf-chip';
-          chip.innerHTML = `<span class="chip-icon">${sug.icon}</span><span>${sug.label}</span>`;
+          chip.innerHTML = `<span class="chip-icon">${sug.icon || '✨'}</span><span>${sug.label}</span>`;
           chip.addEventListener('click', () => {
-            sug.apply();
+            if (typeof sug.apply === 'function') sug.apply();
             saveCurrentStateToMode();
             chip.classList.toggle('active');
+            updateAllFiltersUI();
             updateFilterSummary();
             renderActiveFiltersBar();
           });
