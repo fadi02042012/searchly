@@ -447,6 +447,12 @@
               if(!Array.isArray(filterState.duration)) filterState.duration=[];
               if(!filterState.duration.includes('long')) filterState.duration.push('long');
             }
+            // عبارات السياحة والمناظر الطبيعية تطلب جودة 4K + HD معًا.
+            if(rule.id && rule.id.startsWith('tourism-') && rule.id.endsWith('-quality')){
+              if(!Array.isArray(filterState.quality)) filterState.quality=[];
+              if(!filterState.quality.includes('4k')) filterState.quality.push('4k');
+              if(!filterState.quality.includes('hd')) filterState.quality.push('hd');
+            }
           }
           return;
         }
