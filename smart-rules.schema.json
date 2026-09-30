@@ -116,6 +116,41 @@
             "items": {
               "type": "string"
             }
+          },
+          "linkIndex": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "phraseWeight": {
+            "type": "number",
+            "minimum": 0
+          },
+          "keywordWeight": {
+            "type": "number",
+            "minimum": 0
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "negativePhrases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
           }
         }
       }
@@ -154,6 +189,22 @@
           },
           "label": {
             "type": "string"
+          },
+          "phraseWeight": {
+            "type": "number",
+            "minimum": 0
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
