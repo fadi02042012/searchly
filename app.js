@@ -400,6 +400,30 @@
       function applySmartRule(rule) {
         if(!rule)return;
         const v=rule.value;
+        // 🎬 الفلاتر الذكية للفيديو تُطبّق على filterState مباشرةً،
+        // حتى يمكن جمع فيلم/مسلسل + مدة + جودة + تاريخ بدون الاعتماد على رابط واحد.
+        if(rule.mode==='videos' && rule.action==='link'){
+          const map = {
+            short: ['duration','short'], medium: ['duration','medium'], long: ['duration','long'],
+            '4k': ['quality','4k'], hd: ['quality','hd'], hdr: ['feature','hdr'],
+            '360': ['feature','360'], vr180: ['feature','vr180'], '3d': ['feature','3d'],
+            live: ['type','live'], shorts: ['type','shorts'], playlist: ['type','playlist'],
+            channel: ['type','channel'], video: ['type','video'],
+            movie: ['type','movie'], series: ['type','series']
+          };
+          if(v==='views'){ filterState.sort='views'; return; }
+          if(v==='rating'){ filterState.sort='rating'; return; }
+          if(v==='hour'||v==='today'||v==='week'||v==='month'||v==='year'){
+            filterState.date=[v]; return;
+          }
+          const mapped=map[v];
+          if(mapped){
+            const [key,value]=mapped;
+            if(!Array.isArray(filterState[key])) filterState[key]=[];
+            if(!filterState[key].includes(value)) filterState[key].push(value);
+          }
+          return;
+        }
         if(rule.action==='link'){const i=getSmartFilterIndex(v);if(i!==undefined)selectSmartLink(i);}
         else if(rule.action==='advancedFileType')advancedState.fileType=v;
         else if(rule.action==='advancedUsageRights')advancedState.usageRights=v;
@@ -426,14 +450,12 @@
         else if(detected?.mode==='news'){newsState.allWords=query;matched.filter(x=>x.rule.mode==='news').forEach(x=>applySmartRule(x.rule));}
         else if(detected?.mode==='images'){imageState.allWords=query;matched.filter(x=>x.rule.mode==='images').forEach(x=>applySmartRule(x.rule));}
         else if(detected?.mode==='videos'){
-          const ids=new Set(matched.filter(x=>x.rule.mode==='videos').map(x=>x.rule.id));
-          const combo=(smartRules.combinations||[]).slice().sort((a,b)=>(Number(b.priority)||0)-(Number(a.priority)||0)).find(c=>c.requires.every(id=>ids.has(id)));
-          if(combo){const i=getSmartFilterIndex(combo.target);if(i!==undefined)selectSmartLink(i);}
-          else {
-            const video=matched.find(x=>x.rule.mode==='videos'&&x.rule.action==='link');
-            if(video)applySmartRule(video.rule);
-            else {const i=getSmartFilterIndex('views');if(ids.has('instructional')&&i!==undefined)selectSmartLink(i);}
-          }
+          // 🎯 طبّق كل نوايا الفيديو المكتشفة معًا.
+          // مثال: "فيلم عادل امام أكثر من 20 دقيقة" => فيلم + مدة طويلة.
+          const videoMatches=matched.filter(x=>x.rule.mode==='videos');
+          videoMatches
+            .sort((a,b)=>(Number(b.rule.priority)||0)-(Number(a.rule.priority)||0)||b.score-a.score)
+            .forEach(x=>applySmartRule(x.rule));
         } else {
           const web=matched.find(x=>x.rule.mode==='web');
           if(web)applySmartRule(web.rule);
@@ -629,7 +651,7 @@
         ar: {
           sort: { relevance: 'الأكثر صلة', date: 'تاريخ النشر', views: 'عدد المشاهدات', rating: 'التقييم' },
           type: { video: 'فيديو', playlist: 'قائمة', live: 'بث', shorts: 'Shorts', channel: 'قنوات', movie: 'أفلام', series: 'مسلسلات' },
-          duration: { short: 'قصير', medium: 'متوسط', long: 'طويل' },
+          duration: { short: 'أقل من 4 دقائق', medium: 'بين 4 و20 دقيقة', long: '🎬 أكثر من 20 دقيقة' },
           date: { hour: 'ساعة', today: 'اليوم', week: 'أسبوع', month: 'شهر', year: 'سنة' },
           quality: { '4k': '4K', hd: 'HD' },
           feature: { '360': '360°', vr180: 'VR180', '3d': '3D', hdr: 'HDR', cc: 'ترجمة' }
@@ -637,7 +659,7 @@
         en: {
           sort: { relevance: 'Relevance', date: 'Date', views: 'Views', rating: 'Rating' },
           type: { video: 'Video', playlist: 'Playlist', live: 'Live', shorts: 'Shorts', channel: 'Channels', movie: 'Movies', series: 'Series' },
-          duration: { short: 'Short', medium: 'Medium', long: 'Long' },
+          duration: { short: 'Under 4 min', medium: '4–20 min', long: '🎬 Over 20 min' },
           date: { hour: 'Hour', today: 'Today', week: 'Week', month: 'Month', year: 'Year' },
           quality: { '4k': '4K', hd: 'HD' },
           feature: { '360': '360°', vr180: 'VR180', '3d': '3D', hdr: 'HDR', cc: 'CC' }
@@ -1037,7 +1059,7 @@
           active.push({ key: 'sort', value: filterState.sort, label: 'ترتيب: ' + (filterLabels[currentLang].sort?.[filterState.sort] || filterState.sort), type: 'simple', multi: false });
         }
         (filterState.type || []).forEach(v => active.push({ key: 'type', value: v, label: 'نوع: ' + (filterLabels[currentLang].type?.[v] || v), type: 'simple', multi: true }));
-        (filterState.duration || []).forEach(v => active.push({ key: 'duration', value: v, label: 'مدة: ' + (filterLabels[currentLang].duration?.[v] || v), type: 'simple', multi: true }));
+        (filterState.duration || []).forEach(v => active.push({ key: 'duration', value: v, label: (filterLabels[currentLang].duration?.[v] || v), type: 'simple', multi: true }));
         (filterState.date || []).forEach(v => active.push({ key: 'date', value: v, label: 'تاريخ: ' + (filterLabels[currentLang].date?.[v] || v), type: 'simple', multi: true }));
         (filterState.quality || []).forEach(v => active.push({ key: 'quality', value: v, label: 'جودة: ' + (filterLabels[currentLang].quality?.[v] || v), type: 'simple', multi: true }));
         (filterState.feature || []).forEach(v => active.push({ key: 'feature', value: v, label: 'ميزة: ' + (filterLabels[currentLang].feature?.[v] || v), type: 'simple', multi: true }));
