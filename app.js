@@ -311,35 +311,116 @@
       // =====================================================
       // SMART SEARCH DETECTION
       // =====================================================
-      const smartPatterns = {
-        maps: {
-          keywords: ['مطعم', 'مطاعم', 'فندق', 'فنادق', 'مقهى', 'مقاهي', 'صيدلية', 'صيدليات', 'مستشفى', 'مستشفيات', 'بنك', 'بنوك', 'صراف', 'محطة', 'محطات', 'بقالة', 'سوبر ماركت', 'مول', 'مركز تجاري', 'قريب', 'قريبة', 'بالقرب', 'nearby', 'restaurant', 'hotel', 'cafe', 'pharmacy', 'hospital', 'bank', 'atm', 'gas station', 'supermarket', 'mall'],
-          icon: '🗺️', label: 'خرائط'
-        },
-        news: {
-          keywords: ['أخبار', 'خبر', 'عاجل', 'سياسة', 'اقتصاد', 'رياضة', 'news', 'breaking', 'politics', 'economy'],
-          icon: '📰', label: 'أخبار'
-        },
-        images: {
-          keywords: ['صورة', 'صور', 'خلفية', 'خلفيات', 'شعار', 'تصميم', 'image', 'images', 'wallpaper', 'logo', 'picture'],
-          icon: '🖼️', label: 'صور'
-        },
-        videos: {
-          keywords: ['فيديو', 'يوتيوب', 'مقطع', 'حلقة', 'video', 'youtube', 'watch', 'clip'],
-          icon: '🎬', label: 'فيديو'
+      // =====================================================
+      // ✨ SMART SEARCH ENGINE
+      // =====================================================
+      const DEFAULT_SMART_RULES = {
+        version: 1,
+        settings: { phraseWeight: 5, keywordWeight: 1, tieMinScore: 5, maxSuggestions: 8 },
+        modes: {
+          maps:{icon:'🗺️',label:'خرائط',phrases:['مطاعم قريبه','مطاعم قريبة','فنادق قريبه','فنادق قريبة','بالقرب مني','near me','nearby'],keywords:['مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','مستشفى','بنك','محطة','restaurant','hotel','cafe','pharmacy','hospital','bank']},
+          news:{icon:'📰',label:'أخبار',phrases:['اخبار اليوم','أخبار اليوم','آخر الأخبار','اخر الاخبار','خبر عاجل','latest news','breaking news'],keywords:['اخبار','أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','news','breaking','politics','economy','sports']},
+          images:{icon:'🖼️',label:'صور',phrases:['صور عالية الجودة','خلفيات عالية الدقة','صور مجانية','صور كبيرة','صور png'],keywords:['صورة','صور','صوره','خلفية','خلفيات','شعار','تصميم','png','jpg','jpeg','wallpaper','image','images','picture','logo']},
+          videos:{icon:'🎬',label:'فيديو',phrases:['فيديو تعليمي','فيديو كامل','فيديو مباشر','بث مباشر','فيلم كامل','مسلسل كامل','الحلقة كاملة','شرح كامل','شرح بالتفصيل','شرح للمبتدئين','خطوة بخطوة','طريقة صنع','كيفية صنع','كيف اصنع','كيف اسوي','كيف اعمل','طريقة عمل','طريقة استخدام','طريقة تركيب','حل مشكلة','مراجعة','مقارنة','tutorial','how to','how to make','step by step','documentary'],keywords:['فيديو','يوتيوب','مقطع','مشاهدة','شاهد','حلقة','فيلم','أفلام','مسلسل','شرح','تعلم','دروس','طريقة','كيفية','مراجعة','مقارنة','وثائقي','انمي','كرتون','video','youtube','watch','tutorial','documentary']}
         }
       };
+      let smartRules = DEFAULT_SMART_RULES;
+      let smartRulesLoaded = false;
 
-      function detectSearchMode(query) {
-        if (!query || query.trim().length < 2) return null;
-        const lower = query.toLowerCase();
-        for (const [mode, config] of Object.entries(smartPatterns)) {
-          for (const keyword of config.keywords) {
-            if (lower.includes(keyword.toLowerCase())) return { mode, config };
-          }
-        }
-        return null;
+      function normalizeSmartQuery(query) {
+        return String(query || '').toLowerCase().replace(/[إأآ]/g,'ا').replace(/ة/g,'ه').replace(/[ًٌٍَُِّْـ]/g,'').replace(/[؟?!.,،؛:()[\]{}"']/g,' ').replace(/\s+/g,' ').trim();
       }
+      function scoreSmartMode(query, mode, config) {
+        const q=normalizeSmartQuery(query), matched=[]; let score=0;
+        (config.phrases||[]).forEach(p=>{const n=normalizeSmartQuery(p);if(n&&q.includes(n)){score+=smartRules.settings.phraseWeight;matched.push(n);}});
+        (config.keywords||[]).forEach(k=>{const n=normalizeSmartQuery(k);if(n&&q.includes(n)){score+=smartRules.settings.keywordWeight;matched.push(n);}});
+        return {mode,config,score,matched:[...new Set(matched)]};
+      }
+      function detectSearchMode(query) {
+        const q=normalizeSmartQuery(query); if(q.length<2)return null;
+        const results=Object.entries(smartRules.modes||{}).map(([mode,c])=>scoreSmartMode(query,mode,c)).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+        if(!results.length)return null;
+        const best=results[0], second=results[1];
+        if(second && best.score===second.score && best.score < Number(smartRules.settings.tieMinScore||5))return null;
+        return best;
+      }
+      function resetSmartAutoState() {
+        filterState=createDefaultFilterState();
+        advancedState={allWords:'',exactPhrase:'',anyWords:'',noneWords:'',numbers:'',site:'',fileType:'',lastUpdate:'',lang:'',usageRights:''};
+        newsState={allWords:'',exactPhrase:'',site:'',time:'all',sort:'relevance'};
+        imageState={allWords:'',site:'',fileType:'',size:'all',exactWidth:'',exactHeight:'',aspect:'all',color:'all',colorType:'all',type:'all',rights:'all',time:'all',lang:'',region:'',safe:'all'};
+        mapState={place:'',near:'',rating:'0',hours:'all',price:'all',category:'',sort:'relevance'};
+        selectedLinksState={selected:{}};
+      }
+      function getSmartFilterIndex(id) {
+        const r=(smartRules.filters||[]).find(x=>x.id===id);
+        if(r && r.linkIndex!==undefined)return Number(r.linkIndex);
+        const legacy={views:1,rating:2,uploaded:3,title:4,hour:5,today:6,week:7,month:8,year:9,short:10,medium:11,long:12,'4k':13,hdr:14,hd:15,'360':16,vr180:17,'3d':18,longViews:19,long4k:20,long4kHd:21,video:22,channel:23,playlist:24,movie:25,live:26,shorts:27,instagram:33};
+        return legacy[id];
+      }
+      function getMatchedSmartRules(query) {
+        const q=normalizeSmartQuery(query);
+        return (smartRules.filters||[]).map(rule=>{
+          let score=0;
+          (rule.phrases||[]).forEach(p=>{if(q.includes(normalizeSmartQuery(p)))score+=Number(rule.phraseWeight||smartRules.settings.phraseWeight||5);});
+          (rule.keywords||[]).forEach(k=>{if(q.includes(normalizeSmartQuery(k)))score+=Number(rule.keywordWeight||smartRules.settings.keywordWeight||1);});
+          return {rule,score};
+        }).filter(x=>x.score>0).sort((a,b)=>(Number(b.rule.priority)||0)-(Number(a.rule.priority)||0)||b.score-a.score);
+      }
+      function applySmartRule(rule) {
+        if(!rule)return;
+        const v=rule.value;
+        if(rule.action==='link'){const i=getSmartFilterIndex(v);if(i!==undefined)selectSmartLink(i);}
+        else if(rule.action==='advancedFileType')advancedState.fileType=v;
+        else if(rule.action==='advancedUsageRights')advancedState.usageRights=v;
+        else if(rule.action==='imageRights')imageState.rights=v;
+        else if(rule.action==='imageSize')imageState.size=v;
+        else if(rule.action==='imageColorType')imageState.colorType=v;
+        else if(rule.action==='imageType')imageState.type=v;
+        else if(rule.action==='imageFileType')imageState.fileType=v;
+        else if(rule.action==='mapCategory')mapState.category=v;
+        else if(rule.action==='mapRating')mapState.rating=v;
+        else if(rule.action==='mapHours')mapState.hours=v;
+        else if(rule.action==='mapPrice')mapState.price=v;
+        else if(rule.action==='newsTime')newsState.time=v;
+        else if(rule.action==='newsSort')newsState.sort=v;
+      }
+      function getSmartSpecialSuggestions(query) {
+        return getMatchedSmartRules(query).slice(0,Number(smartRules.settings.maxSuggestions)||8).map(({rule})=>({id:'smart-'+rule.id,icon:rule.icon||'✨',label:rule.label||rule.id,linkIndex:rule.action==='link'?getSmartFilterIndex(rule.value):undefined,apply:()=>applySmartRule(rule)}));
+      }
+      function applySmartIntent(query,{reset=true}={}) {
+        if(reset)resetSmartAutoState();
+        const detected=detectSearchMode(query), matched=getMatchedSmartRules(query);
+        if(!query)return null;
+        if(detected?.mode==='maps'){mapState.place=query;matched.filter(x=>x.rule.mode==='maps').forEach(x=>applySmartRule(x.rule));}
+        else if(detected?.mode==='news'){newsState.allWords=query;matched.filter(x=>x.rule.mode==='news').forEach(x=>applySmartRule(x.rule));}
+        else if(detected?.mode==='images'){imageState.allWords=query;matched.filter(x=>x.rule.mode==='images').forEach(x=>applySmartRule(x.rule));}
+        else if(detected?.mode==='videos'){
+          const ids=new Set(matched.filter(x=>x.rule.mode==='videos').map(x=>x.rule.id));
+          const combo=(smartRules.combinations||[]).slice().sort((a,b)=>(Number(b.priority)||0)-(Number(a.priority)||0)).find(c=>c.requires.every(id=>ids.has(id)));
+          if(combo){const i=getSmartFilterIndex(combo.target);if(i!==undefined)selectSmartLink(i);}
+          else {
+            const video=matched.find(x=>x.rule.mode==='videos'&&x.rule.action==='link');
+            if(video)applySmartRule(video.rule);
+            else {const i=getSmartFilterIndex('views');if(ids.has('instructional')&&i!==undefined)selectSmartLink(i);}
+          }
+        } else {
+          const web=matched.find(x=>x.rule.mode==='web');
+          if(web)applySmartRule(web.rule);
+        }
+        return {detected,suggestions:getSmartSpecialSuggestions(query)};
+      }
+      async function loadSmartRules(){
+        try{
+          const response=await fetch('./smart-rules.json',{cache:'no-store'});
+          if(!response.ok)throw new Error('HTTP '+response.status);
+          const data=await response.json();
+          if(data&&data.modes&&Array.isArray(data.filters))smartRules={...DEFAULT_SMART_RULES,...data,settings:{...DEFAULT_SMART_RULES.settings,...(data.settings||{})}};
+          smartRulesLoaded=true;
+        }catch(e){smartRules=DEFAULT_SMART_RULES;smartRulesLoaded=false;console.warn('Smart rules fallback',e);}
+        updateSmartIndicator(); if(typeof renderContextualFilters==='function')renderContextualFilters();
+      }
+      loadSmartRules();
 
       const searchModesConfig = [
         { id: 'smart', icon: '✨', label: 'ذكي', labelEn: 'Smart' },
@@ -1254,6 +1335,11 @@
         if (!query) { showToast(langStrings[currentLang].toastEmpty); return; }
         currentQuery = query;
         const mode = getActiveMode();
+        if (mode === 'smart') {
+          applySmartIntent(query,{reset:true});
+          saveStateToMode('smart');
+          updateAllFiltersUI(); updateFilterSummary(); renderActiveFiltersBar();
+        }
 
         // ⭐ إذا كانت هناك روابط مختارة → افتحها كلها
         const selectedLinks = buildSelectedLinksURLs(query);
@@ -1630,9 +1716,14 @@
       // =====================================================
       searchBtn.addEventListener('click', (e) => { e.preventDefault(); performSearch(); });
       searchInput.addEventListener('input', () => {
-        showSuggestions();
-        updateSmartIndicator();
-        if (getActiveMode() === 'smart') renderContextualFilters();
+        currentQuery=searchInput.value.trim();
+        if(getActiveMode()==='smart') {
+          applySmartIntent(currentQuery,{reset:true});
+          saveCurrentStateToMode('smart');
+          updateAllFiltersUI(); updateFilterSummary(); renderActiveFiltersBar();
+        }
+        showSuggestions(); updateSmartIndicator();
+        if(getActiveMode()==='smart')renderContextualFilters();
       });
       searchInput.addEventListener('focus', showSuggestions);
       searchInput.addEventListener('blur', hideSuggestions);
