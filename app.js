@@ -411,7 +411,15 @@
             channel: ['type','channel'], video: ['type','video'],
             movie: ['type','movie'], series: ['type','series']
           };
-          if(v==='views'){ filterState.sort='views'; return; }
+          if(v==='views'){
+            // 🔥 عبارات الشرح/التصنيع/التركيب وما شابه = محتوى تعليمي طويل + الأعلى مشاهدة.
+            if(rule.id==='instructional'){
+              if(!Array.isArray(filterState.duration)) filterState.duration=[];
+              if(!filterState.duration.includes('long')) filterState.duration.push('long');
+            }
+            filterState.sort='views';
+            return;
+          }
           if(v==='rating'){ filterState.sort='rating'; return; }
           if(v==='hour'||v==='today'||v==='week'||v==='month'||v==='year'){
             filterState.date=[v]; return;
@@ -1079,7 +1087,19 @@
           active.push({ key: 'sort', value: filterState.sort, label: 'ترتيب: ' + (filterLabels[currentLang].sort?.[filterState.sort] || filterState.sort), type: 'simple', multi: false });
         }
         (filterState.type || []).forEach(v => active.push({ key: 'type', value: v, label: 'نوع: ' + (filterLabels[currentLang].type?.[v] || v), type: 'simple', multi: true }));
-        (filterState.duration || []).forEach(v => active.push({ key: 'duration', value: v, label: (filterLabels[currentLang].duration?.[v] || v), type: 'simple', multi: true }));
+        // 🎯 اعرض الفلتر التعليمي كفلتر مركّب واحد بدل شريحتين منفصلتين.
+        const hasLong = (filterState.duration || []).includes('long');
+        const hasViews = filterState.sort === 'views';
+        if(hasLong && hasViews){
+          active.push({
+            key: 'instructionalCombo',
+            value: 'long-views',
+            label: currentLang === 'ar' ? '🏆 أكثر من 20 دقيقة + الأعلى مشاهدة' : '🏆 Over 20 min + Most viewed',
+            type: 'simpleCombo'
+          });
+        } else {
+          (filterState.duration || []).forEach(v => active.push({ key: 'duration', value: v, label: (filterLabels[currentLang].duration?.[v] || v), type: 'simple', multi: true }));
+        }
         (filterState.date || []).forEach(v => active.push({ key: 'date', value: v, label: 'تاريخ: ' + (filterLabels[currentLang].date?.[v] || v), type: 'simple', multi: true }));
         (filterState.quality || []).forEach(v => active.push({ key: 'quality', value: v, label: 'جودة: ' + (filterLabels[currentLang].quality?.[v] || v), type: 'simple', multi: true }));
         (filterState.feature || []).forEach(v => active.push({ key: 'feature', value: v, label: 'ميزة: ' + (filterLabels[currentLang].feature?.[v] || v), type: 'simple', multi: true }));
@@ -1156,7 +1176,12 @@
           closeBtn.className = 'chip-close';
           closeBtn.textContent = '×';
           closeBtn.addEventListener('click', () => {
-            if (filter.type === 'simple') {
+            if (filter.type === 'simpleCombo') {
+              filterState.duration = (filterState.duration || []).filter(v => v !== 'long');
+              filterState.sort = 'date';
+              setFilterButtonVisuals(filterState);
+              saveCurrentStateToMode();
+            } else if (filter.type === 'simple') {
               if (filter.multi) {
                 const arr = filterState[filter.key];
                 const idx = arr.indexOf(filter.value);
