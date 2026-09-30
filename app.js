@@ -628,7 +628,7 @@
       const filterLabels = {
         ar: {
           sort: { relevance: 'الأكثر صلة', date: 'تاريخ النشر', views: 'عدد المشاهدات', rating: 'التقييم' },
-          type: { video: 'فيديو', playlist: 'قائمة', live: 'بث', shorts: 'Shorts', channel: 'قنوات', movie: 'أفلام' },
+          type: { video: 'فيديو', playlist: 'قائمة', live: 'بث', shorts: 'Shorts', channel: 'قنوات', movie: 'أفلام', series: 'مسلسلات' },
           duration: { short: 'قصير', medium: 'متوسط', long: 'طويل' },
           date: { hour: 'ساعة', today: 'اليوم', week: 'أسبوع', month: 'شهر', year: 'سنة' },
           quality: { '4k': '4K', hd: 'HD' },
@@ -636,7 +636,7 @@
         },
         en: {
           sort: { relevance: 'Relevance', date: 'Date', views: 'Views', rating: 'Rating' },
-          type: { video: 'Video', playlist: 'Playlist', live: 'Live', shorts: 'Shorts', channel: 'Channels', movie: 'Movies' },
+          type: { video: 'Video', playlist: 'Playlist', live: 'Live', shorts: 'Shorts', channel: 'Channels', movie: 'Movies', series: 'Series' },
           duration: { short: 'Short', medium: 'Medium', long: 'Long' },
           date: { hour: 'Hour', today: 'Today', week: 'Week', month: 'Month', year: 'Year' },
           quality: { '4k': '4K', hd: 'HD' },
@@ -832,6 +832,59 @@
         return parts.join(' ');
       }
 
+      function videoSearchURL(query) {
+        let finalQuery = String(query || '').trim();
+        const types = filterState.type || [];
+        const durations = filterState.duration || [];
+        const dates = filterState.date || [];
+        const quality = filterState.quality || [];
+        const features = filterState.feature || [];
+
+        // النوع: أفلام/مسلسلات ليست فلاتر YouTube مستقلة في صفحة النتائج،
+        // لذلك نضيفها للاستعلام بشكل صريح.
+        if (types.includes('movie')) finalQuery += ' فيلم';
+        if (types.includes('series')) finalQuery += ' مسلسل';
+
+        const params = new URLSearchParams();
+        params.set('search_query', finalQuery);
+
+        // نستخدم فلاتر YouTube الأصلية عندما يكون هناك فلتر واحد قابل للتمثيل مباشرة.
+        // عند تعدد الفلاتر، نُبقي الاستعلام صالحًا ونستخدم أول فلتر مدعوم.
+        const spMap = {
+          short: 'EgIYAQ%3D%3D',
+          medium: 'EgIYAw%3D%3D',
+          long: 'EgIYAg%3D%3D',
+          '4k': 'EgJwAQ%3D%3D',
+          hd: 'EgIgAQ%3D%3D',
+          '360': 'EgJ4AQ%3D%3D',
+          vr180: 'EgPQAQE%3D',
+          '3d': 'EgI4AQ%3D%3D',
+          hdr: 'EgPIAQE%3D'
+        };
+        const candidates = [...durations, ...quality, ...features];
+        const supported = candidates.find(v => spMap[v]);
+        if (supported) params.set('sp', decodeURIComponent(spMap[supported]));
+
+        // فلاتر النوع الأساسية التي يدعمها YouTube عبر sp.
+        const typeSp = {
+          live: 'EgJAAQ%3D%3D',
+          playlist: 'EgIQAw%3D%3D',
+          shorts: 'EgIQAQ%3D%3D',
+          video: 'EgIQAQ%3D%3D'
+        };
+        if (!supported) {
+          const t = types.find(v => typeSp[v]);
+          if (t) params.set('sp', decodeURIComponent(typeSp[t]));
+        }
+
+        const dateMap = { hour: 'EgIIAQ%3D%3D', today: 'EgQIAhAB', week: 'EgQIAxAB', month: 'EgQIBBAB', year: 'EgQIBRAB' };
+        const d = dates.find(v => dateMap[v]);
+        if (d && !params.has('sp')) params.set('sp', decodeURIComponent(dateMap[d]));
+
+        // الترتيب يظل مفيدًا عبر واجهة Google عند الحاجة، لذلك لا نخلط مصدرين للفلترة.
+        return 'https://www.youtube.com/results?' + params.toString();
+      }
+
       function googleSearchURL(query) {
         const finalQuery = buildAdvancedQuery(String(query || ''));
         const params = [];
@@ -966,7 +1019,7 @@
               // ⭐ استخدم أول رابط مختار أو الرابط الافتراضي
               const selected = buildSelectedLinksURLs(query);
               if (selected.length > 0) return selected[0].url;
-              return generateAdvancedLink(query, 0);
+              return videoSearchURL(query);
             }
             return googleSearchURL(query);
           }
