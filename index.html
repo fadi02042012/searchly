@@ -35,6 +35,7 @@
     <button class="mode-tab" data-mode="images"><span class="mode-icon">🖼️</span><span>صور</span></button>
     <button class="mode-tab" data-mode="maps"><span class="mode-icon">🗺️</span><span>خرائط</span></button>
     <button class="mode-tab" data-mode="videos"><span class="mode-icon">🎬</span><span>فيديو</span></button>
+    <button class="gemini-tab" id="geminiTab" type="button"><span>✨</span><span id="geminiTabText">Gemini AI</span></button>
   </div>
 
   <!-- SEARCH BOX -->
@@ -78,6 +79,28 @@
     </div>
     <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
   </div>
+
+  <section class="gemini-panel answer-panel" id="geminiPanel" aria-labelledby="geminiPanelTitle">
+    <div class="gemini-card answer-card">
+      <div class="gemini-head">
+        <div>
+          <div class="gemini-title" id="geminiPanelTitle">✨ Gemini AI</div>
+          <div class="gemini-subtitle" id="geminiPanelSubtitle">اكتب سؤالك في مربع البحث وستظهر الإجابة هنا</div>
+        </div>
+        <span class="gemini-status" id="geminiStatus">● جاهز</span>
+      </div>
+      <div class="gemini-answer-wrap">
+        <div class="gemini-answer-label">
+          <div class="gemini-answer-title"><span class="gemini-answer-dot"></span><span id="geminiAnswerTitle">الإجابة</span></div>
+        </div>
+        <div class="gemini-answer empty" id="geminiAnswer" aria-live="polite">اكتب سؤالك في مربع البحث بالأعلى ثم اضغط «بحث».</div>
+        <div class="gemini-answer-actions">
+          <button class="btn gemini-clear" id="geminiClear" type="button">مسح الإجابة</button>
+        </div>
+        <div class="gemini-answer-meta" id="geminiFoot">قد تحتوي الإجابات على أخطاء؛ تحقّق من المعلومات المهمة. لا تُدخل مفاتيح API أو معلومات سرية.</div>
+      </div>
+    </div>
+  </section>
 
   <div class="contextual-filters" id="contextualFilters">
     <span class="cf-label"><span>💡</span><span id="cfLabelText">فلاتر مقترحة:</span></span>
