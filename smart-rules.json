@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 8,
   "settings": {
     "phraseWeight": 6,
     "keywordWeight": 1,
@@ -3316,6 +3316,321 @@
         "photo"
       ],
       "priority": 40
+    },
+    {
+      "id": "documentary",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "وثائقي: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "وثائقي",
+        "وثائقيات",
+        "فيلم وثائقي",
+        "أفلام وثائقية",
+        "افلام وثائقية",
+        "documentary",
+        "documentaries"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 42
+    },
+    {
+      "id": "review",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⭐",
+      "label": "مراجعة: الأعلى مشاهدة + الأعلى تقييمًا",
+      "phrases": [
+        "مراجعة",
+        "مراجعات",
+        "review",
+        "reviews"
+      ],
+      "value": "rating",
+      "linkIndex": 20,
+      "priority": 38
+    },
+    {
+      "id": "comparison",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⚖️",
+      "label": "مقارنة: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "مقارنة",
+        "مقارنات",
+        "مقارنة بين",
+        "مقارنة مع",
+        "vs",
+        "versus",
+        "comparison",
+        "comparisons"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 38
+    },
+    {
+      "id": "educational",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎓",
+      "label": "تعليمي: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "تعليمي",
+        "تعليمية",
+        "فيديو تعليمي",
+        "دورة",
+        "دورات",
+        "كورس",
+        "كورس كامل",
+        "تعلم",
+        "دروس",
+        "درس",
+        "educational",
+        "course",
+        "full course"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 40
+    },
+    {
+      "id": "installation",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔧",
+      "label": "تركيب: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "تركيب",
+        "طريقة تركيب",
+        "تثبيت",
+        "إعداد",
+        "طريقة تثبيت",
+        "installation",
+        "setup",
+        "install"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 41
+    },
+    {
+      "id": "manufacturing",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏭",
+      "label": "تصنيع: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "تصنيع",
+        "صناعة",
+        "طريقة تصنيع",
+        "كيفية تصنيع",
+        "طريقة صناعة",
+        "كيفية صناعة",
+        "كيف يصنع",
+        "كيف تصنع",
+        "manufacturing",
+        "how it's made"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 41
+    },
+    {
+      "id": "repair",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🛠️",
+      "label": "إصلاح: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "إصلاح",
+        "اصلاح",
+        "تصليح",
+        "طريقة إصلاح",
+        "طريقة اصلاح",
+        "حل مشكلة",
+        "عطل",
+        "إصلاح مشكلة",
+        "repair",
+        "fix",
+        "troubleshooting"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 41
+    },
+    {
+      "id": "movie-full",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "أفلام: أكثر من 20 دقيقة",
+      "phrases": [
+        "فيلم",
+        "أفلام",
+        "افلام",
+        "فيلم كامل",
+        "movie",
+        "movies",
+        "full movie"
+      ],
+      "value": "movie",
+      "linkIndex": 25,
+      "priority": 35
+    },
+    {
+      "id": "series-full",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "مسلسلات: أكثر من 20 دقيقة",
+      "phrases": [
+        "مسلسل",
+        "مسلسلات",
+        "مسلسل كامل",
+        "حلقة كاملة",
+        "الحلقة كاملة",
+        "جميع الحلقات",
+        "موسم كامل",
+        "series",
+        "full episode",
+        "full season"
+      ],
+      "value": "series",
+      "linkIndex": 25,
+      "priority": 35
+    },
+    {
+      "id": "quality-4k",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎥",
+      "label": "4K: أكثر من 20 دقيقة",
+      "phrases": [
+        "4k",
+        "فيديو 4k",
+        "دقة 4k"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 25
+    },
+    {
+      "id": "quality-hd",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "HD: أكثر من 20 دقيقة",
+      "phrases": [
+        "hd",
+        "فيديو hd",
+        "جودة عالية",
+        "دقة عالية"
+      ],
+      "value": "hd",
+      "linkIndex": 20,
+      "priority": 24
+    },
+    {
+      "id": "quality-hdr",
+      "mode": "videos",
+      "action": "link",
+      "icon": "✨",
+      "label": "HDR: أكثر من 20 دقيقة",
+      "phrases": [
+        "hdr"
+      ],
+      "value": "hdr",
+      "linkIndex": 20,
+      "priority": 24
+    },
+    {
+      "id": "new-videos",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📆",
+      "label": "جديد: هذا الأسبوع",
+      "phrases": [
+        "جديد",
+        "جديدة",
+        "آخر الفيديوهات",
+        "احدث الفيديوهات",
+        "أحدث الفيديوهات",
+        "هذا الأسبوع",
+        "هذا الاسبوع",
+        "this week",
+        "latest videos"
+      ],
+      "value": "week",
+      "linkIndex": 20,
+      "priority": 23
+    },
+    {
+      "id": "live-now",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔴",
+      "label": "بث مباشر",
+      "phrases": [
+        "بث مباشر",
+        "مباشر",
+        "live",
+        "live stream"
+      ],
+      "value": "live",
+      "linkIndex": 25,
+      "priority": 30
+    },
+    {
+      "id": "short-content",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⚡",
+      "label": "Shorts",
+      "phrases": [
+        "shorts",
+        "شورتس",
+        "شورت",
+        "مقطع قصير"
+      ],
+      "value": "shorts",
+      "linkIndex": 25,
+      "priority": 30
+    },
+    {
+      "id": "playlist-content",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📂",
+      "label": "قائمة تشغيل",
+      "phrases": [
+        "قائمة تشغيل",
+        "قوائم تشغيل",
+        "playlist",
+        "playlists"
+      ],
+      "value": "playlist",
+      "linkIndex": 25,
+      "priority": 30
+    },
+    {
+      "id": "channel-content",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "قنوات",
+      "phrases": [
+        "قناة",
+        "قنوات",
+        "channel",
+        "channels"
+      ],
+      "value": "channel",
+      "linkIndex": 25,
+      "priority": 30
     }
   ],
   "combinations": [
