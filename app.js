@@ -862,6 +862,26 @@
         const quality = filterState.quality || [];
         const features = filterState.feature || [];
 
+        // 🧠 نظّف عبارات الفلاتر التي كتبها المستخدم من نص البحث.
+        // مثال: "فيلم عادل امام أكثر من 20 دقيقة" يصبح بحثًا عن "عادل امام فيلم"
+        // مع تطبيق فلتر المدة بشكل مستقل.
+        const filterPhrases = [
+          /أكثر\s+من\s+20\s+دقيقة|اكثر\s+من\s+20\s+دقيقه/gi,
+          /بين\s+4\s*(?:و|إلى|الى|-)\s*20\s+دقيقة/gi,
+          /أقل\s+من\s+4\s+دقائق|اقل\s+من\s+4\s+دقائق/gi,
+          /4k/gi, /hd/gi, /hdr/gi, /vr\s*180/gi,
+          /ثلاثي\s+الأبعاد|ثلاثي\s+الابعاد/gi,
+          /آخر\s+ساعة|اخر\s+ساعه/gi, /اليوم/gi, /هذا\s+الأسبوع|هذا\s+الاسبوع/gi,
+          /هذا\s+الشهر/gi, /هذا\s+العام|هذه\s+السنة/gi
+        ];
+        filterPhrases.forEach(pattern => { finalQuery = finalQuery.replace(pattern, ' '); });
+
+        // إزالة كلمات نوع المحتوى من النص ثم إضافتها بصيغة موحّدة.
+        finalQuery = finalQuery
+          .replace(/\b(?:movie|movies|series|video|videos|shorts|playlist|playlists)\b/gi, ' ')
+          .replace(/\b(?:فيلم|أفلام|افلام|مسلسل|مسلسلات|فيديو|فيديوهات|شورتس|شورت|قائمة تشغيل|قوائم تشغيل)\b/gi, ' ')
+          .replace(/\s+/g, ' ').trim();
+
         // النوع: أفلام/مسلسلات ليست فلاتر YouTube مستقلة في صفحة النتائج،
         // لذلك نضيفها للاستعلام بشكل صريح.
         if (types.includes('movie')) finalQuery += ' فيلم';
