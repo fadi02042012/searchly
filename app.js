@@ -38,7 +38,15 @@
         { name: "📈 ترند YouTube", group: "منصات", base: "https://www.google.com/search?q=", suffix: "+site:https://www.youtube.com/feed/trending" },
         { name: "📂 قوائم تشغيل YouTube", group: "منصات", base: "https://www.google.com/search?q=", suffix: "+site:https://www.youtube.com/user/*/playlists" },
         { name: "📺 البحث داخل قناة TEDx", group: "قنوات محددة", base: "https://www.youtube.com/@TEDx/search?query=", suffix: "" },
-        { name: "📷 البحث في Instagram (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.instagram.com+", suffix: "&num=10&tbs=qdr:d" },
+        { name: "📷 البحث في Instagram (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.instagram.com+", suffix: "&num=10" },
+        { name: "📘 البحث في Facebook (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.facebook.com+", suffix: "&num=10" },
+        { name: "🎵 البحث في TikTok (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.tiktok.com+", suffix: "&num=10" },
+        { name: "𝕏 البحث في X (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://x.com+", suffix: "&num=10" },
+        { name: "👻 البحث في Snapchat (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.snapchat.com+", suffix: "&num=10" },
+        { name: "💼 البحث في LinkedIn (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.linkedin.com+", suffix: "&num=10" },
+        { name: "🟠 البحث في Reddit (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.reddit.com+", suffix: "&num=10" },
+        { name: "📌 البحث في Pinterest (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.pinterest.com+", suffix: "&num=10" },
+        { name: "🧵 البحث في Threads (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.threads.net+", suffix: "&num=10" },
         { name: "📺 البحث داخل قناة ArabicMOD", group: "قنوات محددة", base: "https://www.youtube.com/@ArabicMOD/search?query=", suffix: "" },
         { name: "📺 البحث داخل قناة Fortinet", group: "قنوات محددة", base: "https://www.youtube.com/@fortinet/search?query=", suffix: "" },
         { name: "😂 البحث داخل قناة Gags", group: "قنوات محددة", base: "https://www.youtube.com/@gags/search?query=", suffix: "" },
@@ -105,6 +113,24 @@
       let langTouched = false;
       let currentQuery = '';
       let cmdActiveIndex = 0;
+      const FILTER_USAGE_KEY = 'sh_filter_usage_v1';
+      let filterUsage = {};
+      function loadFilterUsage() {
+        try {
+          const saved = localStorage.getItem(FILTER_USAGE_KEY);
+          const parsed = saved ? JSON.parse(saved) : {};
+          filterUsage = parsed && typeof parsed === 'object' ? parsed : {};
+        } catch (e) { filterUsage = {}; }
+      }
+      function saveFilterUsage() {
+        try { localStorage.setItem(FILTER_USAGE_KEY, JSON.stringify(filterUsage)); } catch (e) {}
+      }
+      function recordFilterUsage(filterId) {
+        if (!filterId) return;
+        filterUsage[filterId] = (Number(filterUsage[filterId]) || 0) + 1;
+        saveFilterUsage();
+      }
+      function getFilterUsage(filterId) { return Number(filterUsage[filterId]) || 0; }
 
       function getActiveMode() {
         const activeTab = document.querySelector('.mode-tab.active');
@@ -284,10 +310,19 @@
         const grid = document.getElementById('allFiltersGrid');
         if (!grid) return;
         grid.innerHTML = '';
+        grid.classList.remove('show-more');
+
         const groups = getSearchesByGroup();
-        Object.entries(groups).forEach(([groupName, items]) => {
+        const priorityGroups = ['أساسي', 'الترتيب', 'التاريخ', 'المدة', 'الجودة'];
+        const orderedGroups = Object.entries(groups).sort(([a], [b]) => {
+          const ai = priorityGroups.indexOf(a);
+          const bi = priorityGroups.indexOf(b);
+          return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+        });
+
+        orderedGroups.forEach(([groupName, items], groupIndex) => {
           const groupDiv = document.createElement('div');
-          groupDiv.className = 'all-filter-group';
+          groupDiv.className = 'all-filter-group' + (groupIndex >= priorityGroups.length ? ' all-filter-group-extra' : '');
           groupDiv.dataset.group = groupName;
           const icon = groupIcons[groupName] || '📌';
           groupDiv.innerHTML = `<div class="all-filter-group-title">${icon} ${groupName}</div>`;
@@ -306,6 +341,9 @@
           groupDiv.appendChild(itemsDiv);
           grid.appendChild(groupDiv);
         });
+
+        const moreBtn = document.getElementById('allFiltersMoreBtn');
+        if (moreBtn) moreBtn.style.display = orderedGroups.length > priorityGroups.length ? '' : 'none';
       }
 
       // =====================================================
@@ -313,32 +351,324 @@
       // =====================================================
       const smartPatterns = {
         maps: {
-          keywords: ['مطعم', 'مطاعم', 'فندق', 'فنادق', 'مقهى', 'مقاهي', 'صيدلية', 'صيدليات', 'مستشفى', 'مستشفيات', 'بنك', 'بنوك', 'صراف', 'محطة', 'محطات', 'بقالة', 'سوبر ماركت', 'مول', 'مركز تجاري', 'قريب', 'قريبة', 'بالقرب', 'nearby', 'restaurant', 'hotel', 'cafe', 'pharmacy', 'hospital', 'bank', 'atm', 'gas station', 'supermarket', 'mall'],
-          icon: '🗺️', label: 'خرائط'
+          keywords: [
+            'مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','صيدليات','مستشفى','مستشفيات',
+            'بنك','بنوك','صراف','محطة','محطات','بقالة','سوبر ماركت','مول','مركز تجاري',
+            'أماكن','مكان','موقع','عنوان','اتجاهات','طريق','قريب','قريبة','بالقرب','حولي','حولّي',
+            'أقرب','nearest','nearby','near me','restaurant','restaurants','hotel','hotels',
+            'cafe','cafes','pharmacy','hospital','bank','atm','gas station','supermarket','mall',
+            'location','locations','map','maps','directions',
+            // إضافات شائعة للبحث المحلي
+            'مطاعم حولي','مطعم قريب','مطعم بالقرب مني','فندق قريب','فندق بالقرب مني','كافيه قريب','مقهى قريب',
+            'صيدلية قريبة','مستشفى قريب مني','بنك قريب مني','محطة وقود قريبة','متجر قريب مني','محل قريب مني',
+            'أماكن قريبة','أماكن حولي','ماذا يوجد حولي','ماذا يوجد بالقرب مني','دليل الأماكن','أماكن سياحية',
+            'مطاعم في','فنادق في','مقاهي في','صيدليات في','مستشفيات في','بنوك في','مولات في','متاجر في',
+            'where is','where are','places near me','restaurants near me','hotels near me','cafes near me',
+            'pharmacies near me','hospitals near me','stores near me','shops near me','things to do near me',
+            "أقرب مطعم",
+            "أقرب فندق",
+            "أقرب مقهى",
+            "أقرب صيدلية",
+            "أقرب مستشفى",
+            "أقرب بنك",
+            "أقرب متجر",
+            "أقرب محطة",
+            "أماكن للزيارة",
+            "أماكن تستحق الزيارة",
+            "أفضل الأماكن القريبة",
+            "مطاعم مفتوحة الآن",
+            "فنادق قريبة",
+            "مقاهي قريبة",
+            "محلات قريبة",
+            "مطاعم للعائلات",
+            "فنادق رخيصة قريبة",
+            "أماكن سياحية قريبة",
+            "nearest restaurant",
+            "nearest hotel",
+            "nearest cafe",
+            "best places near me",
+          ],
+          phrases: ['قريب مني','قريبة مني','بالقرب مني','حولّي','حولي','أقرب مكان','أين أقرب','near me','nearby','closest to me'],
+          icon:'🗺️', label:'خرائط', weight:3
         },
         news: {
-          keywords: ['أخبار', 'خبر', 'عاجل', 'سياسة', 'اقتصاد', 'رياضة', 'news', 'breaking', 'politics', 'economy'],
-          icon: '📰', label: 'أخبار'
+          keywords: [
+            'أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','اليوم','الآن','آخر الأخبار',
+            'أخبار اليوم','خبر اليوم','الأخبار العاجلة','news','breaking','politics','economy',
+            'sports news','latest news','today news','breaking news',
+            // عبارات إخبارية شائعة
+            'آخر المستجدات','مستجدات اليوم','ما الجديد اليوم','ما الأخبار','ما الجديد في العالم',
+            'أخبار العالم','أخبار اليمن','أخبار السعودية','أخبار مصر','أخبار التقنية','أخبار السيارات',
+            'أخبار الذكاء الاصطناعي','أخبار الشركات','أخبار الاقتصاد اليوم','أخبار السياسة اليوم',
+            'نتائج المباريات اليوم','أخبار كرة القدم اليوم','آخر أخبار كرة القدم','أخبار عاجلة الآن',
+            'ماذا حدث اليوم','ما الذي حدث اليوم','تطورات اليوم','آخر التطورات','today latest news',
+            'latest updates','world news','tech news','football news','business news','news today',
+            "أهم الأخبار اليوم",
+            "أبرز أخبار اليوم",
+            "ملخص أخبار اليوم",
+            "آخر الأخبار العاجلة",
+            "أحدث الأخبار",
+            "أخبار التكنولوجيا اليوم",
+            "أخبار الذكاء الاصطناعي اليوم",
+            "أخبار العالم اليوم",
+            "أخبار اليمن اليوم",
+            "أخبار السعودية اليوم",
+            "أخبار كرة القدم اليوم",
+            "أخبار الدوري اليوم",
+            "نتائج اليوم",
+            "آخر المستجدات اليوم",
+            "ما هي آخر الأخبار",
+            "ما آخر الأخبار",
+            "top news today",
+            "latest headlines",
+            "breaking news today",
+            "latest technology news",
+          ],
+          phrases: ['آخر أخبار','أخبار اليوم','خبر عاجل','الأخبار العاجلة','latest news','breaking news','today news'],
+          icon:'📰', label:'أخبار', weight:3
         },
         images: {
-          keywords: ['صورة', 'صور', 'خلفية', 'خلفيات', 'شعار', 'تصميم', 'image', 'images', 'wallpaper', 'logo', 'picture'],
-          icon: '🖼️', label: 'صور'
+          keywords: [
+            'صورة','صور','خلفية','خلفيات','شعار','شعارات','تصميم','تصاميم','صورة لـ','صور لـ',
+            'image','images','wallpaper','wallpapers','logo','logos','picture','pictures','photo','photos',
+            'png','jpg','jpeg','4k wallpaper',
+            // طلبات صور شائعة
+            'صور عالية الجودة','صور hd','صور 4k','صورة عالية الجودة','خلفية 4k','خلفيات 4k للهاتف',
+            'خلفيات ايفون','خلفيات اندرويد','خلفيات سطح المكتب','خلفية كمبيوتر','خلفية جوال',
+            'صور بروفايل','صور شخصية','صور كرتونية','صور انمي','صور طبيعة 4k','صور سيارات 4k',
+            'صور للاستخدام','صور مجانية','صور بدون حقوق','صورة شعار','صور شعارات الشركات',
+            'صور مرجعية','صور توضيحية','ابحث عن صورة','اعرض لي صور','show me pictures',
+            'high quality images','hd images','4k images','4k wallpapers','iphone wallpapers',
+            'desktop wallpapers','profile pictures','free images','stock photos',
+            "صور جميلة",
+            "صور جديدة",
+            "صور نادرة",
+            "صور واضحة",
+            "صور احترافية",
+            "صور مجانية عالية الجودة",
+            "خلفيات جميلة",
+            "خلفيات جديدة",
+            "خلفيات موبايل",
+            "خلفيات آيفون 4K",
+            "خلفيات كمبيوتر 4K",
+            "صور للطبيعة",
+            "صور للسيارات",
+            "صور للحيوانات",
+            "صور للفضاء",
+            "صور للمدن",
+            "صور كرتونية جميلة",
+            "صور أنمي عالية الجودة",
+            "ابحث عن صور",
+            "اعرض الصور",
+            "best wallpapers",
+            "beautiful images",
+            "nature 4k",
+            "car wallpapers 4k",
+          ],
+          phrases: ['صور لـ','صورة لـ','خلفيات للهاتف','خلفيات للكمبيوتر','wallpaper 4k','phone wallpapers'],
+          icon:'🖼️', label:'صور', weight:3
         },
         videos: {
-          keywords: ['فيديو', 'يوتيوب', 'مقطع', 'حلقة', 'video', 'youtube', 'watch', 'clip'],
-          icon: '🎬', label: 'فيديو'
+          keywords: [
+            'فيديو','فيديوهات','يوتيوب','مقطع','مقاطع','حلقة','حلقات','مشاهدة','شاهد',
+            'video','videos','youtube','watch','clip','clips','shorts','tutorial video',
+            // طلبات فيديو شائعة
+            'فيديو تعليمي','شرح بالفيديو','شرح فيديو','فيديو كامل','فيديو مباشر','بث مباشر',
+            'مقاطع قصيرة','فيديوهات قصيرة','فيديوهات تعليمية','فيديوهات مضحكة','مقاطع كرة القدم',
+            'فيديو مباراة','مشاهدة المباراة','مشاهدة مباشرة','شاهد الآن','شاهد الحلقة','الحلقة كاملة',
+            'فيديو شرح','دروس فيديو','كورس فيديو','ابحث عن فيديو','اعرض لي فيديو',
+            'watch video','watch live','live stream','full video','video tutorial','video lesson',
+            'short videos','football video','match highlights','watch the match',
+            "فيديوهات جديدة",
+            "أفضل فيديوهات",
+            "فيديو شرح كامل",
+            "شرح كامل بالفيديو",
+            "فيديو للمبتدئين",
+            "فيديو تعليمي قصير",
+            "دروس تعليمية بالفيديو",
+            "فيديوهات تقنية",
+            "فيديوهات برمجة",
+            "فيديوهات كرة القدم",
+            "ملخص المباراة فيديو",
+            "أهداف المباراة فيديو",
+            "فيديو مباشر الآن",
+            "مشاهدة البث المباشر",
+            "شاهد الفيديو كامل",
+            "ابحث عن مقاطع",
+            "اعرض فيديوهات",
+            "طريقة صنع",
+            "طريقة صناعة",
+            "كيفية صنع",
+            "كيفية صناعة",
+            "كيف يصنع",
+            "كيف تصنع",
+            "كيف اصنع",
+            "طريقة تصنيع",
+            "كيف اسوي",
+            "كيف اعمل",
+            "كيف أعمل",
+            "شرح",
+            "شرح كامل",
+            "شرح بالتفصيل",
+            "شرح للمبتدئين",
+            "تعلم",
+            "تعلم كيف",
+            "دروس",
+            "درس",
+            "خطوات",
+            "خطوة بخطوة",
+            "طريقة عمل",
+            "طريقة استخدام",
+            "طريقة تركيب",
+            "طريقة إصلاح",
+            "طريقة اصلاح",
+            "حل مشكلة",
+            "حل مشاكل",
+            "تجربة",
+            "تجارب",
+            "مراجعة",
+            "مراجعات",
+            "مقارنة",
+            "مقارنات",
+            "أفضل طريقة",
+            "افضل طريقة",
+            "نصائح",
+            "نصائح للمبتدئين",
+            "شرح يوتيوب",
+            "فيديو تعليمي",
+            "فيديو شرح",
+            "فيديو كامل",
+            "فيديوهات تعليمية",
+            "how to",
+            "how do I",
+            "how to make",
+            "how to use",
+            "tutorial",
+            "tutorials",
+            "step by step",
+            "beginner guide",
+            "full tutorial",
+            "review",
+            "reviews",
+            "comparison",
+            "guide",
+            "كيفية تصنيع",
+            "تصنيع",
+            "صناعة",
+            "فيلم",
+            "أفلام",
+            "فيلم كامل",
+            "فيلم مترجم",
+            "فيلم مدبلج",
+            "فيلم عربي",
+            "فيلم أجنبي",
+            "فيلم تركي",
+            "فيلم هندي",
+            "فيلم أكشن",
+            "فيلم رعب",
+            "فيلم كوميدي",
+            "أفلام جديدة",
+            "أفلام كاملة",
+            "أفضل الأفلام",
+            "مسلسل",
+            "مسلسلات",
+            "مسلسل كامل",
+            "مسلسل مترجم",
+            "مسلسل مدبلج",
+            "مسلسلات جديدة",
+            "مسلسلات تركية",
+            "مسلسلات عربية",
+            "مسلسلات كورية",
+            "أفضل المسلسلات",
+            "حلقة",
+            "الحلقة",
+            "الحلقة كاملة",
+            "الحلقة الأخيرة",
+            "الحلقة الأولى",
+            "جميع الحلقات",
+            "موسم",
+            "الموسم الأول",
+            "الموسم الثاني",
+            "أنمي",
+            "انمي",
+            "أنمي كامل",
+            "حلقات الأنمي",
+            "كرتون",
+            "رسوم متحركة",
+            "وثائقي",
+            "وثائقيات",
+            "فيلم وثائقي",
+            "أفلام وثائقية",
+            "وثائقي",
+            "documentary",
+            "best videos",
+            "latest videos",
+            "full tutorial",
+            "live video now",
+          ],
+          phrases: ['فيديو عن','فيديوهات','مشاهدة مباراة','شاهد فيديو','youtube','youtube tutorial','programming videos'],
+          icon:'🎬', label:'فيديو', weight:3
         }
       };
 
+      function normalizeSmartQuery(query) {
+        return (query || '')
+          .toLowerCase()
+          .replace(/[إأآ]/g, 'ا')
+          .replace(/ة/g, 'ه')
+          .replace(/[ًٌٍَُِّْـ]/g, '')
+          .replace(/[؟?!.,،؛:()[\]{}"']/g, ' ')
+          .replace(/\\s+/g, ' ')
+          .trim();
+      }
+
       function detectSearchMode(query) {
-        if (!query || query.trim().length < 2) return null;
-        const lower = query.toLowerCase();
-        for (const [mode, config] of Object.entries(smartPatterns)) {
-          for (const keyword of config.keywords) {
-            if (lower.includes(keyword.toLowerCase())) return { mode, config };
-          }
-        }
-        return null;
+        const lower = normalizeSmartQuery(query);
+        if (lower.length < 2) return null;
+
+        const candidates = Object.entries(smartPatterns).map(([mode, config]) => {
+          let score = 0;
+          const matches = [];
+
+          // العبارات المركبة أقوى من الكلمات المفردة لأنها تعبّر عن نية أوضح.
+          (config.phrases || []).forEach(phrase => {
+            const p = normalizeSmartQuery(phrase);
+            if (p && lower.includes(p)) {
+              score += config.weight * 3;
+              matches.push(phrase);
+            }
+          });
+
+          // الكلمات العامة تعطي إشارة، لكن بوزن أقل.
+          (config.keywords || []).forEach(keyword => {
+            const k = normalizeSmartQuery(keyword);
+            if (!k || !lower.includes(k)) return;
+            const alreadyMatched = (config.phrases || []).some(phrase => normalizeSmartQuery(phrase) === k);
+            score += config.weight + (alreadyMatched ? 0 : 1);
+            matches.push(keyword);
+          });
+
+          // وجود أكثر من إشارة مختلفة لنفس النية يزيد الثقة.
+          const uniqueMatches = [...new Set(matches)];
+          if (uniqueMatches.length > 1) score += Math.min(uniqueMatches.length - 1, 3);
+
+          return { mode, config, score, matches: uniqueMatches };
+        }).sort((a, b) => b.score - a.score);
+
+        const best = candidates[0];
+        const second = candidates[1];
+
+        if (!best || best.score < 4) return null;
+
+        // إذا كانت نيتان واضحتان بنفس القوة، لا نخمن.
+        if (second && second.score >= best.score && second.mode !== best.mode) return null;
+
+        return {
+          mode: best.mode,
+          config: best.config,
+          score: best.score,
+          matches: best.matches
+        };
       }
 
       const searchModesConfig = [
@@ -352,34 +682,87 @@
 
       const contextualSuggestions = {
         maps: [
-          { icon: '⭐', label: '4+ نجوم', apply: () => { mapState.rating = '4'; } },
-          { icon: '🕐', label: 'مفتوح الآن', apply: () => { mapState.hours = 'open'; } },
-          { icon: '💰', label: 'اقتصادي', apply: () => { mapState.price = '1'; } },
-          { icon: '🍽️', label: 'مطاعم', apply: () => { mapState.category = 'restaurants'; } }
+          { id: 'maps-rating-4', icon: '⭐', label: '4+ نجوم', apply: () => { mapState.rating = '4'; } },
+          { id: 'maps-open-now', icon: '🕐', label: 'مفتوح الآن', apply: () => { mapState.hours = 'open'; } },
+          { id: 'maps-budget', icon: '💰', label: 'اقتصادي', apply: () => { mapState.price = '1'; } },
+          { id: 'maps-restaurants', icon: '🍽️', label: 'مطاعم', apply: () => { mapState.category = 'restaurants'; } }
         ],
         news: [
-          { icon: '⏰', label: 'آخر ساعة', apply: () => { newsState.time = 'h'; } },
-          { icon: '📅', label: 'اليوم', apply: () => { newsState.time = 'h24'; } },
-          { icon: '📆', label: 'هذا الأسبوع', apply: () => { newsState.time = 'd7'; } },
-          { icon: '🔥', label: 'الأحدث', apply: () => { newsState.sort = 'date'; } }
+          { id: 'news-last-hour', icon: '⏰', label: 'آخر ساعة', apply: () => { newsState.time = 'h'; } },
+          { id: 'news-today', icon: '📅', label: 'اليوم', apply: () => { newsState.time = 'h24'; } },
+          { id: 'news-week', icon: '📆', label: 'هذا الأسبوع', apply: () => { newsState.time = 'd7'; } },
+          { id: 'news-latest', icon: '🔥', label: 'الأحدث', apply: () => { newsState.sort = 'date'; } }
         ],
         images: [
-          { icon: '📐', label: 'كبير', apply: () => { imageState.size = 'l'; } },
-          { icon: '🎨', label: 'ملون', apply: () => { imageState.colorType = 'color'; } },
-          { icon: '👤', label: 'وجه', apply: () => { imageState.type = 'face'; } },
-          { icon: '⚖️', label: 'مجاني', apply: () => { imageState.rights = 'f'; } }
+          { id: 'images-large', icon: '📐', label: 'كبير', apply: () => { imageState.size = 'l'; } },
+          { id: 'images-color', icon: '🎨', label: 'ملون', apply: () => { imageState.colorType = 'color'; } },
+          { id: 'images-face', icon: '👤', label: 'وجه', apply: () => { imageState.type = 'face'; } },
+          { id: 'images-free', icon: '⚖️', label: 'مجاني', apply: () => { imageState.rights = 'f'; } }
         ],
         videos: [
-          { icon: '⏱️', label: 'قصير', apply: () => { filterState.duration = ['short']; } },
-          { icon: '🎥', label: 'HD', apply: () => { filterState.quality = ['hd']; } },
-          { icon: '🔴', label: 'مباشر', apply: () => { filterState.type = ['live']; } }
+          { id: 'videos-views', icon: '🔥', label: 'الترتيب حسب عدد المشاهدات', linkIndex: 1, apply: () => {} },
+          { id: 'videos-long', icon: '🎬', label: 'أكثر من 20 دقيقة', linkIndex: 12, apply: () => { filterState.duration = ['long']; } },
+          { id: 'videos-4k', icon: '🎥', label: '4K', linkIndex: 13, apply: () => { filterState.quality = ['4k']; } },
+          { id: 'videos-hd', icon: '📺', label: 'HD', linkIndex: 15, apply: () => { filterState.quality = ['hd']; } },
+          { id: 'videos-long-4k-hd', icon: '💎', label: 'أكثر من 20 دقيقة + 4K + HD', linkIndex: 21, apply: () => {} },
+          { id: 'videos-short', icon: '⏱️', label: 'قصير', linkIndex: 10, apply: () => { filterState.duration = ['short']; } },
+          { id: 'videos-live', icon: '🔴', label: 'مباشر', linkIndex: 26, apply: () => { filterState.type = ['live']; } }
         ],
         web: [
-          { icon: '📄', label: 'PDF', apply: () => { advancedState.fileType = 'pdf'; } },
-          { icon: '📅', label: 'هذا العام', apply: () => { filterState.date = ['year']; } },
-          { icon: '📰', label: 'أخبار', apply: () => { advancedState.allWords = 'أخبار'; } }
+          { id: 'web-pdf', icon: '📄', label: 'PDF', apply: () => { advancedState.fileType = 'pdf'; } },
+          { id: 'web-year', icon: '📅', label: 'هذا العام', apply: () => { filterState.date = ['year']; } },
+          { id: 'web-news', icon: '📰', label: 'أخبار', apply: () => { advancedState.allWords = 'أخبار'; } }
         ]
       };
+
+                  function getSmartSpecialSuggestions(query) {
+        const lower = normalizeSmartQuery(query);
+
+        const fileTypes = [
+          { type: 'pdf', icon: '📄', label: 'ويب: نوع ملف: pdf', phrases: ['ملف pdf', 'pdf', 'بي دي اف', 'ملفات بي دي اف'] },
+          { type: 'doc', icon: '📝', label: 'ويب: نوع ملف: doc', phrases: ['ملف doc', 'ملف docx', 'doc', 'docx', 'وورد', 'word'] },
+          { type: 'xls', icon: '📊', label: 'ويب: نوع ملف: xls', phrases: ['ملف xls', 'ملف xlsx', 'xls', 'xlsx', 'اكسل', 'excel'] },
+          { type: 'ppt', icon: '📽️', label: 'ويب: نوع ملف: ppt', phrases: ['ملف ppt', 'ملف pptx', 'ppt', 'pptx', 'باوربوينت', 'powerpoint'] },
+          { type: 'txt', icon: '📃', label: 'ويب: نوع ملف: txt', phrases: ['ملف txt', 'txt', 'نص txt', 'ملف نصي'] }
+        ];
+
+        for (const item of fileTypes) {
+          if (item.phrases.some(phrase => lower.includes(normalizeSmartQuery(phrase)))) {
+            return [{
+              id: 'smart-file-' + item.type,
+              icon: item.icon,
+              label: 'ويب: نوع ملف: ' + item.type.toUpperCase(),
+              fileType: item.type,
+              apply: () => { advancedState.fileType = item.type; }
+            }];
+          }
+        }
+
+        const platforms = [
+          ['smart-instagram-24h','📷','البحث في Instagram (أي وقت)','انستقرام|انستجرام|instagram'],
+          ['smart-facebook-24h','📘','البحث في Facebook (أي وقت)','فيسبوك|فيس بوك|facebook|fb'],
+          ['smart-tiktok-24h','🎵','البحث في TikTok (أي وقت)','تيك توك|تيكتوك|tiktok|tik tok'],
+          ['smart-x-24h','𝕏','البحث في X (أي وقت)','تويتر|twitter|منصة اكس|منصة x|اكس'],
+          ['smart-snapchat-24h','👻','البحث في Snapchat (أي وقت)','سناب شات|سناب|snapchat'],
+          ['smart-linkedin-24h','💼','البحث في LinkedIn (أي وقت)','لينكد ان|لينكدإن|linkedin'],
+          ['smart-reddit-24h','🟠','البحث في Reddit (أي وقت)','ريديت|reddit'],
+          ['smart-pinterest-24h','📌','البحث في Pinterest (أي وقت)','بنترست|pinterest'],
+          ['smart-threads-24h','🧵','البحث في Threads (أي وقت)','ثريدز|threads']
+        ];
+        for (const [id, icon, label, rawPhrases] of platforms) {
+          if (!rawPhrases.split('|').some(p => lower.includes(normalizeSmartQuery(p)))) continue;
+          const linkIndex = searches.findIndex(item => item && item.name === icon + ' ' + label);
+          if (linkIndex >= 0) return [{ id, icon, label, linkIndex, apply: () => {} }];
+        }
+        return [];
+      }
+
+      function getContextualSuggestions(modeKey) {
+        return (contextualSuggestions[modeKey] || [])
+          .map((suggestion, index) => ({ suggestion, index, usage: getFilterUsage(suggestion.id) }))
+          .sort((a, b) => b.usage - a.usage || a.index - b.index)
+          .map(item => item.suggestion);
+      }
 
       // =====================================================
       // DOM ELEMENTS
@@ -628,9 +1011,26 @@
       }
 
       function handleAllFilterClick(item) {
-        const idx = item.dataset.linkIndex;
+        const idx = Number(item.dataset.linkIndex);
+        const current = searches[idx];
+        if (!current) return;
         const key = 'link:' + idx;
-        selectedLinksState.selected[key] = !selectedLinksState.selected[key];
+
+        // داخل نفس المجموعة: اختيار واحد فقط.
+        // يمكن الجمع بين مجموعات مختلفة، لكن لا يمكن اختيار فلترين من نفس المجموعة.
+        const sameGroupKeys = Object.keys(selectedLinksState.selected).filter(k => {
+          if (!selectedLinksState.selected[k] || k === key) return false;
+          const otherIdx = Number(k.replace('link:', ''));
+          return searches[otherIdx] && searches[otherIdx].group === current.group;
+        });
+
+        if (selectedLinksState.selected[key]) {
+          delete selectedLinksState.selected[key];
+        } else {
+          sameGroupKeys.forEach(k => delete selectedLinksState.selected[k]);
+          selectedLinksState.selected[key] = true;
+        }
+
         updateAllFiltersUI();
         saveCurrentStateToMode();
       }
@@ -645,6 +1045,8 @@
         if (filterSearchInput) {
           filterSearchInput.addEventListener('input', (e) => {
             const q = e.target.value.trim().toLowerCase();
+            const grid = document.getElementById('allFiltersGrid');
+            if (grid) grid.classList.toggle('show-more', !!q);
             document.querySelectorAll('.all-filter-item').forEach(item => {
               const name = item.querySelector('.af-name').textContent.toLowerCase();
               item.style.display = q === '' || name.includes(q) ? '' : 'none';
@@ -653,6 +1055,16 @@
               const visibleItems = Array.from(group.querySelectorAll('.all-filter-item')).filter(it => it.style.display !== 'none');
               group.style.display = visibleItems.length > 0 ? '' : 'none';
             });
+          });
+        }
+        const allFiltersMoreBtn = document.getElementById('allFiltersMoreBtn');
+        if (allFiltersMoreBtn) {
+          allFiltersMoreBtn.addEventListener('click', () => {
+            const grid = document.getElementById('allFiltersGrid');
+            if (!grid) return;
+            const expanded = grid.classList.toggle('show-more');
+            allFiltersMoreBtn.setAttribute('aria-expanded', String(expanded));
+            allFiltersMoreBtn.textContent = expanded ? 'إظهار أقل ⌃' : 'إظهار المزيد ⌄';
           });
         }
         const selectAllBtn = document.getElementById('afSelectAll');
@@ -703,7 +1115,19 @@
         }
         if (advancedState.numbers) parts.push(advancedState.numbers.trim());
         if (advancedState.site) parts.push('site:' + advancedState.site.trim());
-        if (advancedState.fileType) parts.push('filetype:' + advancedState.fileType);
+        if (advancedState.fileType) {
+          const fileTypeGroups = {
+            pdf: ['pdf'],
+            doc: ['doc', 'docx'],
+            xls: ['xls', 'xlsx'],
+            ppt: ['ppt', 'pptx'],
+            txt: ['txt']
+          };
+          const extensions = fileTypeGroups[advancedState.fileType] || [advancedState.fileType];
+          parts.push(extensions.length === 1
+            ? 'filetype:' + extensions[0]
+            : '(' + extensions.map(ext => 'filetype:' + ext).join(' OR ') + ')');
+        }
         if (parts.length === 0) return baseQuery;
         if (baseQuery && !advancedState.allWords && !advancedState.exactPhrase && !advancedState.anyWords && !advancedState.numbers) {
           parts.unshift(baseQuery);
@@ -1052,26 +1476,83 @@
 
       function renderContextualFilters() {
         const mode = getActiveMode();
-        let modeKey = mode === 'smart' ? (detectSearchMode(currentQuery)?.mode || 'web') : mode;
-        const suggestions = contextualSuggestions[modeKey];
-        if (!suggestions || suggestions.length === 0) {
+        const query = currentQuery || searchInput.value || '';
+        const modeKey = mode === 'smart'
+          ? (detectSearchMode(query)?.mode || 'web')
+          : mode;
+        const specialSuggestions = mode === 'smart' ? getSmartSpecialSuggestions(query) : [];
+        const suggestions = [...specialSuggestions, ...getContextualSuggestions(modeKey)]
+          .filter((item, index, arr) => arr.findIndex(x => x.id === item.id) === index);
+
+        // تفعيل الفلتر الذكي المناسب تلقائيًا، سواء كان فلتر منصة أو نوع ملف ويب.
+        if (mode === 'smart' && specialSuggestions.length > 0) {
+          const special = specialSuggestions[0];
+          if (special.linkIndex !== undefined) {
+            selectedLinksState.selected = {};
+            selectedLinksState.selected['link:' + special.linkIndex] = true;
+            saveCurrentStateToMode();
+            updateAllFiltersUI();
+          } else if (special.fileType) {
+            // غيّر نوع الملف مباشرة حسب النوع الذي اكتشفه البحث الذكي.
+            advancedState.fileType = special.fileType;
+            saveCurrentStateToMode();
+            syncAdvancedInputs();
+            renderActiveFiltersBar();
+            updateAllFiltersUI();
+          }
+        }
+
+        if (!suggestions.length) {
           contextualFilters.classList.remove('show');
           return;
         }
+
         contextualFilters.classList.add('show');
         cfLabelText.textContent = langStrings[currentLang].cfLabelText;
         cfChips.innerHTML = '';
-        suggestions.forEach(sug => {
+
+        suggestions.slice(0, 4).forEach(sug => {
           const chip = document.createElement('button');
           chip.className = 'cf-chip';
-          chip.innerHTML = `<span class="chip-icon">${sug.icon}</span><span>${sug.label}</span>`;
+          chip.dataset.filterId = sug.id;
+          const usage = getFilterUsage(sug.id);
+          chip.innerHTML = `
+            <span class="chip-icon">${sug.icon}</span>
+            <span>${sug.label}</span>
+            ${usage > 0 ? `<span style="font-size:10px;opacity:.65">×${usage}</span>` : ''}
+          `;
+
           chip.addEventListener('click', () => {
             sug.apply();
+
+            if (sug.linkIndex !== undefined) {
+              selectedLinksState.selected = {};
+              selectedLinksState.selected['link:' + sug.linkIndex] = true;
+            }
+
+            recordFilterUsage(sug.id);
             saveCurrentStateToMode();
-            chip.classList.toggle('active');
+            syncAllInputs();
             updateFilterSummary();
             renderActiveFiltersBar();
+
+            const query = (searchInput.value || currentQuery || '').trim();
+            if (query) {
+              performSearch(query);
+            } else {
+              showToast(currentLang === 'ar'
+                ? '✏️ اكتب كلمة أولاً ثم اختر الفلتر'
+                : '✏️ Enter a search term first');
+            }
+
+            renderContextualFilters();
           });
+
+          if (usage > 0) {
+            chip.title = currentLang === 'ar'
+              ? `استخدمت هذا الفلتر ${usage} مرة`
+              : `Used ${usage} times`;
+          }
           cfChips.appendChild(chip);
         });
       }
@@ -1261,6 +1742,17 @@
           selectedLinks.slice(0, 5).forEach(link => {
             window.open(link.url, '_blank');
           });
+
+          // تبويب "ذكي" يبدأ كل بحث بحالة جديدة ولا يرث الفلاتر المستخدمة سابقًا.
+          if (mode === 'smart') {
+            selectedLinksState.selected = {};
+            filterUsage = {};
+            saveFilterUsage();
+            saveCurrentStateToMode();
+            renderContextualFilters();
+            updateAllFiltersUI();
+          }
+
           emptyState.style.display = 'none';
           lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
           const modeInfo = searchModesConfig.find(m => m.id === mode);
@@ -1619,7 +2111,7 @@
         strings.quickSuggestions.forEach(text => {
           const chip = document.createElement('button');
           chip.textContent = text;
-          chip.addEventListener('click', () => { searchInput.value = text; performSearch(text); });
+          chip.addEventListener('click', () => { searchInput.value = text; currentQuery = text; const detected = detectSearchMode(text); if (detected) switchMode(detected.mode); performSearch(text); });
           quickSuggestions.appendChild(chip);
         });
       }
@@ -1631,8 +2123,21 @@
       searchInput.addEventListener('input', () => {
         showSuggestions();
         updateSmartIndicator();
-        if (getActiveMode() === 'smart') renderContextualFilters();
+        if (getActiveMode() === 'smart') {
+          const nextQuery = searchInput.value.trim();
+
+          // كل استعلام ذكي يبدأ بدون فلتر رابط مركب قديم.
+          if (nextQuery !== currentQuery) {
+            selectedLinksState.selected = {};
+            saveCurrentStateToMode();
+            updateAllFiltersUI();
+          }
+
+          currentQuery = nextQuery;
+          renderContextualFilters();
+        }
       });
+
       searchInput.addEventListener('focus', showSuggestions);
       searchInput.addEventListener('blur', hideSuggestions);
       searchInput.addEventListener('keydown', (e) => {
@@ -1789,6 +2294,8 @@
       function init() {
         // ⭐ بناء شبكة كافة الفلاتر من searches
         buildAllFiltersGrid();
+
+        loadFilterUsage();
 
         const savedTheme = localStorage.getItem('sh_theme');
         if (savedTheme === 'dark') {
