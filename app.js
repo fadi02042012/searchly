@@ -1584,6 +1584,37 @@
       }
 
       // =====================================================
+      // SEARCH CONTROLS
+      // =====================================================
+      function attachSearchListeners() {
+        if (!searchBtn || !searchInput) return;
+        if (searchBtn.dataset.searchInitialized === '1') return;
+        searchBtn.dataset.searchInitialized = '1';
+
+        searchBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          performSearch();
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter') return;
+          e.preventDefault();
+          suggestionsDropdown.classList.remove('show');
+          performSearch();
+        });
+
+        searchInput.addEventListener('input', () => {
+          showSuggestions();
+        });
+
+        searchInput.addEventListener('focus', () => {
+          if (searchInput.value.trim()) showSuggestions();
+        });
+
+        searchInput.addEventListener('blur', hideSuggestions);
+      }
+
+      // =====================================================
       // LANGUAGE SWITCH
       // =====================================================
       function switchLanguage(lang) {
@@ -1661,6 +1692,7 @@
         const initialMode = searchModesConfig.some(item => item.id === savedMode) ? savedMode : 'web';
         setActiveMode(initialMode);
         attachModeTabListeners();
+        attachSearchListeners();
         attachAllFiltersListeners();
         loadStateFromMode(initialMode);
         setFilterButtonVisuals(filterState);
