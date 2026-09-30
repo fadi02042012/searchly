@@ -363,6 +363,31 @@
         const legacy={views:1,rating:2,uploaded:3,title:4,hour:5,today:6,week:7,month:8,year:9,short:10,medium:11,long:12,'4k':13,hdr:14,hd:15,'360':16,vr180:17,'3d':18,longViews:19,long4k:20,long4kHd:21,video:22,channel:23,playlist:24,movie:25,live:26,shorts:27,instagram:33};
         return legacy[id];
       }
+      function selectSmartLink(index) {
+        const idx = Number(index);
+        if (!Number.isInteger(idx) || idx < 0 || idx >= searches.length) return false;
+        const current = searches[idx];
+        if (!current) return false;
+
+        const key = 'link:' + idx;
+        const sameGroupKeys = Object.keys(selectedLinksState.selected).filter(k => {
+          if (!selectedLinksState.selected[k] || k === key) return false;
+          const otherIdx = Number(k.replace('link:', ''));
+          return searches[otherIdx] && searches[otherIdx].group === current.group;
+        });
+
+        if (selectedLinksState.selected[key]) {
+          delete selectedLinksState.selected[key];
+        } else {
+          sameGroupKeys.forEach(k => delete selectedLinksState.selected[k]);
+          selectedLinksState.selected[key] = true;
+        }
+
+        updateAllFiltersUI();
+        saveCurrentStateToMode();
+        return true;
+      }
+
       function getMatchedSmartRules(query) {
         const q=normalizeSmartQuery(query);
         return (smartRules.filters||[]).map(rule=>{
