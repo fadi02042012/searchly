@@ -318,34 +318,86 @@
       // =====================================================
       // SMART SEARCH DETECTION
       // =====================================================
+      // =====================================================
+      // ✨ SMART SEARCH — تحليل النية متعدد الإشارات
+      // =====================================================
+      function normalizeSmartQuery(query) {
+        return String(query || '')
+          .toLowerCase()
+          .replace(/[إأآ]/g, 'ا')
+          .replace(/ة/g, 'ه')
+          .replace(/[ًٌٍَُِّْـ]/g, '')
+          .replace(/[؟?!.,،؛:()[\]{}"'']/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+
       const smartPatterns = {
         maps: {
-          keywords: ['مطعم', 'مطاعم', 'فندق', 'فنادق', 'مقهى', 'مقاهي', 'صيدلية', 'صيدليات', 'مستشفى', 'مستشفيات', 'بنك', 'بنوك', 'صراف', 'محطة', 'محطات', 'بقالة', 'سوبر ماركت', 'مول', 'مركز تجاري', 'قريب', 'قريبة', 'بالقرب', 'nearby', 'restaurant', 'hotel', 'cafe', 'pharmacy', 'hospital', 'bank', 'atm', 'gas station', 'supermarket', 'mall'],
+          phrases: ['مطاعم قريبه','مطاعم قريبة','مطعم قريب','فنادق قريبه','فنادق قريبة','مقاهي قريبه','صيدليات قريبه','مستشفيات قريبه','بالقرب مني','بالقرب من','قريب مني','قريبة مني','near me','nearby','restaurants near','hotels near'],
+          keywords: ['مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','صيدليات','مستشفى','مستشفيات','بنك','بنوك','صراف','محطة','محطات','بقالة','سوبر ماركت','مول','مركز تجاري','restaurant','hotel','cafe','pharmacy','hospital','bank','atm','gas station','supermarket','mall'],
           icon: '🗺️', label: 'خرائط'
         },
         news: {
-          keywords: ['أخبار', 'خبر', 'عاجل', 'سياسة', 'اقتصاد', 'رياضة', 'news', 'breaking', 'politics', 'economy'],
+          phrases: ['اخبار اليوم','أخبار اليوم','اخر الاخبار','آخر الأخبار','خبر عاجل','اخبار عاجله','هذا الخبر','ما الجديد في','latest news','breaking news','today news'],
+          keywords: ['اخبار','أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','انتخابات','news','breaking','politics','economy','sports'],
           icon: '📰', label: 'أخبار'
         },
         images: {
-          keywords: ['صورة', 'صور', 'خلفية', 'خلفيات', 'شعار', 'تصميم', 'image', 'images', 'wallpaper', 'logo', 'picture'],
+          phrases: ['صور عاليه الجوده','صور عالية الجودة','خلفيات عاليه الدقه','خلفيات عالية الدقة','صور png','صور مجانية','صورة مجانية','صور كبيره','صور كبيرة','صور مربعة','صور عريضه','صور عريضة'],
+          keywords: ['صورة','صور','صوره','خلفية','خلفيات','شعار','تصميم','png','jpg','jpeg','wallpaper','image','images','picture','logo'],
           icon: '🖼️', label: 'صور'
         },
         videos: {
-          keywords: ['فيديو', 'يوتيوب', 'مقطع', 'حلقة', 'video', 'youtube', 'watch', 'clip'],
+          phrases: [
+            'فيديو تعليمي','فيديو كامل','فيديو مباشر','بث مباشر','فيلم كامل','فيلم مترجم','فيلم مدبلج',
+            'مسلسل كامل','مسلسل مترجم','جميع الحلقات','الحلقة كاملة','حلقة كاملة','فيديو 4k',
+            'فيديو hd','شرح كامل','شرح بالتفصيل','شرح للمبتدئين','خطوة بخطوة','طريقة صنع','طريقة صناعة',
+            'كيفية صنع','كيفية صناعة','كيف يصنع','كيف تصنع','كيف اصنع','كيف اسوي','كيف اعمل',
+            'طريقة عمل','طريقة استخدام','طريقة تركيب','طريقة اصلاح','طريقة إصلاح','حل مشكلة',
+            'مراجعة','مراجعات','مقارنة','مقارنات','تجربة','تجارب','دروس','درس','تعلم','tutorial',
+            'how to','how do i','how to make','how to use','step by step','beginner guide',
+            'full tutorial','review','reviews','comparison','guide','documentary','فيلم وثائقي','فيلم وثائقية',
+            'أفلام وثائقية','افلام وثائقية','وثائقي','وثائقيات','مسلسل','مسلسلات','حلقة','موسم','أنمي','انمي','كرتون'
+          ],
+          keywords: ['فيديو','يوتيوب','مقطع','مشاهدة','شاهد','حلقة','فيلم','أفلام','مسلسل','مسلسلات','شرح','تعلم','دروس','طريقة','كيفية','مراجعة','مقارنة','وثائقي','انمي','أنمي','كرتون','video','youtube','watch','clip','tutorial','documentary'],
           icon: '🎬', label: 'فيديو'
         }
       };
 
-      function detectSearchMode(query) {
-        if (!query || query.trim().length < 2) return null;
-        const lower = query.toLowerCase();
-        for (const [mode, config] of Object.entries(smartPatterns)) {
-          for (const keyword of config.keywords) {
-            if (lower.includes(keyword.toLowerCase())) return { mode, config };
+      function scoreSmartMode(query, mode, config) {
+        const lower = normalizeSmartQuery(query);
+        let score = 0;
+        const matched = [];
+        config.phrases.forEach(phrase => {
+          const p = normalizeSmartQuery(phrase);
+          if (p && lower.includes(p)) {
+            score += 5;
+            matched.push(p);
           }
-        }
-        return null;
+        });
+        config.keywords.forEach(keyword => {
+          const k = normalizeSmartQuery(keyword);
+          if (k && lower.includes(k)) {
+            score += 1;
+            matched.push(k);
+          }
+        });
+        return { mode, config, score, matched: [...new Set(matched)] };
+      }
+
+      function detectSearchMode(query) {
+        if (!query || normalizeSmartQuery(query).length < 2) return null;
+        const results = Object.entries(smartPatterns)
+          .map(([mode, config]) => scoreSmartMode(query, mode, config))
+          .filter(result => result.score > 0)
+          .sort((a, b) => b.score - a.score);
+
+        if (!results.length) return null;
+        const best = results[0];
+        const second = results[1];
+        if (second && best.score === second.score && best.score < 5) return null;
+        return best;
       }
 
       const searchModesConfig = [
@@ -357,37 +409,206 @@
         { id: 'videos', icon: '🎬', label: 'فيديو', labelEn: 'Videos' }
       ];
 
+      const smartFilterLinks = {
+        views: 1, rating: 2, uploaded: 3, title: 4,
+        hour: 5, today: 6, week: 7, month: 8, year: 9,
+        short: 10, medium: 11, long: 12, '4k': 13, hdr: 14, hd: 15,
+        '360': 16, vr180: 17, '3d': 18,
+        longViews: 19, long4k: 20, long4kHd: 21,
+        video: 22, channel: 23, playlist: 24, movie: 25, live: 26, shorts: 27,
+        youtubeShorts: 27, instagram: 33
+      };
+
+      function smartHas(lower, values) {
+        return values.some(value => lower.includes(normalizeSmartQuery(value)));
+      }
+
+      function resetSmartAutoState() {
+        filterState.sort = 'date';
+        filterState.type = [];
+        filterState.duration = [];
+        filterState.date = [];
+        filterState.quality = [];
+        filterState.feature = [];
+        advancedState = { allWords: '', exactPhrase: '', anyWords: '', noneWords: '', numbers: '', site: '', fileType: '', lastUpdate: '', lang: '', usageRights: '' };
+        newsState = { allWords: '', exactPhrase: '', site: '', time: 'all', sort: 'relevance' };
+        imageState = { allWords: '', site: '', fileType: '', size: 'all', exactWidth: '', exactHeight: '', aspect: 'all', color: 'all', colorType: 'all', type: 'all', rights: 'all', time: 'all', lang: '', region: '', safe: 'all' };
+        mapState = { place: '', near: '', rating: '0', hours: 'all', price: 'all', category: '', sort: 'relevance' };
+        selectedLinksState.selected = {};
+      }
+
+      function getSmartSpecialSuggestions(query) {
+        const lower = normalizeSmartQuery(query);
+        const suggestions = [];
+        const addLink = (id, icon, label, key) => {
+          const index = smartFilterLinks[key];
+          if (index === undefined) return;
+          suggestions.push({ id, icon, label, linkIndex: index, auto: true, apply: () => selectSmartLink(index) });
+        };
+        const addSimple = (id, icon, label, apply) => suggestions.push({ id, icon, label, auto: true, apply });
+
+        // نوع الملف: يدعم الصيغ الشائعة المرتبطة ببعضها.
+        const fileGroups = [
+          { type: 'pdf', label: 'ويب: نوع ملف: PDF', phrases: ['ملف pdf','pdf','بي دي اف','ملفات بي دي اف'] },
+          { type: 'doc', label: 'ويب: نوع ملف: DOC + DOCX', phrases: ['ملف doc','ملف docx','doc','docx','وورد','word'] },
+          { type: 'xls', label: 'ويب: نوع ملف: XLS + XLSX', phrases: ['ملف xls','ملف xlsx','xls','xlsx','اكسل','excel'] },
+          { type: 'ppt', label: 'ويب: نوع ملف: PPT + PPTX', phrases: ['ملف ppt','ملف pptx','ppt','pptx','باوربوينت','powerpoint'] },
+          { type: 'txt', label: 'ويب: نوع ملف: TXT', phrases: ['ملف txt','txt','ملف نصي','نص txt'] }
+        ];
+        const file = fileGroups.find(item => smartHas(lower, item.phrases));
+        if (file) addSimple('smart-file-' + file.type, '📄', file.label, () => { advancedState.fileType = file.type; });
+
+        if (smartHas(lower, ['مجاني','free','royalty free'])) {
+          if (smartHas(lower, ['صورة','صور','image','images'])) addSimple('smart-images-free','⚖️','صور: مجاني', () => { imageState.rights = 'f'; });
+          else addSimple('smart-web-free','⚖️','ويب: مجاني للاستخدام', () => { advancedState.usageRights = 'f'; });
+        }
+        if (smartHas(lower, ['4k'])) addLink('smart-4k','🎥','4K','4k');
+        if (smartHas(lower, ['hd'])) addLink('smart-hd','📺','HD','hd');
+        if (smartHas(lower, ['hdr'])) addLink('smart-hdr','✨','HDR','hdr');
+        if (smartHas(lower, ['360'])) addLink('smart-360','🌍','360°','360');
+        if (smartHas(lower, ['vr180','vr 180'])) addLink('smart-vr180','🥽','VR180','vr180');
+        if (smartHas(lower, ['ثلاثي الابعاد','ثلاثي الأبعاد','3d'])) addLink('smart-3d','🎞️','3D','3d');
+
+        if (smartHas(lower, ['اكثر من 20 دقيقه','أكثر من 20 دقيقة','20 دقيقة','20 دقيقه','long'])) addLink('smart-long','🎬','أكثر من 20 دقيقة','long');
+        if (smartHas(lower, ['اقل من 4 دقائق','أقل من 4 دقائق','اقل من 4 دق','short'])) addLink('smart-short','⏱️','أقل من 4 دقائق','short');
+        if (smartHas(lower, ['بين 4 و20','4-20','4 الى 20','medium'])) addLink('smart-medium','⌛','بين 4 و20 دقيقة','medium');
+
+        if (smartHas(lower, ['الاكثر مشاهدة','الأكثر مشاهدة','عدد المشاهدات','مشاهدات','most viewed','views'])) addLink('smart-views','🔥','الترتيب حسب عدد المشاهدات','views');
+        if (smartHas(lower, ['الأعلى تقييما','الأعلى تقييمًا','اعلى تقييم','تقييم','rating'])) addLink('smart-rating','⭐','الترتيب حسب التقييم','rating');
+
+        if (smartHas(lower, ['آخر ساعة','اخر ساعه','الساعة الماضية','last hour'])) addLink('smart-hour','🕐','آخر ساعة','hour');
+        else if (smartHas(lower, ['اليوم','today','24 ساعة','24h'])) addLink('smart-today','📆','اليوم','today');
+        else if (smartHas(lower, ['هذا الاسبوع','هذا الأسبوع','الاسبوع','this week'])) addLink('smart-week','📅','هذا الأسبوع','week');
+        else if (smartHas(lower, ['هذا الشهر','this month'])) addLink('smart-month','🗓️','هذا الشهر','month');
+        else if (smartHas(lower, ['هذا العام','هذه السنة','this year'])) addLink('smart-year','📖','هذا العام','year');
+
+        if (smartHas(lower, ['بث مباشر','مباشر','live'])) addLink('smart-live','🔴','مباشر','live');
+        if (smartHas(lower, ['shorts','شورتس','شورت'])) addLink('smart-shorts','🎬','YouTube Shorts','shorts');
+        if (smartHas(lower, ['قائمة تشغيل','قوائم تشغيل','playlist','playlists'])) addLink('smart-playlist','📂','قوائم تشغيل','playlist');
+        if (smartHas(lower, ['قناة','قنوات','channel','channels'])) addLink('smart-channel','📺','قنوات','channel');
+        if (smartHas(lower, ['فيلم','افلام','أفلام','movie','movies'])) addLink('smart-movie','🎬','أفلام','movie');
+        if (smartHas(lower, ['فيديو','فيديوهات','video','videos'])) addLink('smart-video','🎥','فيديوهات فقط','video');
+
+        if (smartHas(lower, ['انستقرام','انستجرام','instagram'])) addLink('smart-instagram','📷','البحث في Instagram','instagram');
+
+        return suggestions;
+      }
+
+      function selectSmartLink(index) {
+        selectedLinksState.selected = {};
+        selectedLinksState.selected['link:' + index] = true;
+      }
+
+      function applySmartIntent(query, options = {}) {
+        const lower = normalizeSmartQuery(query);
+        if (!lower) {
+          if (options.reset !== false) resetSmartAutoState();
+          return null;
+        }
+
+        resetSmartAutoState();
+        const detected = detectSearchMode(query);
+        const suggestions = getSmartSpecialSuggestions(query);
+
+        // الصور / الخرائط / الأخبار لها حالة مخصصة، مع الحفاظ على استعلام المستخدم.
+        if (detected?.mode === 'maps') {
+          mapState.place = query;
+          if (smartHas(lower, ['قريب','قريبه','قريبة','بالقرب','near me','nearby'])) mapState.hours = 'all';
+          if (smartHas(lower, ['مطعم','مطاعم','restaurant'])) mapState.category = 'restaurants';
+          if (smartHas(lower, ['فندق','فنادق','hotel'])) mapState.category = 'hotels';
+          if (smartHas(lower, ['مقهى','مقاهي','cafe'])) mapState.category = 'cafes';
+          if (smartHas(lower, ['صيدلية','صيدليات','pharmacy'])) mapState.category = 'pharmacies';
+          if (smartHas(lower, ['مستشفى','مستشفيات','hospital'])) mapState.category = 'hospitals';
+          if (smartHas(lower, ['بنك','بنوك','bank'])) mapState.category = 'banks';
+          if (smartHas(lower, ['4+ نجوم','أربع نجوم','4 نجوم'])) mapState.rating = '4';
+          if (smartHas(lower, ['مفتوح الآن','open now'])) mapState.hours = 'open';
+          if (smartHas(lower, ['اقتصادي','رخيص','cheap','budget'])) mapState.price = '1';
+        } else if (detected?.mode === 'news') {
+          newsState.allWords = query;
+          if (smartHas(lower, ['آخر ساعة','اخر ساعه','last hour'])) newsState.time = 'h';
+          else if (smartHas(lower, ['اليوم','today'])) newsState.time = 'h24';
+          else if (smartHas(lower, ['هذا الاسبوع','هذا الأسبوع','this week'])) newsState.time = 'd7';
+          else if (smartHas(lower, ['هذا الشهر','this month'])) newsState.time = 'd30';
+          if (smartHas(lower, ['الأحدث','الاحدث','latest'])) newsState.sort = 'date';
+        } else if (detected?.mode === 'images') {
+          imageState.allWords = query;
+          if (smartHas(lower, ['كبير','كبيرة','large'])) imageState.size = 'l';
+          if (smartHas(lower, ['ملون','ملونة','color'])) imageState.colorType = 'color';
+          if (smartHas(lower, ['ابيض واسود','أبيض وأسود','gray','black and white'])) imageState.colorType = 'gray';
+          if (smartHas(lower, ['وجه','faces','face'])) imageState.type = 'face';
+          if (smartHas(lower, ['مجاني','free'])) imageState.rights = 'f';
+          if (smartHas(lower, ['شفاف','transparent'])) imageState.colorType = 'trans';
+          if (smartHas(lower, ['png'])) imageState.fileType = 'png';
+          if (smartHas(lower, ['jpg','jpeg'])) imageState.fileType = 'jpg';
+        }
+
+        // طبقة فيديو مستقلة: يمكن تركيب عدة شروط في استعلام واحد.
+        if (detected?.mode === 'videos') {
+          const hasLong = smartHas(lower, ['أكثر من 20 دقيقة','اكثر من 20 دقيقه','20 دقيقة','20 دقيقه','long']);
+          const has4k = smartHas(lower, ['4k']);
+          const hasHd = smartHas(lower, ['hd']);
+          const hasViews = smartHas(lower, ['الاكثر مشاهدة','الأكثر مشاهدة','عدد المشاهدات','مشاهدات','most viewed','views']);
+          if (hasLong && has4k && hasHd) selectSmartLink(smartFilterLinks.long4kHd);
+          else if (hasLong && has4k) selectSmartLink(smartFilterLinks.long4k);
+          else if (hasLong && hasViews) selectSmartLink(smartFilterLinks.longViews);
+          else if (hasViews) selectSmartLink(smartFilterLinks.views);
+          else if (hasLong) selectSmartLink(smartFilterLinks.long);
+          else if (has4k) selectSmartLink(smartFilterLinks['4k']);
+          else if (hasHd) selectSmartLink(smartFilterLinks.hd);
+          else if (hasViews) selectSmartLink(smartFilterLinks.views);
+          else if (smartHas(lower, ['فيلم كامل','مسلسل كامل','حلقة كاملة'])) selectSmartLink(smartFilterLinks.movie);
+        } else if (detected?.mode === 'web' || !detected) {
+          // لا نغيّر البحث العام إلى فيديو لمجرد كلمة غير حاسمة.
+          if (suggestions.length && suggestions.some(s => s.linkIndex !== undefined)) {
+            const firstLink = suggestions.find(s => s.linkIndex !== undefined);
+            selectSmartLink(firstLink.linkIndex);
+          }
+        }
+
+        // طبق جميع الفلاتر الخاصة بالنوع حتى عند وجود رابط مركب.
+        suggestions.forEach(s => {
+          if (s.fileType) advancedState.fileType = s.fileType;
+        });
+
+        return { detected, suggestions };
+      }
+
       const contextualSuggestions = {
         maps: [
-          { icon: '⭐', label: '4+ نجوم', apply: () => { mapState.rating = '4'; } },
-          { icon: '🕐', label: 'مفتوح الآن', apply: () => { mapState.hours = 'open'; } },
-          { icon: '💰', label: 'اقتصادي', apply: () => { mapState.price = '1'; } },
-          { icon: '🍽️', label: 'مطاعم', apply: () => { mapState.category = 'restaurants'; } }
+          { id: 'maps-rating-4', icon: '⭐', label: '4+ نجوم', apply: () => { mapState.rating = '4'; } },
+          { id: 'maps-open-now', icon: '🕐', label: 'مفتوح الآن', apply: () => { mapState.hours = 'open'; } },
+          { id: 'maps-budget', icon: '💰', label: 'اقتصادي', apply: () => { mapState.price = '1'; } },
+          { id: 'maps-restaurants', icon: '🍽️', label: 'مطاعم', apply: () => { mapState.category = 'restaurants'; } }
         ],
         news: [
-          { icon: '⏰', label: 'آخر ساعة', apply: () => { newsState.time = 'h'; } },
-          { icon: '📅', label: 'اليوم', apply: () => { newsState.time = 'h24'; } },
-          { icon: '📆', label: 'هذا الأسبوع', apply: () => { newsState.time = 'd7'; } },
-          { icon: '🔥', label: 'الأحدث', apply: () => { newsState.sort = 'date'; } }
+          { id: 'news-last-hour', icon: '⏰', label: 'آخر ساعة', apply: () => { newsState.time = 'h'; } },
+          { id: 'news-today', icon: '📅', label: 'اليوم', apply: () => { newsState.time = 'h24'; } },
+          { id: 'news-week', icon: '📆', label: 'هذا الأسبوع', apply: () => { newsState.time = 'd7'; } },
+          { id: 'news-latest', icon: '🔥', label: 'الأحدث', apply: () => { newsState.sort = 'date'; } }
         ],
         images: [
-          { icon: '📐', label: 'كبير', apply: () => { imageState.size = 'l'; } },
-          { icon: '🎨', label: 'ملون', apply: () => { imageState.colorType = 'color'; } },
-          { icon: '👤', label: 'وجه', apply: () => { imageState.type = 'face'; } },
-          { icon: '⚖️', label: 'مجاني', apply: () => { imageState.rights = 'f'; } }
+          { id: 'images-large', icon: '📐', label: 'كبير', apply: () => { imageState.size = 'l'; } },
+          { id: 'images-color', icon: '🎨', label: 'ملون', apply: () => { imageState.colorType = 'color'; } },
+          { id: 'images-face', icon: '👤', label: 'وجه', apply: () => { imageState.type = 'face'; } },
+          { id: 'images-free', icon: '⚖️', label: 'مجاني', apply: () => { imageState.rights = 'f'; } }
         ],
         videos: [
-          { icon: '⏱️', label: 'قصير', apply: () => { filterState.duration = ['short']; } },
-          { icon: '🎥', label: 'HD', apply: () => { filterState.quality = ['hd']; } },
-          { icon: '🔴', label: 'مباشر', apply: () => { filterState.type = ['live']; } }
+          { id: 'videos-views', icon: '🔥', label: 'الترتيب حسب عدد المشاهدات', linkIndex: 1, apply: () => selectSmartLink(1) },
+          { id: 'videos-long', icon: '🎬', label: 'أكثر من 20 دقيقة', linkIndex: 12, apply: () => selectSmartLink(12) },
+          { id: 'videos-4k', icon: '🎥', label: '4K', linkIndex: 13, apply: () => selectSmartLink(13) },
+          { id: 'videos-hd', icon: '📺', label: 'HD', linkIndex: 15, apply: () => selectSmartLink(15) },
+          { id: 'videos-long-4k-hd', icon: '💎', label: 'أكثر من 20 دقيقة + 4K + HD', linkIndex: 21, apply: () => selectSmartLink(21) },
+          { id: 'videos-short', icon: '⏱️', label: 'قصير', linkIndex: 10, apply: () => selectSmartLink(10) },
+          { id: 'videos-live', icon: '🔴', label: 'مباشر', linkIndex: 26, apply: () => selectSmartLink(26) }
         ],
         web: [
-          { icon: '📄', label: 'PDF', apply: () => { advancedState.fileType = 'pdf'; } },
-          { icon: '📅', label: 'هذا العام', apply: () => { filterState.date = ['year']; } },
-          { icon: '📰', label: 'أخبار', apply: () => { advancedState.allWords = 'أخبار'; } }
+          { id: 'web-pdf', icon: '📄', label: 'PDF', apply: () => { advancedState.fileType = 'pdf'; } },
+          { id: 'web-year', icon: '📅', label: 'هذا العام', apply: () => { filterState.date = ['year']; } },
+          { id: 'web-news', icon: '📰', label: 'أخبار', apply: () => { advancedState.allWords = 'أخبار'; } }
         ]
       };
 
+      // =====================================================
       // =====================================================
       // DOM ELEMENTS
       // =====================================================
@@ -710,7 +931,19 @@
         }
         if (advancedState.numbers) parts.push(advancedState.numbers.trim());
         if (advancedState.site) parts.push('site:' + advancedState.site.trim());
-        if (advancedState.fileType) parts.push('filetype:' + advancedState.fileType);
+        if (advancedState.fileType) {
+          const fileTypeGroups = {
+            pdf: ['pdf'],
+            doc: ['doc', 'docx'],
+            xls: ['xls', 'xlsx'],
+            ppt: ['ppt', 'pptx'],
+            txt: ['txt']
+          };
+          const extensions = fileTypeGroups[advancedState.fileType] || [advancedState.fileType];
+          parts.push(extensions.length === 1
+            ? 'filetype:' + extensions[0]
+            : '(' + extensions.map(ext => 'filetype:' + ext).join(' OR ') + ')');
+        }
         if (parts.length === 0) return baseQuery;
         if (baseQuery && !advancedState.allWords && !advancedState.exactPhrase && !advancedState.anyWords && !advancedState.numbers) {
           parts.unshift(baseQuery);
@@ -1065,28 +1298,66 @@
 
       function renderContextualFilters() {
         const mode = getActiveMode();
-        let modeKey = mode === 'smart' ? (detectSearchMode(currentQuery)?.mode || 'web') : mode;
-        const suggestions = contextualSuggestions[modeKey];
-        if (!suggestions || suggestions.length === 0) {
+        let suggestions = [];
+        let modeKey = mode;
+
+        if (mode === 'smart') {
+          const result = applySmartIntent(currentQuery || searchInput.value, { reset: true });
+          modeKey = result?.detected?.mode || 'web';
+          suggestions = result?.suggestions || [];
+          const generic = contextualSuggestions[modeKey] || [];
+          generic.forEach(item => {
+            if (!suggestions.some(s => s.id === item.id)) suggestions.push(item);
+          });
+        } else {
+          suggestions = contextualSuggestions[modeKey] || [];
+        }
+
+        if (!suggestions.length) {
           contextualFilters.classList.remove('show');
           return;
         }
+
         contextualFilters.classList.add('show');
-        cfLabelText.textContent = langStrings[currentLang].cfLabelText;
+        cfLabelText.textContent = mode === 'smart'
+          ? (currentLang === 'ar' ? '✨ طبّقنا تلقائيًا:' : '✨ Applied automatically:')
+          : langStrings[currentLang].cfLabelText;
         cfChips.innerHTML = '';
-        suggestions.forEach(sug => {
+
+        suggestions.slice(0, 8).forEach(sug => {
           const chip = document.createElement('button');
           chip.className = 'cf-chip';
           chip.innerHTML = `<span class="chip-icon">${sug.icon}</span><span>${sug.label}</span>`;
+          const isLinkActive = sug.linkIndex !== undefined && !!selectedLinksState.selected['link:' + sug.linkIndex];
+          const isStateActive = sug.id && (
+            (sug.id.includes('file-') && advancedState.fileType) ||
+            (sug.id.includes('images-free') && imageState.rights === 'f') ||
+            (sug.id.includes('web-free') && advancedState.usageRights === 'f')
+          );
+          if (isLinkActive || isStateActive || sug.auto) chip.classList.add('active');
+
           chip.addEventListener('click', () => {
-            sug.apply();
+            if (mode === 'smart' && sug.auto) {
+              if (sug.linkIndex !== undefined) selectSmartLink(sug.linkIndex);
+              else sug.apply();
+            } else {
+              sug.apply();
+            }
             saveCurrentStateToMode();
-            chip.classList.toggle('active');
             updateFilterSummary();
             renderActiveFiltersBar();
+            updateAllFiltersUI();
+            renderContextualFilters();
           });
           cfChips.appendChild(chip);
         });
+
+        if (mode === 'smart') {
+          const hint = document.createElement('span');
+          hint.className = 'cf-auto-hint';
+          hint.textContent = currentLang === 'ar' ? 'تُطبّق قبل فتح النتائج' : 'Applied before opening results';
+          cfChips.appendChild(hint);
+        }
       }
 
       function updateSmartIndicator() {
@@ -1096,7 +1367,9 @@
         if (detected) {
           smartIndicator.classList.add('show');
           smartIndicatorText.textContent = (currentLang === 'ar' ? 'وضع ذكي: ' : 'Smart: ') + detected.config.label;
-        } else smartIndicator.classList.remove('show');
+        } else {
+          smartIndicator.classList.remove('show');
+        }
       }
 
       // =====================================================
@@ -1268,12 +1541,18 @@
         currentQuery = query;
         const mode = getActiveMode();
 
-        // ⭐ إذا كانت هناك روابط مختارة → افتحها كلها
+        if (mode === 'smart') {
+          applySmartIntent(query, { reset: true });
+          saveCurrentStateToMode();
+          syncAllInputs();
+          updateAllFiltersUI();
+          updateFilterSummary();
+          renderActiveFiltersBar();
+        }
+
         const selectedLinks = buildSelectedLinksURLs(query);
         if (selectedLinks.length > 0 && (mode === 'videos' || mode === 'smart')) {
-          selectedLinks.slice(0, 5).forEach(link => {
-            window.open(link.url, '_blank');
-          });
+          selectedLinks.slice(0, 5).forEach(link => window.open(link.url, '_blank'));
           emptyState.style.display = 'none';
           lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
           const modeInfo = searchModesConfig.find(m => m.id === mode);
@@ -1281,6 +1560,7 @@
             const label = currentLang === 'ar' ? modeInfo.label : modeInfo.labelEn;
             showToast(`${langStrings[currentLang].toastSearchIn}${label} (${selectedLinks.length})`);
           }
+          renderContextualFilters();
           return;
         }
 
@@ -1293,6 +1573,7 @@
           const label = currentLang === 'ar' ? modeInfo.label : modeInfo.labelEn;
           showToast(langStrings[currentLang].toastSearchIn + label);
         }
+        renderContextualFilters();
       }
 
       // =====================================================
@@ -1604,7 +1885,16 @@
         });
 
         searchInput.addEventListener('input', () => {
+          currentQuery = searchInput.value.trim();
+          if (getActiveMode() === 'smart') {
+            applySmartIntent(currentQuery, { reset: true });
+            saveCurrentStateToMode();
+            updateAllFiltersUI();
+            updateFilterSummary();
+            renderActiveFiltersBar();
+          }
           showSuggestions();
+          renderContextualFilters();
         });
 
         searchInput.addEventListener('focus', () => {
