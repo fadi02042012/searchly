@@ -56,6 +56,9 @@
         { name: "📷 WebCamTaxi", group: "منصات", base: "https://www.webcamtaxi.com/en/search.html?searchword=", suffix: "&searchphrase=all" }
         { name: "🎵 استماع وأغاني", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQAQ%3D%3D" },
         { name: "🎤 أغاني الفنان", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQAQ%3D%3D" },
+        { name: "🎤 كلمات الأغاني", group: "الموسيقى", base: "https://www.google.com/search?q=", suffix: "+كلمات+الأغنية" },
+        { name: "🎬 الفيديو كليب الرسمي", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "+official+music+video" },
+        { name: "🔎 البحث عن أغنية", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "" },
       ];
 
       // =====================================================
