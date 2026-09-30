@@ -100,12 +100,13 @@ module.exports = async function handler(req, res) {
         if (geminiResponse.ok) break;
         const data = await geminiResponse.json().catch(() => ({}));
         lastGeminiError = data;
-        const retryable = [408, 429, 500, 502, 503, 504].includes(geminiResponse.status);
+        // A 429 quota response is not transient capacity: retrying it wastes the
+        // user's quota and turns a clear quota error into a misleading 503.
+        if (geminiResponse.status === 429) break;
+
+        const retryable = [408, 500, 502, 503, 504].includes(geminiResponse.status);
         if (!retryable || attempt === 2) break;
-        const retryAfter = Number(geminiResponse.headers.get('retry-after'));
-        const delay = Number.isFinite(retryAfter) && retryAfter > 0
-          ? Math.min(retryAfter * 1000, 8000)
-          : 800 * Math.pow(2, attempt);
+        const delay = 800 * Math.pow(2, attempt);
         await new Promise(resolve => setTimeout(resolve, delay));
       } catch (error) {
         lastGeminiError = { message: error.message };
@@ -122,10 +123,23 @@ module.exports = async function handler(req, res) {
     const data = await geminiResponse.json().catch(() => ({}));
     if (!geminiResponse.ok) {
       console.error('Gemini chat API error:', data);
-      const transient = [408, 429, 500, 502, 503, 504].includes(geminiResponse.status);
+      const code = data?.error?.status || data?.error?.code || 'GEMINI_API_ERROR';
+      if (geminiResponse.status === 429) {
+        const retryAfterHeader = Number(geminiResponse.headers.get('retry-after'));
+        const match = String(data?.error?.message || '').match(/retry in ([0-9.]+)s/i);
+        const retryAfter = Number.isFinite(retryAfterHeader) && retryAfterHeader > 0
+          ? Math.ceil(retryAfterHeader)
+          : (match ? Math.ceil(Number(match[1])) : 60);
+        return res.status(429).json({
+          error: 'Gemini quota exceeded. Please try again later.',
+          code,
+          retryAfter
+        });
+      }
+      const transient = [408, 500, 502, 503, 504].includes(geminiResponse.status);
       return res.status(transient ? 503 : 502).json({
         error: transient ? 'Gemini service is temporarily unavailable' : 'Gemini API request failed',
-        code: data?.error?.status || data?.error?.code || 'GEMINI_API_ERROR'
+        code
       });
     }
 
