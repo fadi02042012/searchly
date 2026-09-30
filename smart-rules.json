@@ -1,10 +1,10 @@
 {
-  "version": 1,
+  "version": 2,
   "settings": {
-    "phraseWeight": 5,
+    "phraseWeight": 6,
     "keywordWeight": 1,
-    "tieMinScore": 5,
-    "maxSuggestions": 8
+    "tieMinScore": 6,
+    "maxSuggestions": 10
   },
   "modes": {
     "maps": {
@@ -229,31 +229,67 @@
         "tutorial",
         "documentary"
       ]
+    },
+    "web": {
+      "icon": "🌐",
+      "label": "ويب",
+      "phrases": [
+        "بحث ويب",
+        "بحث على الانترنت",
+        "موقع رسمي",
+        "مصادر",
+        "معلومة",
+        "تعريف",
+        "كيف",
+        "لماذا",
+        "ما هو",
+        "ما هي",
+        "what is",
+        "why",
+        "how"
+      ],
+      "keywords": [
+        "بحث",
+        "معلومة",
+        "معلومات",
+        "شرح",
+        "دليل",
+        "مرجع",
+        "مصدر",
+        "موقع",
+        "مواقع",
+        "web",
+        "search",
+        "guide",
+        "reference",
+        "official"
+      ]
     }
   },
   "filters": [
     {
-      "0": "file-pdf",
-      "1": "web",
-      "2": "advancedFileType",
-      "3": "📄",
-      "4": "PDF",
-      "5": [
+      "id": "file-pdf",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "PDF",
+      "phrases": [
         "ملف pdf",
         "pdf",
         "بي دي اف",
         "ملفات بي دي اف"
       ],
-      "6": "pdf",
-      "7": 10
+      "value": "pdf",
+      "linkIndex": 10,
+      "priority": 10
     },
     {
-      "0": "file-doc",
-      "1": "web",
-      "2": "advancedFileType",
-      "3": "📄",
-      "4": "DOC + DOCX",
-      "5": [
+      "id": "file-doc",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "DOC + DOCX",
+      "phrases": [
         "ملف doc",
         "ملف docx",
         "doc",
@@ -261,16 +297,17 @@
         "وورد",
         "word"
       ],
-      "6": "doc",
-      "7": 10
+      "value": "doc",
+      "linkIndex": 10,
+      "priority": 10
     },
     {
-      "0": "file-xls",
-      "1": "web",
-      "2": "advancedFileType",
-      "3": "📄",
-      "4": "XLS + XLSX",
-      "5": [
+      "id": "file-xls",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "XLS + XLSX",
+      "phrases": [
         "ملف xls",
         "ملف xlsx",
         "xls",
@@ -278,16 +315,17 @@
         "اكسل",
         "excel"
       ],
-      "6": "xls",
-      "7": 10
+      "value": "xls",
+      "linkIndex": 10,
+      "priority": 10
     },
     {
-      "0": "file-ppt",
-      "1": "web",
-      "2": "advancedFileType",
-      "3": "📄",
-      "4": "PPT + PPTX",
-      "5": [
+      "id": "file-ppt",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "PPT + PPTX",
+      "phrases": [
         "ملف ppt",
         "ملف pptx",
         "ppt",
@@ -295,185 +333,198 @@
         "باوربوينت",
         "powerpoint"
       ],
-      "6": "ppt",
-      "7": 10
+      "value": "ppt",
+      "linkIndex": 10,
+      "priority": 10
     },
     {
-      "0": "file-txt",
-      "1": "web",
-      "2": "advancedFileType",
-      "3": "📄",
-      "4": "TXT",
-      "5": [
+      "id": "file-txt",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "TXT",
+      "phrases": [
         "ملف txt",
         "txt",
         "ملف نصي",
         "نص txt"
       ],
-      "6": "txt",
-      "7": 10
+      "value": "txt",
+      "linkIndex": 10,
+      "priority": 10
     },
     {
-      "0": "free-images",
-      "1": "images",
-      "2": "imageRights",
-      "3": "⚖️",
-      "4": "صور: مجاني",
-      "5": [
+      "id": "free-images",
+      "mode": "images",
+      "action": "imageRights",
+      "icon": "⚖️",
+      "label": "صور: مجاني",
+      "phrases": [
         "صور مجانية",
         "صورة مجانية",
         "مجاني",
         "free",
         "royalty free"
       ],
-      "6": "f",
-      "7": 8
+      "value": "f",
+      "linkIndex": 8,
+      "priority": 8
     },
     {
-      "0": "free-web",
-      "1": "web",
-      "2": "advancedUsageRights",
-      "3": "⚖️",
-      "4": "ويب: مجاني للاستخدام",
-      "5": [
+      "id": "free-web",
+      "mode": "web",
+      "action": "advancedUsageRights",
+      "icon": "⚖️",
+      "label": "ويب: مجاني للاستخدام",
+      "phrases": [
         "مجاني",
         "free",
         "royalty free"
       ],
-      "6": "f",
-      "7": 5
+      "value": "f",
+      "linkIndex": 5,
+      "priority": 5
     },
     {
-      "0": "4k",
-      "1": "videos",
-      "2": "link",
-      "3": "🎥",
-      "4": "4K",
-      "5": [
+      "id": "4k",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎥",
+      "label": "4K",
+      "phrases": [
         "4k",
         "فيديو 4k",
         "دقة 4k"
       ],
-      "6": "4k",
-      "7": 20
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "hd",
-      "1": "videos",
-      "2": "link",
-      "3": "📺",
-      "4": "HD",
-      "5": [
+      "id": "hd",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "HD",
+      "phrases": [
         "hd",
         "فيديو hd"
       ],
-      "6": "hd",
-      "7": 20
+      "value": "hd",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "hdr",
-      "1": "videos",
-      "2": "link",
-      "3": "✨",
-      "4": "HDR",
-      "5": [
+      "id": "hdr",
+      "mode": "videos",
+      "action": "link",
+      "icon": "✨",
+      "label": "HDR",
+      "phrases": [
         "hdr"
       ],
-      "6": "hdr",
-      "7": 20
+      "value": "hdr",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "360",
-      "1": "videos",
-      "2": "link",
-      "3": "🌍",
-      "4": "360°",
-      "5": [
+      "id": "360",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🌍",
+      "label": "360°",
+      "phrases": [
         "360"
       ],
-      "6": "360",
-      "7": 20
+      "value": "360",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "vr180",
-      "1": "videos",
-      "2": "link",
-      "3": "🥽",
-      "4": "VR180",
-      "5": [
+      "id": "vr180",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🥽",
+      "label": "VR180",
+      "phrases": [
         "vr180",
         "vr 180"
       ],
-      "6": "vr180",
-      "7": 20
+      "value": "vr180",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "3d",
-      "1": "videos",
-      "2": "link",
-      "3": "🎞️",
-      "4": "3D",
-      "5": [
+      "id": "3d",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎞️",
+      "label": "3D",
+      "phrases": [
         "ثلاثي الابعاد",
         "ثلاثي الأبعاد",
         "3d"
       ],
-      "6": "3d",
-      "7": 20
+      "value": "3d",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "long",
-      "1": "videos",
-      "2": "link",
-      "3": "🎬",
-      "4": "أكثر من 20 دقيقة",
-      "5": [
+      "id": "long",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "أكثر من 20 دقيقة",
+      "phrases": [
         "اكثر من 20 دقيقه",
         "أكثر من 20 دقيقة",
         "20 دقيقة",
         "20 دقيقه",
         "long"
       ],
-      "6": "long",
-      "7": 20
+      "value": "long",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "short",
-      "1": "videos",
-      "2": "link",
-      "3": "⏱️",
-      "4": "أقل من 4 دقائق",
-      "5": [
+      "id": "short",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⏱️",
+      "label": "أقل من 4 دقائق",
+      "phrases": [
         "اقل من 4 دقائق",
         "أقل من 4 دقائق",
         "اقل من 4 دق",
         "short"
       ],
-      "6": "short",
-      "7": 20
+      "value": "short",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "medium",
-      "1": "videos",
-      "2": "link",
-      "3": "⌛",
-      "4": "بين 4 و20 دقيقة",
-      "5": [
+      "id": "medium",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⌛",
+      "label": "بين 4 و20 دقيقة",
+      "phrases": [
         "بين 4 و20",
         "4-20",
         "4 الى 20",
         "medium"
       ],
-      "6": "medium",
-      "7": 20
+      "value": "medium",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "views",
-      "1": "videos",
-      "2": "link",
-      "3": "🔥",
-      "4": "الترتيب حسب عدد المشاهدات",
-      "5": [
+      "id": "views",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔥",
+      "label": "الترتيب حسب عدد المشاهدات",
+      "phrases": [
         "الاكثر مشاهدة",
         "الأكثر مشاهدة",
         "عدد المشاهدات",
@@ -481,207 +532,221 @@
         "most viewed",
         "views"
       ],
-      "6": "views",
-      "7": 30
+      "value": "views",
+      "linkIndex": 30,
+      "priority": 30
     },
     {
-      "0": "rating",
-      "1": "videos",
-      "2": "link",
-      "3": "⭐",
-      "4": "الترتيب حسب التقييم",
-      "5": [
+      "id": "rating",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⭐",
+      "label": "الترتيب حسب التقييم",
+      "phrases": [
         "الأعلى تقييما",
         "الأعلى تقييمًا",
         "اعلى تقييم",
         "تقييم",
         "rating"
       ],
-      "6": "rating",
-      "7": 20
+      "value": "rating",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "hour",
-      "1": "videos",
-      "2": "link",
-      "3": "🕐",
-      "4": "آخر ساعة",
-      "5": [
+      "id": "hour",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🕐",
+      "label": "آخر ساعة",
+      "phrases": [
         "آخر ساعة",
         "اخر ساعه",
         "الساعة الماضية",
         "last hour"
       ],
-      "6": "hour",
-      "7": 20
+      "value": "hour",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "today",
-      "1": "videos",
-      "2": "link",
-      "3": "📆",
-      "4": "اليوم",
-      "5": [
+      "id": "today",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📆",
+      "label": "اليوم",
+      "phrases": [
         "اليوم",
         "today",
         "24 ساعة",
         "24h"
       ],
-      "6": "today",
-      "7": 20
+      "value": "today",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "week",
-      "1": "videos",
-      "2": "link",
-      "3": "📅",
-      "4": "هذا الأسبوع",
-      "5": [
+      "id": "week",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📅",
+      "label": "هذا الأسبوع",
+      "phrases": [
         "هذا الاسبوع",
         "هذا الأسبوع",
         "الاسبوع",
         "this week"
       ],
-      "6": "week",
-      "7": 20
+      "value": "week",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "month",
-      "1": "videos",
-      "2": "link",
-      "3": "🗓️",
-      "4": "هذا الشهر",
-      "5": [
+      "id": "month",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🗓️",
+      "label": "هذا الشهر",
+      "phrases": [
         "هذا الشهر",
         "this month"
       ],
-      "6": "month",
-      "7": 20
+      "value": "month",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "year",
-      "1": "videos",
-      "2": "link",
-      "3": "📖",
-      "4": "هذا العام",
-      "5": [
+      "id": "year",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📖",
+      "label": "هذا العام",
+      "phrases": [
         "هذا العام",
         "هذه السنة",
         "this year"
       ],
-      "6": "year",
-      "7": 20
+      "value": "year",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "live",
-      "1": "videos",
-      "2": "link",
-      "3": "🔴",
-      "4": "مباشر",
-      "5": [
+      "id": "live",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔴",
+      "label": "مباشر",
+      "phrases": [
         "بث مباشر",
         "مباشر",
         "live"
       ],
-      "6": "live",
-      "7": 25
+      "value": "live",
+      "linkIndex": 25,
+      "priority": 25
     },
     {
-      "0": "shorts",
-      "1": "videos",
-      "2": "link",
-      "3": "🎬",
-      "4": "YouTube Shorts",
-      "5": [
+      "id": "shorts",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "YouTube Shorts",
+      "phrases": [
         "shorts",
         "شورتس",
         "شورت"
       ],
-      "6": "shorts",
-      "7": 25
+      "value": "shorts",
+      "linkIndex": 25,
+      "priority": 25
     },
     {
-      "0": "playlist",
-      "1": "videos",
-      "2": "link",
-      "3": "📂",
-      "4": "قوائم تشغيل",
-      "5": [
+      "id": "playlist",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📂",
+      "label": "قوائم تشغيل",
+      "phrases": [
         "قائمة تشغيل",
         "قوائم تشغيل",
         "playlist",
         "playlists"
       ],
-      "6": "playlist",
-      "7": 25
+      "value": "playlist",
+      "linkIndex": 25,
+      "priority": 25
     },
     {
-      "0": "channel",
-      "1": "videos",
-      "2": "link",
-      "3": "📺",
-      "4": "قنوات",
-      "5": [
+      "id": "channel",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "قنوات",
+      "phrases": [
         "قناة",
         "قنوات",
         "channel",
         "channels"
       ],
-      "6": "channel",
-      "7": 25
+      "value": "channel",
+      "linkIndex": 25,
+      "priority": 25
     },
     {
-      "0": "movie",
-      "1": "videos",
-      "2": "link",
-      "3": "🎬",
-      "4": "أفلام",
-      "5": [
+      "id": "movie",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "أفلام",
+      "phrases": [
         "فيلم",
         "افلام",
         "أفلام",
         "movie",
         "movies"
       ],
-      "6": "movie",
-      "7": 25
+      "value": "movie",
+      "linkIndex": 25,
+      "priority": 25
     },
     {
-      "0": "video",
-      "1": "videos",
-      "2": "link",
-      "3": "🎥",
-      "4": "فيديوهات فقط",
-      "5": [
+      "id": "video",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎥",
+      "label": "فيديوهات فقط",
+      "phrases": [
         "فيديو",
         "فيديوهات",
         "video",
         "videos"
       ],
-      "6": "video",
-      "7": 10
+      "value": "video",
+      "linkIndex": 10,
+      "priority": 10
     },
     {
-      "0": "instagram",
-      "1": "videos",
-      "2": "link",
-      "3": "📷",
-      "4": "البحث في Instagram",
-      "5": [
+      "id": "instagram",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📷",
+      "label": "البحث في Instagram",
+      "phrases": [
         "انستقرام",
         "انستجرام",
         "instagram"
       ],
-      "6": "instagram",
-      "7": 15
+      "value": "instagram",
+      "linkIndex": 15,
+      "priority": 15
     },
     {
-      "0": "instructional",
-      "1": "videos",
-      "2": "link",
-      "3": "🔥",
-      "4": "الترتيب حسب عدد المشاهدات",
-      "5": [
+      "id": "instructional",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔥",
+      "label": "الترتيب حسب عدد المشاهدات",
+      "phrases": [
         "كيف اصنع",
         "كيف اسوي",
         "كيف اعمل",
@@ -715,310 +780,1313 @@
         "full tutorial",
         "guide"
       ],
-      "6": "views",
-      "7": 40
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 40
     },
     {
-      "0": "map-restaurants",
-      "1": "maps",
-      "2": "mapCategory",
-      "3": "🍽️",
-      "4": "مطاعم",
-      "5": [
+      "id": "map-restaurants",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍽️",
+      "label": "مطاعم",
+      "phrases": [
         "مطعم",
         "مطاعم",
         "restaurant"
       ],
-      "6": "restaurants",
-      "7": 20
+      "value": "restaurants",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "map-hotels",
-      "1": "maps",
-      "2": "mapCategory",
-      "3": "🏨",
-      "4": "فنادق",
-      "5": [
+      "id": "map-hotels",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏨",
+      "label": "فنادق",
+      "phrases": [
         "فندق",
         "فنادق",
         "hotel"
       ],
-      "6": "hotels",
-      "7": 20
+      "value": "hotels",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "map-cafes",
-      "1": "maps",
-      "2": "mapCategory",
-      "3": "☕",
-      "4": "مقاهي",
-      "5": [
+      "id": "map-cafes",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "☕",
+      "label": "مقاهي",
+      "phrases": [
         "مقهى",
         "مقاهي",
         "cafe"
       ],
-      "6": "cafes",
-      "7": 20
+      "value": "cafes",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "map-pharmacies",
-      "1": "maps",
-      "2": "mapCategory",
-      "3": "💊",
-      "4": "صيدليات",
-      "5": [
+      "id": "map-pharmacies",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "💊",
+      "label": "صيدليات",
+      "phrases": [
         "صيدلية",
         "صيدليات",
         "pharmacy"
       ],
-      "6": "pharmacies",
-      "7": 20
+      "value": "pharmacies",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "map-hospitals",
-      "1": "maps",
-      "2": "mapCategory",
-      "3": "🏥",
-      "4": "مستشفيات",
-      "5": [
+      "id": "map-hospitals",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏥",
+      "label": "مستشفيات",
+      "phrases": [
         "مستشفى",
         "مستشفيات",
         "hospital"
       ],
-      "6": "hospitals",
-      "7": 20
+      "value": "hospitals",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "map-banks",
-      "1": "maps",
-      "2": "mapCategory",
-      "3": "🏦",
-      "4": "بنوك",
-      "5": [
+      "id": "map-banks",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏦",
+      "label": "بنوك",
+      "phrases": [
         "بنك",
         "بنوك",
         "bank"
       ],
-      "6": "banks",
-      "7": 20
+      "value": "banks",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "map-rating",
-      "1": "maps",
-      "2": "mapRating",
-      "3": "⭐",
-      "4": "4+ نجوم",
-      "5": [
+      "id": "map-rating",
+      "mode": "maps",
+      "action": "mapRating",
+      "icon": "⭐",
+      "label": "4+ نجوم",
+      "phrases": [
         "4+ نجوم",
         "أربع نجوم",
         "4 نجوم"
       ],
-      "6": "4",
-      "7": 20
+      "value": "4",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "map-open",
-      "1": "maps",
-      "2": "mapHours",
-      "3": "🕐",
-      "4": "مفتوح الآن",
-      "5": [
+      "id": "map-open",
+      "mode": "maps",
+      "action": "mapHours",
+      "icon": "🕐",
+      "label": "مفتوح الآن",
+      "phrases": [
         "مفتوح الآن",
         "open now"
       ],
-      "6": "open",
-      "7": 20
+      "value": "open",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "map-budget",
-      "1": "maps",
-      "2": "mapPrice",
-      "3": "💰",
-      "4": "اقتصادي",
-      "5": [
+      "id": "map-budget",
+      "mode": "maps",
+      "action": "mapPrice",
+      "icon": "💰",
+      "label": "اقتصادي",
+      "phrases": [
         "اقتصادي",
         "رخيص",
         "cheap",
         "budget"
       ],
-      "6": "1",
-      "7": 20
+      "value": "1",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "news-hour",
-      "1": "news",
-      "2": "newsTime",
-      "3": "⏰",
-      "4": "آخر ساعة",
-      "5": [
+      "id": "news-hour",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "⏰",
+      "label": "آخر ساعة",
+      "phrases": [
         "آخر ساعة",
         "اخر ساعه",
         "last hour"
       ],
-      "6": "h",
-      "7": 20
+      "value": "h",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "news-today",
-      "1": "news",
-      "2": "newsTime",
-      "3": "📅",
-      "4": "اليوم",
-      "5": [
+      "id": "news-today",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "📅",
+      "label": "اليوم",
+      "phrases": [
         "اليوم",
         "today"
       ],
-      "6": "h24",
-      "7": 20
+      "value": "h24",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "news-week",
-      "1": "news",
-      "2": "newsTime",
-      "3": "📆",
-      "4": "هذا الأسبوع",
-      "5": [
+      "id": "news-week",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "📆",
+      "label": "هذا الأسبوع",
+      "phrases": [
         "هذا الاسبوع",
         "هذا الأسبوع",
         "this week"
       ],
-      "6": "d7",
-      "7": 20
+      "value": "d7",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "news-month",
-      "1": "news",
-      "2": "newsTime",
-      "3": "🗓️",
-      "4": "هذا الشهر",
-      "5": [
+      "id": "news-month",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "🗓️",
+      "label": "هذا الشهر",
+      "phrases": [
         "هذا الشهر",
         "this month"
       ],
-      "6": "d30",
-      "7": 20
+      "value": "d30",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "news-latest",
-      "1": "news",
-      "2": "newsSort",
-      "3": "🔥",
-      "4": "الأحدث",
-      "5": [
+      "id": "news-latest",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "🔥",
+      "label": "الأحدث",
+      "phrases": [
         "الأحدث",
         "الاحدث",
         "latest"
       ],
-      "6": "date",
-      "7": 20
+      "value": "date",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "image-large",
-      "1": "images",
-      "2": "imageSize",
-      "3": "📐",
-      "4": "كبير",
-      "5": [
+      "id": "image-large",
+      "mode": "images",
+      "action": "imageSize",
+      "icon": "📐",
+      "label": "كبير",
+      "phrases": [
         "كبير",
         "كبيرة",
         "large"
       ],
-      "6": "l",
-      "7": 20
+      "value": "l",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "image-color",
-      "1": "images",
-      "2": "imageColorType",
-      "3": "🎨",
-      "4": "ملون",
-      "5": [
+      "id": "image-color",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "🎨",
+      "label": "ملون",
+      "phrases": [
         "ملون",
         "ملونة",
         "color"
       ],
-      "6": "color",
-      "7": 20
+      "value": "color",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "image-gray",
-      "1": "images",
-      "2": "imageColorType",
-      "3": "⚫",
-      "4": "أبيض وأسود",
-      "5": [
+      "id": "image-gray",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "⚫",
+      "label": "أبيض وأسود",
+      "phrases": [
         "ابيض واسود",
         "أبيض وأسود",
         "gray",
         "black and white"
       ],
-      "6": "gray",
-      "7": 20
+      "value": "gray",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "image-face",
-      "1": "images",
-      "2": "imageType",
-      "3": "👤",
-      "4": "وجه",
-      "5": [
+      "id": "image-face",
+      "mode": "images",
+      "action": "imageType",
+      "icon": "👤",
+      "label": "وجه",
+      "phrases": [
         "وجه",
         "faces",
         "face"
       ],
-      "6": "face",
-      "7": 20
+      "value": "face",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "image-free",
-      "1": "images",
-      "2": "imageRights",
-      "3": "⚖️",
-      "4": "مجاني",
-      "5": [
+      "id": "image-free",
+      "mode": "images",
+      "action": "imageRights",
+      "icon": "⚖️",
+      "label": "مجاني",
+      "phrases": [
         "مجاني",
         "free"
       ],
-      "6": "f",
-      "7": 20
+      "value": "f",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "image-transparent",
-      "1": "images",
-      "2": "imageColorType",
-      "3": "🪟",
-      "4": "شفاف",
-      "5": [
+      "id": "image-transparent",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "🪟",
+      "label": "شفاف",
+      "phrases": [
         "شفاف",
         "transparent"
       ],
-      "6": "trans",
-      "7": 20
+      "value": "trans",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "image-png",
-      "1": "images",
-      "2": "imageFileType",
-      "3": "🖼️",
-      "4": "PNG",
-      "5": [
+      "id": "image-png",
+      "mode": "images",
+      "action": "imageFileType",
+      "icon": "🖼️",
+      "label": "PNG",
+      "phrases": [
         "png"
       ],
-      "6": "png",
-      "7": 20
+      "value": "png",
+      "linkIndex": 20,
+      "priority": 20
     },
     {
-      "0": "image-jpg",
-      "1": "images",
-      "2": "imageFileType",
-      "3": "🖼️",
-      "4": "JPG",
-      "5": [
+      "id": "image-jpg",
+      "mode": "images",
+      "action": "imageFileType",
+      "icon": "🖼️",
+      "label": "JPG",
+      "phrases": [
         "jpg",
         "jpeg"
       ],
-      "6": "jpg",
-      "7": 20
+      "value": "jpg",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "web-site",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🌐",
+      "label": "موقع ويب",
+      "value": "",
+      "phrases": [
+        "موقع",
+        "مواقع",
+        "website",
+        "site"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-rtf",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "RTF",
+      "value": "rtf",
+      "phrases": [
+        "ملف rtf",
+        "rtf"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-csv",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📊",
+      "label": "CSV",
+      "value": "csv",
+      "phrases": [
+        "ملف csv",
+        "csv",
+        "جدول csv"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-json",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🧩",
+      "label": "JSON",
+      "value": "json",
+      "phrases": [
+        "ملف json",
+        "json"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-xml",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🧩",
+      "label": "XML",
+      "value": "xml",
+      "phrases": [
+        "ملف xml",
+        "xml"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-zip",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🗜️",
+      "label": "ZIP",
+      "value": "zip",
+      "phrases": [
+        "ملف zip",
+        "zip",
+        "ملف مضغوط"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-pdf-ar",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "PDF عربي",
+      "value": "pdf",
+      "phrases": [
+        "بحث pdf عربي",
+        "ملف بي دي اف عربي",
+        "pdf عربي"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-highres",
+      "mode": "images",
+      "action": "imageSize",
+      "icon": "🔎",
+      "label": "صور عالية الدقة",
+      "value": "l",
+      "phrases": [
+        "عالية الدقة",
+        "عاليه الدقه",
+        "دقة عالية",
+        "high resolution",
+        "high res"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-wallpaper",
+      "mode": "images",
+      "action": "imageType",
+      "icon": "🖼️",
+      "label": "خلفيات",
+      "value": "wallpaper",
+      "phrases": [
+        "خلفيات",
+        "خلفية سطح المكتب",
+        "خلفيات جوال",
+        "wallpapers"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-portrait",
+      "mode": "images",
+      "action": "imageType",
+      "icon": "🧑",
+      "label": "صور أشخاص",
+      "value": "face",
+      "phrases": [
+        "صور اشخاص",
+        "صور شخص",
+        "portrait",
+        "people"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-square",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "⬛",
+      "label": "صور مربعة",
+      "value": "square",
+      "phrases": [
+        "صور مربعة",
+        "مربع",
+        "square"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-landscape",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "🖼️",
+      "label": "صور عريضة",
+      "value": "wide",
+      "phrases": [
+        "صور عريضة",
+        "عريضة",
+        "wide"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "video-educational",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎓",
+      "label": "تعليمي",
+      "value": "views",
+      "phrases": [
+        "تعليمي",
+        "تعليمية",
+        "دورة",
+        "دورات",
+        "كورس",
+        "كورسات",
+        "شرح تعليمي",
+        "education",
+        "educational",
+        "course"
+      ],
+      "keywords": [
+        "تعلم",
+        "دروس"
+      ],
+      "priority": 40,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-beginner",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎓",
+      "label": "للمبتدئين",
+      "value": "views",
+      "phrases": [
+        "للمبتدئين",
+        "للمبتدئين",
+        "من الصفر",
+        "للمبتدئ",
+        "beginner",
+        "for beginners"
+      ],
+      "keywords": [
+        "مبتدئ"
+      ],
+      "priority": 42,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-review",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔥",
+      "label": "مراجعات",
+      "value": "views",
+      "phrases": [
+        "مراجعة",
+        "مراجعات",
+        "تقييم المنتج",
+        "تجربة المنتج",
+        "review",
+        "reviews"
+      ],
+      "keywords": [
+        "مراجعة",
+        "تجربة"
+      ],
+      "priority": 35,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-comparison",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⚖️",
+      "label": "مقارنة",
+      "value": "views",
+      "phrases": [
+        "مقارنة",
+        "مقارنات",
+        "مقارنة بين",
+        "comparison",
+        "versus",
+        "vs"
+      ],
+      "keywords": [
+        "مقارنة"
+      ],
+      "priority": 35,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-howto",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🛠️",
+      "label": "طريقة وتعليم",
+      "value": "views",
+      "phrases": [
+        "كيف",
+        "كيفية",
+        "طريقة",
+        "طريقة عمل",
+        "طريقة استخدام",
+        "طريقة تركيب",
+        "طريقة إصلاح",
+        "حل مشكلة",
+        "how to",
+        "how do i"
+      ],
+      "keywords": [
+        "شرح",
+        "تعلم"
+      ],
+      "priority": 45,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-documentary",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎞️",
+      "label": "وثائقي",
+      "value": "views",
+      "phrases": [
+        "وثائقي",
+        "وثائقيات",
+        "فيلم وثائقي",
+        "أفلام وثائقية",
+        "documentary",
+        "documentaries"
+      ],
+      "keywords": [
+        "وثائقي"
+      ],
+      "priority": 35,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-anime",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎌",
+      "label": "أنمي",
+      "value": "movie",
+      "phrases": [
+        "انمي",
+        "أنمي",
+        "anime"
+      ],
+      "keywords": [
+        "انمي",
+        "أنمي"
+      ],
+      "priority": 35,
+      "linkIndex": 25
+    },
+    {
+      "id": "video-series",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "مسلسلات",
+      "value": "movie",
+      "phrases": [
+        "مسلسل",
+        "مسلسلات",
+        "حلقة",
+        "حلقات",
+        "موسم",
+        "مواسم",
+        "series",
+        "episode",
+        "episodes"
+      ],
+      "keywords": [
+        "مسلسل",
+        "حلقة"
+      ],
+      "priority": 35,
+      "linkIndex": 25
+    },
+    {
+      "id": "video-music",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎵",
+      "label": "موسيقى",
+      "value": "views",
+      "phrases": [
+        "موسيقى",
+        "اغاني",
+        "أغاني",
+        "كليب",
+        "music",
+        "song",
+        "songs",
+        "music video"
+      ],
+      "keywords": [
+        "موسيقى",
+        "أغاني"
+      ],
+      "priority": 30,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-podcast",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎙️",
+      "label": "بودكاست",
+      "value": "views",
+      "phrases": [
+        "بودكاست",
+        "بودكاستات",
+        "podcast",
+        "podcasts"
+      ],
+      "keywords": [
+        "بودكاست"
+      ],
+      "priority": 30,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-news",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📰",
+      "label": "أخبار فيديو",
+      "value": "views",
+      "phrases": [
+        "اخبار فيديو",
+        "أخبار فيديو",
+        "فيديو اخبار",
+        "video news"
+      ],
+      "keywords": [
+        "أخبار",
+        "news"
+      ],
+      "priority": 30,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-live-now",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔴",
+      "label": "بث مباشر الآن",
+      "value": "live",
+      "phrases": [
+        "بث الآن",
+        "مباشر الآن",
+        "live now",
+        "streaming now"
+      ],
+      "keywords": [
+        "مباشر"
+      ],
+      "priority": 45,
+      "linkIndex": 26
+    },
+    {
+      "id": "video-vertical",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📱",
+      "label": "فيديو عمودي",
+      "value": "shorts",
+      "phrases": [
+        "فيديو عمودي",
+        "عمودي",
+        "vertical video"
+      ],
+      "keywords": [
+        "عمودي"
+      ],
+      "priority": 30,
+      "linkIndex": 27
+    },
+    {
+      "id": "video-channel",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "من قناة",
+      "value": "channel",
+      "phrases": [
+        "من قناة",
+        "قناة يوتيوب",
+        "youtube channel"
+      ],
+      "keywords": [
+        "قناة"
+      ],
+      "priority": 30,
+      "linkIndex": 23
+    },
+    {
+      "id": "video-playlist",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📂",
+      "label": "قائمة تشغيل",
+      "value": "playlist",
+      "phrases": [
+        "قائمة تشغيل",
+        "قوائم تشغيل",
+        "سلسلة فيديوهات",
+        "playlist"
+      ],
+      "keywords": [
+        "قائمة"
+      ],
+      "priority": 30,
+      "linkIndex": 24
+    },
+    {
+      "id": "video-full",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "كامل",
+      "value": "movie",
+      "phrases": [
+        "كامل",
+        "كاملة",
+        "الفيديو كامل",
+        "الفيديو كاملا",
+        "full video",
+        "full movie",
+        "full episode"
+      ],
+      "keywords": [
+        "كامل"
+      ],
+      "priority": 35,
+      "linkIndex": 25
+    },
+    {
+      "id": "video-recent",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📅",
+      "label": "حديث",
+      "value": "today",
+      "phrases": [
+        "منذ قليل",
+        "حديث",
+        "جديد",
+        "جديدة",
+        "new",
+        "recent",
+        "recently"
+      ],
+      "keywords": [
+        "جديد",
+        "حديث"
+      ],
+      "priority": 20,
+      "linkIndex": 6
+    },
+    {
+      "id": "video-popular",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔥",
+      "label": "شائع",
+      "value": "views",
+      "phrases": [
+        "شائع",
+        "الأكثر شعبية",
+        "ترند",
+        "ترندات",
+        "popular",
+        "trending"
+      ],
+      "keywords": [
+        "شائع",
+        "ترند"
+      ],
+      "priority": 35,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-4k-hdr",
+      "mode": "videos",
+      "action": "link",
+      "icon": "💎",
+      "label": "4K + HDR",
+      "value": "hdr",
+      "phrases": [
+        "4k hdr",
+        "4k و hdr",
+        "4k مع hdr"
+      ],
+      "keywords": [
+        "4k",
+        "hdr"
+      ],
+      "priority": 80,
+      "linkIndex": 14
+    },
+    {
+      "id": "video-4k-hd",
+      "mode": "videos",
+      "action": "link",
+      "icon": "💎",
+      "label": "4K + HD",
+      "value": "long4k",
+      "phrases": [
+        "4k hd",
+        "4k و hd",
+        "4k مع hd"
+      ],
+      "keywords": [
+        "4k",
+        "hd"
+      ],
+      "priority": 70,
+      "linkIndex": 20
+    },
+    {
+      "id": "video-short-4k",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⚡",
+      "label": "قصير + 4K",
+      "value": "short",
+      "phrases": [
+        "فيديو قصير 4k",
+        "شورت 4k",
+        "short 4k"
+      ],
+      "keywords": [
+        "4k"
+      ],
+      "priority": 60,
+      "linkIndex": 10
+    },
+    {
+      "id": "video-long-hd",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "طويل + HD",
+      "value": "long4kHd",
+      "phrases": [
+        "فيديو طويل hd",
+        "اكثر من 20 دقيقة hd",
+        "أكثر من 20 دقيقة hd"
+      ],
+      "keywords": [
+        "hd"
+      ],
+      "priority": 60,
+      "linkIndex": 21
+    },
+    {
+      "id": "news-breaking",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "🚨",
+      "label": "عاجل",
+      "value": "h",
+      "phrases": [
+        "عاجل",
+        "خبر عاجل",
+        "breaking news",
+        "breaking"
+      ],
+      "keywords": [
+        "عاجل"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "news-tech",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "💻",
+      "label": "تقنية",
+      "value": "date",
+      "phrases": [
+        "اخبار التقنية",
+        "أخبار التقنية",
+        "تقنية اليوم",
+        "tech news",
+        "technology news"
+      ],
+      "keywords": [
+        "تقنية",
+        "تكنولوجيا"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "news-sports",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "⚽",
+      "label": "رياضة",
+      "value": "date",
+      "phrases": [
+        "اخبار الرياضة",
+        "أخبار الرياضة",
+        "sport news",
+        "sports news"
+      ],
+      "keywords": [
+        "رياضة"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "news-economy",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "💰",
+      "label": "اقتصاد",
+      "value": "date",
+      "phrases": [
+        "اخبار الاقتصاد",
+        "أخبار الاقتصاد",
+        "economic news"
+      ],
+      "keywords": [
+        "اقتصاد"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "news-world",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "🌍",
+      "label": "عالم",
+      "value": "date",
+      "phrases": [
+        "اخبار العالم",
+        "أخبار العالم",
+        "world news"
+      ],
+      "keywords": [
+        "العالم"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "news-local",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "📍",
+      "label": "محلي",
+      "value": "date",
+      "phrases": [
+        "اخبار محلية",
+        "أخبار محلية",
+        "local news"
+      ],
+      "keywords": [
+        "محلي"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-nearby",
+      "mode": "maps",
+      "action": "mapHours",
+      "icon": "📍",
+      "label": "قريب مني",
+      "value": "all",
+      "phrases": [
+        "قريب مني",
+        "قريبة مني",
+        "بالقرب مني",
+        "near me",
+        "nearby"
+      ],
+      "keywords": [
+        "قريب",
+        "بالقرب"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "map-parking",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🅿️",
+      "label": "مواقف سيارات",
+      "value": "parking",
+      "phrases": [
+        "مواقف سيارات",
+        "موقف سيارات",
+        "parking"
+      ],
+      "keywords": [
+        "مواقف",
+        "موقف"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-gas",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "⛽",
+      "label": "محطات وقود",
+      "value": "gas",
+      "phrases": [
+        "محطة وقود",
+        "محطات وقود",
+        "بنزين",
+        "gas station",
+        "fuel"
+      ],
+      "keywords": [
+        "بنزين",
+        "وقود"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-supermarket",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🛒",
+      "label": "متاجر وبقالات",
+      "value": "supermarket",
+      "phrases": [
+        "بقالة",
+        "بقالات",
+        "سوبر ماركت",
+        "supermarket",
+        "grocery"
+      ],
+      "keywords": [
+        "بقالة",
+        "سوبر"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-mall",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏬",
+      "label": "مولات",
+      "value": "mall",
+      "phrases": [
+        "مول",
+        "مولات",
+        "مركز تجاري",
+        "shopping mall"
+      ],
+      "keywords": [
+        "مول"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-atm",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏧",
+      "label": "صراف آلي",
+      "value": "atm",
+      "phrases": [
+        "صراف آلي",
+        "صراف",
+        "atm"
+      ],
+      "keywords": [
+        "صراف"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-price-cheap",
+      "mode": "maps",
+      "action": "mapPrice",
+      "icon": "💰",
+      "label": "رخيص",
+      "value": "1",
+      "phrases": [
+        "رخيص",
+        "رخيصة",
+        "اقل سعر",
+        "أقل سعر",
+        "cheap",
+        "affordable"
+      ],
+      "keywords": [
+        "رخيص",
+        "اقتصادي"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-top-rated",
+      "mode": "maps",
+      "action": "mapRating",
+      "icon": "⭐",
+      "label": "تقييم مرتفع",
+      "value": "4",
+      "phrases": [
+        "تقييم مرتفع",
+        "اعلى تقييم",
+        "أعلى تقييم",
+        "top rated",
+        "highly rated"
+      ],
+      "keywords": [
+        "تقييم"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "web-academic",
+      "mode": "web",
+      "action": "advancedUsageRights",
+      "icon": "🎓",
+      "label": "أكاديمي",
+      "value": "",
+      "phrases": [
+        "بحث أكاديمي",
+        "مصادر أكاديمية",
+        "ورقة بحثية",
+        "academic",
+        "scholar",
+        "research paper"
+      ],
+      "keywords": [
+        "بحث",
+        "دراسة"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "web-official",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🏛️",
+      "label": "المواقع الرسمية",
+      "value": "",
+      "phrases": [
+        "الموقع الرسمي",
+        "المواقع الرسمية",
+        "official website",
+        "official"
+      ],
+      "keywords": [
+        "رسمي",
+        "الرسمية"
+      ],
+      "priority": 35
+    },
+    {
+      "id": "web-github",
+      "mode": "web",
+      "action": "advancedUsageRights",
+      "icon": "💻",
+      "label": "GitHub",
+      "value": "",
+      "phrases": [
+        "github",
+        "مستودع github",
+        "كود على github",
+        "github repository"
+      ],
+      "keywords": [
+        "github",
+        "repository"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "web-documentation",
+      "mode": "web",
+      "action": "advancedUsageRights",
+      "icon": "📚",
+      "label": "توثيق وبرمجيات",
+      "value": "",
+      "phrases": [
+        "التوثيق",
+        "وثائق",
+        "documentation",
+        "docs",
+        "api documentation"
+      ],
+      "keywords": [
+        "توثيق",
+        "وثائق"
+      ],
+      "priority": 30
     }
   ],
   "combinations": [
@@ -1058,6 +2126,30 @@
       "priority": 85,
       "icon": "🏆",
       "label": "أكثر من 20 دقيقة + الأعلى مشاهدة"
+    },
+    {
+      "id": "short-4k",
+      "mode": "videos",
+      "requires": [
+        "short",
+        "4k"
+      ],
+      "target": "short",
+      "priority": 80,
+      "icon": "⚡",
+      "label": "قصير + 4K"
+    },
+    {
+      "id": "4k-hd",
+      "mode": "videos",
+      "requires": [
+        "4k",
+        "hd"
+      ],
+      "target": "long4k",
+      "priority": 75,
+      "icon": "💎",
+      "label": "4K + HD"
     }
   ]
 }
