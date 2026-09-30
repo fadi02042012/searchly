@@ -122,15 +122,17 @@
 
     .search-modes {
       width: 100%; max-width: 900px;
-      display: flex; gap: 8px; margin-bottom: 16px;
-      overflow-x: auto; padding-bottom: 4px;
-      scrollbar-width: thin;
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; margin: 0 auto 14px;
+      padding: 0 2px 4px;
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none;
+      position: relative; z-index: 2;
     }
-    .search-modes::-webkit-scrollbar { height: 4px; }
-    .search-modes::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    .search-modes::-webkit-scrollbar { display: none; }
     .mode-tab {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 10px 18px; border-radius: 40px;
+      min-height: 40px; padding: 9px 16px; border-radius: 40px;
       background: var(--surface); border: 1px solid var(--border);
       color: var(--muted); font-size: 13px; font-weight: 600;
       cursor: pointer; transition: all 0.25s;
