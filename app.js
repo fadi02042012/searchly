@@ -413,9 +413,20 @@
           };
           if(v==='views'){
             // 🔥 عبارات الشرح/التصنيع/التركيب وما شابه = محتوى تعليمي طويل + الأعلى مشاهدة.
-            if(rule.id==='instructional'){
+            // النوايا التعليمية/التصنيع/التركيب/الإصلاح/المقارنة/الوثائقيات
+            // تتعامل كبحث طويل + الأعلى مشاهدة.
+            const longIntents = [
+              'instructional','educational','installation','manufacturing',
+              'repair','comparison','documentary'
+            ];
+            if(longIntents.includes(rule.id)){
               if(!Array.isArray(filterState.duration)) filterState.duration=[];
               if(!filterState.duration.includes('long')) filterState.duration.push('long');
+            }
+            // المراجعات تحتاج الأعلى تقييمًا، مع الإبقاء على الأعلى مشاهدة كترتيب مساعد.
+            if(rule.id==='review'){
+              filterState.sort='rating';
+              return;
             }
             filterState.sort='views';
             return;
@@ -429,6 +440,13 @@
             const [key,value]=mapped;
             if(!Array.isArray(filterState[key])) filterState[key]=[];
             if(!filterState[key].includes(value)) filterState[key].push(value);
+            const longIntentIds = [
+              'movie-full','series-full','quality-4k','quality-hd','quality-hdr'
+            ];
+            if(longIntentIds.includes(rule.id)){
+              if(!Array.isArray(filterState.duration)) filterState.duration=[];
+              if(!filterState.duration.includes('long')) filterState.duration.push('long');
+            }
           }
           return;
         }
