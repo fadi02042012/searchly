@@ -92,7 +92,6 @@ module.exports = async function handler(req, res) {
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
           generationConfig: {
-            temperature: 0,
             maxOutputTokens: 300,
             responseMimeType: 'application/json'
           }
