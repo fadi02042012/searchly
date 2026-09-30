@@ -1625,9 +1625,157 @@
       }
 
       // =====================================================
+      // GEMINI AI TAB
+      // =====================================================
+      const geminiState = {
+        history: [],
+        busy: false,
+        maxHistory: 10
+      };
+
+      function updateGeminiUIStrings() {
+        const ar = currentLang === 'ar';
+        const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
+        setText('geminiTabText', ar ? 'Gemini AI' : 'Gemini AI');
+        setText('geminiPanelTitle', ar ? '✨ Gemini AI' : '✨ Gemini AI');
+        setText('geminiPanelSubtitle', ar ? 'اكتب سؤالك في مربع البحث وستظهر الإجابة هنا' : 'Type your question in the search box and the answer will appear here');
+        setText('geminiAnswerTitle', ar ? 'الإجابة' : 'Answer');
+        setText('geminiClear', ar ? 'مسح الإجابة' : 'Clear answer');
+        setText('geminiFoot', ar ? 'قد تحتوي الإجابات على أخطاء؛ تحقّق من المعلومات المهمة. لا تُدخل مفاتيح API أو معلومات سرية.' : 'AI responses can contain errors. Verify important information. Never enter API keys or secrets.');
+      }
+
+      function getGeminiViewActive() { return document.getElementById('geminiTab')?.classList.contains('active'); }
+
+      function setGeminiView(active) {
+        const tab = document.getElementById('geminiTab');
+        const panel = document.getElementById('geminiPanel');
+        if (!tab || !panel) return;
+        tab.classList.toggle('active', active);
+        panel.classList.toggle('show', active);
+        document.querySelectorAll('.search-modes .mode-tab').forEach(el => el.classList.toggle('active', false));
+        const hideSelectors = ['.contextual-filters','.presets-bar','.active-filters-bar','.quick-suggestions','.empty-state'];
+        hideSelectors.forEach(sel => document.querySelectorAll(sel).forEach(el => { el.style.display = active ? 'none' : ''; }));
+        const searchContainer = document.querySelector('.search-container');
+        if (searchContainer) searchContainer.style.display = '';
+        if (active) {
+          searchInput?.focus();
+          updateGeminiUIStrings();
+        }
+      }
+
+      function renderGeminiMessage(role, text) {
+        const answer = document.getElementById('geminiAnswer');
+        if (!answer) return null;
+        answer.className = 'gemini-answer' + (role === 'model' ? '' : ' loading');
+        answer.textContent = text;
+        answer.scrollTop = answer.scrollHeight;
+        return answer;
+      }
+
+      function clearGeminiChat() {
+        geminiState.history = [];
+        const answer = document.getElementById('geminiAnswer');
+        if (answer) {
+          answer.className = 'gemini-answer empty';
+          answer.textContent = currentLang === 'ar'
+            ? 'اكتب سؤالك في مربع البحث بالأعلى ثم اضغط «بحث».'
+            : 'Type your question in the search box above and press “Search”.';
+        }
+        const status = document.getElementById('geminiStatus');
+        if (status) status.textContent = currentLang === 'ar' ? '● جاهز' : '● Ready';
+        updateGeminiUIStrings();
+      }
+
+      async function askGemini(questionFromSearch) {
+        if (geminiState.busy) return;
+        const question = (questionFromSearch || searchInput?.value || '').trim();
+        if (!question) {
+          showToast(currentLang === 'ar' ? '✏️ اكتب سؤالك أولاً' : '✏️ Write your question first');
+          searchInput?.focus();
+          return;
+        }
+
+        geminiState.busy = true;
+        const answer = document.getElementById('geminiAnswer');
+        const status = document.getElementById('geminiStatus');
+        if (answer) {
+          answer.className = 'gemini-answer loading';
+          answer.textContent = currentLang === 'ar' ? 'جاري التفكير…' : 'Thinking…';
+        }
+        if (status) status.textContent = currentLang === 'ar' ? '● يفكر…' : '● Thinking…';
+
+        const historyForRequest = geminiState.history.slice(-geminiState.maxHistory);
+        geminiState.history.push({ role: 'user', text: question });
+
+        try {
+          const response = await fetch('/api/gemini-chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: question,
+              history: historyForRequest,
+              language: currentLang
+            })
+          });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(data.error || 'Gemini request failed');
+
+          const result = typeof data.answer === 'string' && data.answer.trim()
+            ? data.answer.trim()
+            : (currentLang === 'ar' ? 'لم تصل إجابة من Gemini.' : 'Gemini returned no answer.');
+
+          if (answer) {
+            answer.className = 'gemini-answer';
+            answer.textContent = result;
+          }
+          geminiState.history.push({ role: 'model', text: result });
+          if (geminiState.history.length > geminiState.maxHistory) {
+            geminiState.history = geminiState.history.slice(-geminiState.maxHistory);
+          }
+          if (status) status.textContent = currentLang === 'ar' ? '● تم الرد' : '● Answered';
+        } catch (error) {
+          if (answer) {
+            answer.className = 'gemini-answer';
+            answer.textContent = currentLang === 'ar'
+              ? 'تعذر الاتصال بـ Gemini الآن. حاول مرة أخرى.'
+              : 'Gemini is temporarily unavailable. Please try again.';
+          }
+          if (status) status.textContent = currentLang === 'ar' ? '● غير متاح مؤقتًا' : '● Temporarily unavailable';
+          console.warn('Searchly Gemini chat error:', error);
+        } finally {
+          geminiState.busy = false;
+        }
+      }
+
+      function initGeminiTab() {
+        const tab = document.getElementById('geminiTab');
+        const clear = document.getElementById('geminiClear');
+        if (!tab || !clear || tab.dataset.geminiInitialized === '1') return;
+        tab.dataset.geminiInitialized = '1';
+
+        tab.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setGeminiView(true);
+        });
+        clear.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          clearGeminiChat();
+        });
+
+        document.querySelectorAll('.search-modes .mode-tab').forEach(modeTab => {
+          modeTab.addEventListener('click', () => setGeminiView(false));
+        });
+        updateGeminiUIStrings();
+      }
+
+
+
+      // =====================================================
       // EVENT LISTENERS
       // =====================================================
-      searchBtn.addEventListener('click', () => performSearch());
+      searchBtn.addEventListener('click', () => getGeminiViewActive() ? askGemini() : performSearch());
       searchInput.addEventListener('input', () => {
         showSuggestions();
         updateSmartIndicator();
@@ -1639,7 +1787,7 @@
         if (e.key === 'Enter') {
           e.preventDefault();
           suggestionsDropdown.classList.remove('show');
-          performSearch();
+          getGeminiViewActive() ? askGemini() : performSearch();
         }
       });
 
@@ -1807,6 +1955,7 @@
         const savedMode = localStorage.getItem('sh_mode');
         const initialMode = savedMode || 'web';
         setActiveMode(initialMode);
+        initGeminiTab();
         attachModeTabListeners();
         attachAllFiltersListeners();
         loadStateFromMode(initialMode);
