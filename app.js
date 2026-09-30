@@ -1978,7 +1978,7 @@
           try { presets = JSON.parse(savedPresets) || []; } catch(e) { presets = []; }
         }
         const savedMode = localStorage.getItem('sh_mode');
-        const initialMode = savedMode || 'web';
+        const initialMode = searchModesConfig.some(item => item.id === savedMode) ? savedMode : 'web';
         setActiveMode(initialMode);
         initGeminiTab();
         attachModeTabListeners();
