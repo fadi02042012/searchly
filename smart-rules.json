@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "settings": {
     "phraseWeight": 6,
     "keywordWeight": 1,
@@ -2259,6 +2259,513 @@
       ],
       "priority": 50,
       "linkIndex": 1
+    },
+    {
+      "id": "market-search",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🛍️",
+      "label": "أسواق ومحلات شعبية",
+      "value": "markets",
+      "phrases": [
+        "سوق شعبي",
+        "الأسواق الشعبية",
+        "سوق محلي",
+        "السوق المحلي",
+        "سوق قديم",
+        "سوق تراثي",
+        "سوق تقليدي",
+        "سوق الجمعة",
+        "سوق الحراج",
+        "سوق الخضار",
+        "سوق السمك",
+        "سوق اللحوم",
+        "سوق الملابس",
+        "سوق الذهب",
+        "سوق العسل",
+        "سوق البهارات",
+        "سوق التوابل",
+        "سوق الحرف اليدوية",
+        "سوق المنتجات المحلية",
+        "بازار",
+        "بازار شعبي",
+        "souq",
+        "souk",
+        "local market",
+        "traditional market",
+        "street market",
+        "bazaar"
+      ],
+      "keywords": [
+        "سوق",
+        "أسواق",
+        "شعبي",
+        "محلي",
+        "تراثي",
+        "بازار",
+        "souq",
+        "souk",
+        "market"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "market-food",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍲",
+      "label": "أطعمة شعبية",
+      "value": "food",
+      "phrases": [
+        "اكل شعبي",
+        "أكل شعبي",
+        "أكلات شعبية",
+        "أطعمة شعبية",
+        "مطاعم شعبية",
+        "اكلات محلية",
+        "أكلات محلية",
+        "أكل محلي",
+        "طعام محلي",
+        "مأكولات شعبية",
+        "مأكولات محلية",
+        "street food",
+        "local food",
+        "traditional food",
+        "traditional dishes"
+      ],
+      "keywords": [
+        "اكل",
+        "أكل",
+        "أكلات",
+        "أطعمة",
+        "طعام",
+        "مأكولات",
+        "شعبي",
+        "محلي",
+        "food"
+      ],
+      "priority": 55
+    },
+    {
+      "id": "market-spices",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🌶️",
+      "label": "بهارات وتوابل",
+      "value": "spices",
+      "phrases": [
+        "بهارات",
+        "توابل",
+        "سوق البهارات",
+        "محل بهارات",
+        "عطارة",
+        "سوق العطارة",
+        "عطار",
+        "اعشاب وتوابل",
+        "أعشاب وتوابل",
+        "spices",
+        "herbs",
+        "herbal shop"
+      ],
+      "keywords": [
+        "بهارات",
+        "توابل",
+        "عطارة",
+        "عطار",
+        "اعشاب",
+        "أعشاب",
+        "spices"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-honey",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍯",
+      "label": "عسل ومنتجاته",
+      "value": "honey",
+      "phrases": [
+        "عسل",
+        "عسل طبيعي",
+        "عسل بلدي",
+        "عسل سدر",
+        "محل عسل",
+        "سوق العسل",
+        "منتجات العسل",
+        "honey",
+        "natural honey",
+        "sidr honey"
+      ],
+      "keywords": [
+        "عسل",
+        "honey"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-bakery",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🥖",
+      "label": "مخابز وأفران شعبية",
+      "value": "bakery",
+      "phrases": [
+        "مخبز شعبي",
+        "مخبز بلدي",
+        "فرن شعبي",
+        "خبز شعبي",
+        "خبز بلدي",
+        "معجنات شعبية",
+        "مخبوزات",
+        "bakery",
+        "traditional bread"
+      ],
+      "keywords": [
+        "مخبز",
+        "فرن",
+        "خبز",
+        "معجنات",
+        "مخبوزات",
+        "bakery"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-meat",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🥩",
+      "label": "لحوم ودواجن",
+      "value": "meat",
+      "phrases": [
+        "سوق اللحوم",
+        "ملحمة",
+        "محل لحوم",
+        "لحوم طازجة",
+        "لحوم بلدية",
+        "دجاج بلدي",
+        "دواجن",
+        "butcher",
+        "fresh meat",
+        "chicken"
+      ],
+      "keywords": [
+        "لحوم",
+        "ملحمة",
+        "دجاج",
+        "دواجن",
+        "butcher"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-fish",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🐟",
+      "label": "أسماك ومأكولات بحرية",
+      "value": "fish",
+      "phrases": [
+        "سوق السمك",
+        "سمك طازج",
+        "أسماك طازجة",
+        "بحريات",
+        "مأكولات بحرية",
+        "محل سمك",
+        "fish market",
+        "fresh fish",
+        "seafood"
+      ],
+      "keywords": [
+        "سمك",
+        "أسماك",
+        "بحريات",
+        "بحرية",
+        "مأكولات بحرية",
+        "fish",
+        "seafood"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-vegetables",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🥬",
+      "label": "خضروات وفواكه",
+      "value": "produce",
+      "phrases": [
+        "سوق الخضار",
+        "سوق الفواكه",
+        "خضار طازجة",
+        "فواكه طازجة",
+        "خضروات وفواكه",
+        "خضار وفواكه",
+        "سوق المنتجات الزراعية",
+        "vegetable market",
+        "fruit market",
+        "fresh produce"
+      ],
+      "keywords": [
+        "خضار",
+        "خضروات",
+        "فواكه",
+        "فاكهة",
+        "منتجات زراعية",
+        "produce"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-clothes",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "👕",
+      "label": "ملابس شعبية",
+      "value": "clothes",
+      "phrases": [
+        "ملابس شعبية",
+        "ملابس تراثية",
+        "ملابس تقليدية",
+        "سوق الملابس",
+        "ملابس محلية",
+        "ثياب شعبية",
+        "traditional clothes",
+        "traditional clothing",
+        "local clothes"
+      ],
+      "keywords": [
+        "ملابس",
+        "ثياب",
+        "تراثية",
+        "تقليدية",
+        "clothes",
+        "clothing"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "market-gold",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "💍",
+      "label": "ذهب ومجوهرات",
+      "value": "gold",
+      "phrases": [
+        "سوق الذهب",
+        "محل ذهب",
+        "ذهب",
+        "مجوهرات",
+        "فضة",
+        "صياغة",
+        "مجوهرات شعبية",
+        "gold market",
+        "gold shop",
+        "jewelry",
+        "silver"
+      ],
+      "keywords": [
+        "ذهب",
+        "مجوهرات",
+        "فضة",
+        "صياغة",
+        "gold",
+        "jewelry"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "market-crafts",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🧺",
+      "label": "حرف ومنتجات يدوية",
+      "value": "crafts",
+      "phrases": [
+        "حرف يدوية",
+        "صناعات يدوية",
+        "منتجات يدوية",
+        "سوق الحرف",
+        "مشغولات يدوية",
+        "تراثيات",
+        "تحف شعبية",
+        "handicrafts",
+        "handmade",
+        "craft market",
+        "traditional crafts"
+      ],
+      "keywords": [
+        "حرف",
+        "يدوية",
+        "صناعات",
+        "مشغولات",
+        "تراثيات",
+        "handmade",
+        "crafts"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "market-coffee",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "☕",
+      "label": "قهوة وشاي شعبي",
+      "value": "coffee",
+      "phrases": [
+        "قهوة شعبية",
+        "قهوة عربية",
+        "بن",
+        "سوق البن",
+        "محل بن",
+        "شاي شعبي",
+        "شاي",
+        "coffee",
+        "arabic coffee",
+        "coffee beans",
+        "tea"
+      ],
+      "keywords": [
+        "قهوة",
+        "بن",
+        "شاي",
+        "coffee",
+        "tea"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-sweets",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍬",
+      "label": "حلويات شعبية",
+      "value": "sweets",
+      "phrases": [
+        "حلويات شعبية",
+        "حلويات محلية",
+        "حلويات تقليدية",
+        "حلوى شعبية",
+        "سوق الحلويات",
+        "حلويات عربية",
+        "traditional sweets",
+        "local sweets",
+        "arabic sweets"
+      ],
+      "keywords": [
+        "حلويات",
+        "حلوى",
+        "sweets"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-spices-food",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍛",
+      "label": "مكونات الطبخ الشعبية",
+      "value": "groceries",
+      "phrases": [
+        "مكونات طبخ",
+        "مستلزمات الطبخ",
+        "مواد غذائية",
+        "بقالة شعبية",
+        "مواد غذائية محلية",
+        "مكونات محلية",
+        "groceries",
+        "food supplies",
+        "cooking ingredients"
+      ],
+      "keywords": [
+        "مكونات",
+        "طبخ",
+        "مواد غذائية",
+        "بقالة",
+        "groceries"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "street-food-search",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🌮",
+      "label": "أكل الشارع",
+      "value": "streetfood",
+      "phrases": [
+        "اكل الشارع",
+        "أكل الشوارع",
+        "طعام الشارع",
+        "أطعمة الشارع",
+        "عربة أكل",
+        "عربات أكل",
+        "بائع متجول",
+        "street food",
+        "food truck",
+        "food cart"
+      ],
+      "keywords": [
+        "شارع",
+        "عربة",
+        "عربات",
+        "بائع",
+        "street food",
+        "food truck"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "market-breakfast",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍳",
+      "label": "فطور شعبي",
+      "value": "breakfast",
+      "phrases": [
+        "فطور شعبي",
+        "فطور محلي",
+        "فطور بلدي",
+        "وجبة فطور شعبية",
+        "popular breakfast",
+        "local breakfast",
+        "traditional breakfast"
+      ],
+      "keywords": [
+        "فطور",
+        "إفطار",
+        "breakfast"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-grills",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍢",
+      "label": "مشاوي شعبية",
+      "value": "grills",
+      "phrases": [
+        "مشاوي",
+        "مشويات",
+        "مشاوي شعبية",
+        "شواية شعبية",
+        "لحم مشوي",
+        "دجاج مشوي",
+        "grill",
+        "grills",
+        "barbecue"
+      ],
+      "keywords": [
+        "مشاوي",
+        "مشويات",
+        "شواية",
+        "مشوي",
+        "grill",
+        "barbecue"
+      ],
+      "priority": 45
     }
   ],
   "combinations": [
@@ -2339,6 +2846,37 @@
       "اسمع فيروز",
       "كلمات أغنية",
       "الفيديو كليب الرسمي"
-    ]
+    ],
+    "marketAndFood": {
+      "categories": [
+        "markets",
+        "food",
+        "spices",
+        "honey",
+        "bakery",
+        "meat",
+        "fish",
+        "produce",
+        "clothes",
+        "gold",
+        "crafts",
+        "coffee",
+        "sweets",
+        "groceries",
+        "streetfood",
+        "breakfast",
+        "grills"
+      ],
+      "examples": [
+        "ابحث عن سوق شعبي قريب",
+        "أين أجد أكل شعبي؟",
+        "سوق البهارات قريب مني",
+        "أريد عسل طبيعي",
+        "أين يوجد سوق السمك؟",
+        "أين أجد ملابس شعبية؟",
+        "مطعم أكل شعبي",
+        "أفضل مكان لفطور شعبي"
+      ]
+    }
   }
 }
