@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "settings": {
     "phraseWeight": 6,
     "keywordWeight": 1,
@@ -2094,7 +2094,7 @@
       "action": "link",
       "icon": "🎵",
       "label": "استماع إلى أغنية",
-      "value": "views",
+      "value": "music-listen-intent",
       "phrases": [
         "استمع اغنية",
         "استمع لأغنية",
@@ -2133,7 +2133,7 @@
         "music"
       ],
       "priority": 55,
-      "linkIndex": 1
+      "linkIndex": 49
     },
     {
       "id": "music-search-intent",
@@ -2178,7 +2178,7 @@
       "action": "link",
       "icon": "🎤",
       "label": "أغاني الفنان",
-      "value": "views",
+      "value": "music-artist-query",
       "phrases": [
         "اغاني ابوبكر سالم",
         "أغاني أبو بكر سالم",
@@ -2212,7 +2212,7 @@
         "فيروز"
       ],
       "priority": 58,
-      "linkIndex": 1
+      "linkIndex": 50
     },
     {
       "id": "music-lyrics-query",
