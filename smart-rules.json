@@ -3663,7 +3663,7 @@
       "mode": "videos",
       "action": "link",
       "icon": "🗺️",
-      "label": "وجهات سياحية: 4K + HD",
+      "label": "🗺️ وجهات سياحية 🚗 رحلات سياحية: 4K + HD",
       "phrases": [
         "أماكن سياحية",
         "أماكن سياحية في",
@@ -3677,7 +3677,15 @@
         "tourist attractions",
         "tourist destinations",
         "places to visit",
-        "travel destinations"
+        "travel destinations",
+        "وجهات سياحية في",
+        "رحلات سياحية",
+        "رحلة سياحية",
+        "رحلات سياحية في",
+        "رحلة إلى",
+        "رحلات إلى",
+        "tourist trips",
+        "travel trips"
       ],
       "value": "4k",
       "linkIndex": 20,
