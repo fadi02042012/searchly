@@ -1302,9 +1302,10 @@
         let modeKey = mode;
 
         if (mode === 'smart') {
-          const result = applySmartIntent(currentQuery || searchInput.value, { reset: true });
-          modeKey = result?.detected?.mode || 'web';
-          suggestions = result?.suggestions || [];
+          // العرض لا يغيّر الحالة؛ التطبيق التلقائي يتم فقط عند تغيّر الاستعلام أو تنفيذ البحث.
+          const detected = detectSearchMode(currentQuery || searchInput.value);
+          modeKey = detected?.mode || 'web';
+          suggestions = getSmartSpecialSuggestions(currentQuery || searchInput.value);
           const generic = contextualSuggestions[modeKey] || [];
           generic.forEach(item => {
             if (!suggestions.some(s => s.id === item.id)) suggestions.push(item);
@@ -1320,7 +1321,7 @@
 
         contextualFilters.classList.add('show');
         cfLabelText.textContent = mode === 'smart'
-          ? (currentLang === 'ar' ? '✨ طبّقنا تلقائيًا:' : '✨ Applied automatically:')
+          ? (currentLang === 'ar' ? '✨ الفلاتر المناسبة:' : '✨ Relevant filters:')
           : langStrings[currentLang].cfLabelText;
         cfChips.innerHTML = '';
 
@@ -1328,18 +1329,22 @@
           const chip = document.createElement('button');
           chip.className = 'cf-chip';
           chip.innerHTML = `<span class="chip-icon">${sug.icon}</span><span>${sug.label}</span>`;
-          const isLinkActive = sug.linkIndex !== undefined && !!selectedLinksState.selected['link:' + sug.linkIndex];
-          const isStateActive = sug.id && (
-            (sug.id.includes('file-') && advancedState.fileType) ||
-            (sug.id.includes('images-free') && imageState.rights === 'f') ||
-            (sug.id.includes('web-free') && advancedState.usageRights === 'f')
+
+          const isLinkActive = sug.linkIndex !== undefined &&
+            !!selectedLinksState.selected['link:' + sug.linkIndex];
+          const isFileActive = sug.id && sug.id.startsWith('smart-file-') && !!advancedState.fileType;
+          const isImageFreeActive = sug.id === 'smart-images-free' && imageState.rights === 'f';
+          const isWebFreeActive = sug.id === 'smart-web-free' && advancedState.usageRights === 'f';
+          const isGenericActive = (
+            sug.id === 'videos-views' && !!selectedLinksState.selected['link:1']
           );
-          if (isLinkActive || isStateActive || sug.auto) chip.classList.add('active');
+          if (isLinkActive || isFileActive || isImageFreeActive || isWebFreeActive || isGenericActive) {
+            chip.classList.add('active');
+          }
 
           chip.addEventListener('click', () => {
-            if (mode === 'smart' && sug.auto) {
-              if (sug.linkIndex !== undefined) selectSmartLink(sug.linkIndex);
-              else sug.apply();
+            if (sug.linkIndex !== undefined) {
+              selectSmartLink(sug.linkIndex);
             } else {
               sug.apply();
             }
@@ -1355,7 +1360,7 @@
         if (mode === 'smart') {
           const hint = document.createElement('span');
           hint.className = 'cf-auto-hint';
-          hint.textContent = currentLang === 'ar' ? 'تُطبّق قبل فتح النتائج' : 'Applied before opening results';
+          hint.textContent = currentLang === 'ar' ? 'تُطبّق تلقائيًا قبل فتح النتائج' : 'Applied automatically before opening results';
           cfChips.appendChild(hint);
         }
       }
