@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "settings": {
     "phraseWeight": 6,
     "keywordWeight": 1,
@@ -2141,7 +2141,7 @@
       "action": "link",
       "icon": "🎵",
       "label": "البحث عن أغنية",
-      "value": "views",
+      "value": "music-search-intent",
       "phrases": [
         "ابحث عن اغنية",
         "أبحث عن أغنية",
@@ -2170,7 +2170,7 @@
         "singer"
       ],
       "priority": 52,
-      "linkIndex": 1
+      "linkIndex": 53
     },
     {
       "id": "music-artist-query",
@@ -2220,7 +2220,7 @@
       "action": "link",
       "icon": "🎤",
       "label": "كلمات الأغنية",
-      "value": "views",
+      "value": "music-lyrics-query",
       "phrases": [
         "كلمات اغنية",
         "كلمات الأغنية",
@@ -2236,7 +2236,7 @@
         "lyrics"
       ],
       "priority": 50,
-      "linkIndex": 1
+      "linkIndex": 51
     },
     {
       "id": "music-official",
@@ -2244,7 +2244,7 @@
       "action": "link",
       "icon": "🎬",
       "label": "الأغنية الرسمية",
-      "value": "views",
+      "value": "music-official",
       "phrases": [
         "الاغنية الرسمية",
         "الأغنية الرسمية",
@@ -2258,7 +2258,7 @@
         "official"
       ],
       "priority": 50,
-      "linkIndex": 1
+      "linkIndex": 52
     },
     {
       "id": "market-search",
