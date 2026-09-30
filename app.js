@@ -1189,15 +1189,23 @@
         cfChips.innerHTML = '';
         suggestions.forEach(sug => {
           const chip = document.createElement('button');
+          chip.type = 'button';
           chip.className = 'cf-chip';
+          chip.dataset.smartRuleId = sug.id || '';
+          if (sug.linkIndex !== undefined) chip.dataset.linkIndex = String(sug.linkIndex);
           chip.innerHTML = `<span class="chip-icon">${sug.icon || '✨'}</span><span>${sug.label}</span>`;
-          chip.addEventListener('click', () => {
-            if (typeof sug.apply === 'function') sug.apply();
+          chip.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            let applied = false;
+            if (sug.linkIndex !== undefined) applied = selectSmartLink(sug.linkIndex);
+            else if (typeof sug.apply === 'function') { sug.apply(); applied = true; }
+            if (!applied) return;
             saveCurrentStateToMode();
-            chip.classList.toggle('active');
             updateAllFiltersUI();
             updateFilterSummary();
             renderActiveFiltersBar();
+            chip.classList.toggle('active');
           });
           cfChips.appendChild(chip);
         });
