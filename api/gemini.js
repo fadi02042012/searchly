@@ -43,7 +43,8 @@ module.exports = async function handler(req, res) {
       'User query: ' + query.trim()
     ].join('\n');
 
-    const geminiResponse = await fetch(
+    async function callGemini() {
+      return fetch(
       'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent',
       {
         method: 'POST',
@@ -62,6 +63,13 @@ module.exports = async function handler(req, res) {
     const data = await geminiResponse.json();
     if (!geminiResponse.ok) {
       console.error('Gemini API error:', data);
+      // Gemini transient failures must not break Smart Search.
+      if ([408, 429, 500, 502, 503, 504].includes(geminiResponse.status)) {
+        return res.status(200).json({
+          result: { mode: 'smart', query: query.trim(), filters: null },
+          fallback: true
+        });
+      }
       return res.status(502).json({ error: 'Gemini API request failed' });
     }
 
