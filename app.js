@@ -411,6 +411,8 @@
 
       let smartRules = DEFAULT_SMART_RULES;
       let smartRulesLoaded = false;
+      let smartInputTimer = null;
+      const SMART_RULES_VERSION = 1;
 
       function normalizeSmartRules(payload) {
         if (!payload || typeof payload !== 'object') return DEFAULT_SMART_RULES;
@@ -422,7 +424,7 @@
 
       async function loadSmartRules() {
         try {
-          const response = await fetch('./smart-rules.json', { cache: 'no-store' });
+          const response = await fetch('./smart-rules.json?v=' + SMART_RULES_VERSION, { cache: 'default' });
           if (!response.ok) throw new Error('smart-rules-' + response.status);
           smartRules = normalizeSmartRules(await response.json());
           smartRulesLoaded = true;
@@ -2095,7 +2097,8 @@
             saveCurrentStateToMode();
             updateAllFiltersUI();
             updateFilterSummary();
-            renderActiveFiltersBar();
+              renderActiveFiltersBar();
+            }, 90);
           }
           showSuggestions();
           renderContextualFilters();
