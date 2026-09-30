@@ -485,6 +485,8 @@
           .sort((a,b) => (Number(b.rule.priority)||0) - (Number(a.rule.priority)||0) || b.score - a.score);
       }
 
+      // Stable filter IDs are the public contract between JSON rules and the app.
+      // Numeric search indexes remain an internal fallback for legacy rules.
       const smartFilterLinks = {
         views: 1, rating: 2, uploaded: 3, title: 4, hour: 5, today: 6, week: 7, month: 8, year: 9,
         short: 10, medium: 11, long: 12, '4k': 13, hdr: 14, hd: 15, '360': 16, vr180: 17, '3d': 18,
@@ -492,11 +494,23 @@
         live: 26, shorts: 27, youtubeShorts: 27, instagram: 33
       };
 
+      function getSmartFilterIndex(filterId) {
+        if (!filterId) return undefined;
+        const direct = (smartRules.filters || []).find(rule => rule.id === filterId && rule.linkIndex !== undefined);
+        if (direct) return Number(direct.linkIndex);
+        const legacy = smartFilterLinks[filterId];
+        return legacy === undefined ? undefined : Number(legacy);
+      }
+
+      function getSmartFilterRule(filterId) {
+        return (smartRules.filters || []).find(rule => rule.id === filterId) || null;
+      }
+
       function applySmartRule(rule) {
         if (!rule) return;
         const action = rule.action, value = rule.value;
         if (action === 'link') {
-          const index = smartFilterLinks[value];
+          const index = getSmartFilterIndex(value);
           if (index !== undefined) selectSmartLink(index);
         } else if (action === 'advancedFileType') advancedState.fileType = value;
         else if (action === 'advancedUsageRights') advancedState.usageRights = value;
@@ -517,7 +531,7 @@
         const matched = getMatchedSmartRules(query);
         const suggestions = matched.map(({rule}) => ({
           id: 'smart-' + rule.id, icon: rule.icon || '✨', label: rule.label || rule.id,
-          linkIndex: rule.action === 'link' ? smartFilterLinks[rule.value] : undefined,
+          linkIndex: rule.action === 'link' ? getSmartFilterIndex(rule.value) : undefined,
           auto: true, apply: () => applySmartRule(rule)
         }));
         return suggestions.slice(0, Number(smartRules.settings.maxSuggestions) || 8);
@@ -550,21 +564,21 @@
         if (detected?.mode === 'videos') {
           const ids = new Set(matched.filter(({rule}) => rule.mode === 'videos').map(({rule}) => rule.id));
           const combo = (smartRules.combinations || []).slice().sort((a,b) => (Number(b.priority)||0)-(Number(a.priority)||0)).find(c => c.mode === 'videos' && c.requires.every(id => ids.has(id)));
-          if (combo) selectSmartLink(smartFilterLinks[combo.target]);
+          if (combo) selectSmartLink(getSmartFilterIndex(combo.target));
           else {
             const videoRules = matched.filter(({rule}) => rule.mode === 'videos' && rule.action === 'link');
             const instructional = ids.has('instructional');
             const target = videoRules.find(({rule}) => rule.id === 'views' || rule.id === 'instructional');
-            if (target) selectSmartLink(smartFilterLinks[target.rule.value]);
-            else if (videoRules.length) selectSmartLink(smartFilterLinks[videoRules[0].rule.value]);
-            else if (instructional) selectSmartLink(smartFilterLinks.views);
+            if (target) selectSmartLink(getSmartFilterIndex(target.rule.value));
+            else if (videoRules.length) selectSmartLink(getSmartFilterIndex(videoRules[0].rule.value));
+            else if (instructional) selectSmartLink(getSmartFilterIndex('views'));
           }
         } else if (detected?.mode === 'web' || !detected) {
           const webRule = matched.find(({rule}) => rule.mode === 'web' && rule.action !== 'advancedUsageRights');
           if (webRule) applySmartRule(webRule.rule);
           else {
             const link = matched.find(({rule}) => rule.action === 'link');
-            if (link) selectSmartLink(smartFilterLinks[link.rule.value]);
+            if (link) selectSmartLink(getSmartFilterIndex(link.rule.value));
           }
         }
 
