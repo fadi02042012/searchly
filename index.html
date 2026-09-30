@@ -4235,10 +4235,19 @@
       function initGeminiTab() {
         const tab = document.getElementById('geminiTab');
         const clear = document.getElementById('geminiClear');
-        if (!tab || !clear) return;
+        if (!tab || !clear || tab.dataset.geminiInitialized === '1') return;
+        tab.dataset.geminiInitialized = '1';
 
-        tab.addEventListener('click', () => setGeminiView(true));
-        clear.addEventListener('click', clearGeminiChat);
+        tab.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setGeminiView(true);
+        });
+        clear.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          clearGeminiChat();
+        });
 
         document.querySelectorAll('.search-modes .mode-tab').forEach(modeTab => {
           modeTab.addEventListener('click', () => setGeminiView(false));
@@ -4444,6 +4453,7 @@
         const savedMode = localStorage.getItem('sh_mode');
         const initialMode = savedMode || 'web';
         setActiveMode(initialMode);
+        initGeminiTab();
         attachModeTabListeners();
         attachAllFiltersListeners();
         loadStateFromMode(initialMode);
