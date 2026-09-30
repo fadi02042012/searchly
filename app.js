@@ -2092,11 +2092,13 @@
 
         searchInput.addEventListener('input', () => {
           currentQuery = searchInput.value.trim();
+          if (smartInputTimer) clearTimeout(smartInputTimer);
           if (getActiveMode() === 'smart') {
-            applySmartIntent(currentQuery, { reset: true });
-            saveCurrentStateToMode();
-            updateAllFiltersUI();
-            updateFilterSummary();
+            smartInputTimer = setTimeout(() => {
+              applySmartIntent(currentQuery, { reset: true });
+              saveCurrentStateToMode();
+              updateAllFiltersUI();
+              updateFilterSummary();
               renderActiveFiltersBar();
             }, 90);
           }
