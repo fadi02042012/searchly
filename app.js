@@ -491,6 +491,18 @@
 
         if (smartHas(lower, ['انستقرام','انستجرام','instagram'])) addLink('smart-instagram','📷','البحث في Instagram','instagram');
 
+        // الاستعلامات التعليمية/الشرح غالبًا تستفيد من ترتيب المشاهدات.
+        const instructional = smartHas(lower, [
+          'كيف اصنع','كيف اسوي','كيف اعمل','طريقة صنع','طريقة صناعة','كيفية صنع','كيفية صناعة',
+          'كيف يصنع','كيف تصنع','شرح','شرح كامل','شرح بالتفصيل','شرح للمبتدئين',
+          'خطوة بخطوة','طريقة عمل','طريقة استخدام','طريقة تركيب','طريقة اصلاح','طريقة إصلاح',
+          'حل مشكلة','تعلم','دروس','درس','tutorial','how to','how do i','how to make',
+          'how to use','step by step','beginner guide','full tutorial','guide'
+        ]);
+        if (instructional && !suggestions.some(s => s.id === 'smart-views')) {
+          addLink('smart-views','🔥','الترتيب حسب عدد المشاهدات','views');
+        }
+
         return suggestions;
       }
 
@@ -556,6 +568,13 @@
           else if (has4k) selectSmartLink(smartFilterLinks['4k']);
           else if (hasHd) selectSmartLink(smartFilterLinks.hd);
           else if (hasViews) selectSmartLink(smartFilterLinks.views);
+          else if (smartHas(lower, [
+            'كيف اصنع','كيف اسوي','كيف اعمل','طريقة صنع','طريقة صناعة','كيفية صنع','كيفية صناعة',
+            'كيف يصنع','كيف تصنع','شرح','شرح كامل','شرح بالتفصيل','شرح للمبتدئين',
+            'خطوة بخطوة','طريقة عمل','طريقة استخدام','طريقة تركيب','طريقة اصلاح','طريقة إصلاح',
+            'حل مشكلة','تعلم','دروس','درس','tutorial','how to','how do i','how to make',
+            'how to use','step by step','beginner guide','full tutorial','guide'
+          ])) selectSmartLink(smartFilterLinks.views);
           else if (smartHas(lower, ['فيلم كامل','مسلسل كامل','حلقة كاملة'])) selectSmartLink(smartFilterLinks.movie);
         } else if (detected?.mode === 'web' || !detected) {
           // لا نغيّر البحث العام إلى فيديو لمجرد كلمة غير حاسمة.
