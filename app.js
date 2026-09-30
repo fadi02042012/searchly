@@ -1773,6 +1773,17 @@
 
 
       // =====================================================
+      // GEMINI TAB ROBUST CLICK HANDLER
+      // =====================================================
+      document.addEventListener('click', (e) => {
+        const tab = e.target.closest('#geminiTab');
+        if (!tab) return;
+        e.preventDefault();
+        e.stopPropagation();
+        setGeminiView(true);
+      }, true);
+
+      // =====================================================
       // EVENT LISTENERS
       // =====================================================
       searchBtn.addEventListener('click', () => getGeminiViewActive() ? askGemini() : performSearch());
