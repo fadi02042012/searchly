@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>searchly — بحث ذكي متقدم</title>
+  <meta name="description" content="Searchly — أداة بحث ذكية ومتقدمة للويب والأخبار والصور والخرائط والفيديو.">
+  <meta name="theme-color" content="#1a73e8">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
-<link rel="stylesheet" href="style.css?v=5">
 <body>
   <!-- HEADER -->
   <header class="header">
@@ -14,12 +16,12 @@
       <span>searchly</span>
     </a>
     <div class="header-actions">
-      <button class="icon-btn" id="cmdBtn" title="لوحة الأوامر (Ctrl + /)">⌘</button>
+      <button class="icon-btn" id="cmdBtn" type="button" title="لوحة الأوامر (Ctrl + /)" aria-label="فتح لوحة الأوامر">⌘</button>
       <div class="lang-group">
-        <button class="lang-btn active-lang" id="langAr">🇸🇦</button>
-        <button class="lang-btn" id="langEn">🇬🇧</button>
+        <button class="lang-btn active-lang" id="langAr" type="button" aria-label="العربية">🇸🇦</button>
+        <button class="lang-btn" id="langEn" type="button" aria-label="English">🇬🇧</button>
       </div>
-      <button class="icon-btn" id="themeToggle" title="تبديل الوضع">🌙</button>
+      <button class="icon-btn" id="themeToggle" type="button" title="تبديل الوضع" aria-label="تبديل الوضع الليلي">🌙</button>
     </div>
   </header>
 
@@ -29,13 +31,13 @@
 <p id="heroDesc">حوّل فكرتك إلى بحث أسرع وأكثر دقة مع Searchly.</p> </section>
   <!-- SEARCH MODES -->
   <div class="search-modes" id="searchModes">
-    <button class="mode-tab" data-mode="smart"><span class="mode-icon">✨</span><span>ذكي</span></button>
-    <button class="mode-tab" data-mode="web"><span class="mode-icon">🌐</span><span>ويب</span></button>
-    <button class="mode-tab" data-mode="news"><span class="mode-icon">📰</span><span>أخبار</span></button>
-    <button class="mode-tab" data-mode="images"><span class="mode-icon">🖼️</span><span>صور</span></button>
-    <button class="mode-tab" data-mode="maps"><span class="mode-icon">🗺️</span><span>خرائط</span></button>
-    <button class="mode-tab" data-mode="videos"><span class="mode-icon">🎬</span><span>فيديو</span></button>
-  </div>
+    <button class="mode-tab" type="button" data-mode="smart" aria-selected="false"><span class="mode-icon">✨</span><span>ذكي</span></button>
+    <button class="mode-tab" type="button" data-mode="web" aria-selected="false"><span class="mode-icon">🌐</span><span>ويب</span></button>
+    <button class="mode-tab" type="button" data-mode="news" aria-selected="false"><span class="mode-icon">📰</span><span>أخبار</span></button>
+    <button class="mode-tab" type="button" data-mode="images" aria-selected="false"><span class="mode-icon">🖼️</span><span>صور</span></button>
+    <button class="mode-tab" type="button" data-mode="maps" aria-selected="false"><span class="mode-icon">🗺️</span><span>خرائط</span></button>
+    <button class="mode-tab" type="button" data-mode="videos" aria-selected="false"><span class="mode-icon">🎬</span><span>فيديو</span></button>
+</div>
 
   <!-- SEARCH BOX -->
   <div class="search-container">
@@ -45,9 +47,9 @@
         <span id="smartIndicatorText">وضع ذكي</span>
       </div>
       <span class="search-icon">🔍</span>
-      <input id="searchInput" type="text" placeholder="اكتب ما تريد البحث عنه..." autocomplete="off" spellcheck="false">
+      <input id="searchInput" type="search" inputmode="search" enterkeyhint="search" placeholder="اكتب ما تريد البحث عنه..." autocomplete="off" spellcheck="false" aria-label="عبارة البحث">
       <div class="search-actions">
-        <button class="btn btn-translate" id="translateBtn" title="ترجمة + بحث">
+        <button class="btn btn-translate" id="translateBtn" type="button" title="ترجمة + بحث" aria-label="ترجمة عبارة البحث ثم البحث">
           <span class="icon-text">🌐</span>
           <span class="spinner"></span>
         </button>
@@ -68,8 +70,8 @@
   <option value="fa">🇮🇷 الفارسية — فارسی</option>
 </select>
         </div>
-        <button class="btn btn-primary" id="searchBtn">🔍 بحث</button>
-        <button class="filter-main-btn" id="openFiltersBtn" title="بحث متقدم">
+        <button class="btn btn-primary" id="searchBtn" type="button">🔍 بحث</button>
+        <button class="filter-main-btn" id="openFiltersBtn" type="button" title="بحث متقدم" aria-haspopup="dialog" aria-controls="filterOverlay">
           <span>🎛️</span>
           <span class="filter-label-text" id="filterBtnLabel">بحث متقدم</span>
           <span class="badge-count" id="filterBadge" style="display:none;">0</span>
@@ -78,8 +80,7 @@
     </div>
     <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
   </div>
-
-  <div class="contextual-filters" id="contextualFilters">
+<div class="contextual-filters" id="contextualFilters">
     <span class="cf-label"><span>💡</span><span id="cfLabelText">فلاتر مقترحة:</span></span>
     <div class="cf-chips" id="cfChips"></div>
   </div>
@@ -106,10 +107,11 @@
     <p style="margin-top:6px;font-size:10px;">آخر تحديث: <span id="lastUpdated"></span></p>
   </footer>
   <div class="cmd-backdrop" id="cmdBackdrop"></div>
-  <div class="cmd-palette" id="cmdPalette">
+  <div class="cmd-palette" id="cmdPalette" role="dialog" aria-modal="true" aria-labelledby="cmdPaletteTitle" aria-hidden="true">
     <div class="cmd-search">
       <span class="cmd-search-icon">⌘</span>
-      <input type="text" id="cmdSearchInput" placeholder="اكتب أمراً أو فلتراً...">
+      <label id="cmdPaletteTitle" class="sr-only" for="cmdSearchInput">لوحة الأوامر</label>
+      <input type="search" id="cmdSearchInput" placeholder="اكتب أمراً أو فلتراً..." aria-label="البحث في الأوامر">
       <span class="cmd-esc">ESC</span>
     </div>
     <div class="cmd-results" id="cmdResults"></div>
@@ -117,11 +119,11 @@
 
   <!-- FILTER DRAWER -->
   <div class="filter-backdrop" id="filterBackdrop"></div>
-  <div class="filter-overlay" id="filterOverlay" aria-hidden="true">
+  <div class="filter-overlay" id="filterOverlay" role="dialog" aria-modal="true" aria-labelledby="filterDrawerTitle" aria-hidden="true">
     <section class="filter-drawer">
       <div class="filter-drawer-head">
-        <h3>🎛️ بحث متقدم</h3>
-        <button class="filter-close-btn" id="closeFiltersBtn" type="button">×</button>
+        <h3 id="filterDrawerTitle">🎛️ بحث متقدم</h3>
+        <button class="filter-close-btn" id="closeFiltersBtn" type="button" aria-label="إغلاق البحث المتقدم">×</button>
       </div>
 
       <div class="filter-tabs" id="filterTabs">
@@ -179,6 +181,8 @@
             <button class="filter-btn" data-filter-type="playlist">قائمة تشغيل</button>
             <button class="filter-btn" data-filter-type="live">بث مباشر</button>
             <button class="filter-btn" data-filter-type="shorts">Shorts</button>
+            <button class="filter-btn" data-filter-type="movie">🎬 أفلام</button>
+            <button class="filter-btn" data-filter-type="series">📺 مسلسلات</button>
           </div>
         </div>
         <div class="advanced-section">
@@ -463,10 +467,11 @@
     </section>
   </div>
 
-<div class="toast" id="toast"></div>
+  <noscript><p class="noscript-message">يحتاج Searchly إلى تفعيل JavaScript لإجراء البحث.</p></noscript>
 
-<script src="app.js?v=5" defer></script>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script src="app.js?v=6" defer></script>
 
 </body>
-</html></body>
 </html>

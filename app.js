@@ -38,15 +38,7 @@
         { name: "📈 ترند YouTube", group: "منصات", base: "https://www.google.com/search?q=", suffix: "+site:https://www.youtube.com/feed/trending" },
         { name: "📂 قوائم تشغيل YouTube", group: "منصات", base: "https://www.google.com/search?q=", suffix: "+site:https://www.youtube.com/user/*/playlists" },
         { name: "📺 البحث داخل قناة TEDx", group: "قنوات محددة", base: "https://www.youtube.com/@TEDx/search?query=", suffix: "" },
-        { name: "📷 البحث في Instagram (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.instagram.com+", suffix: "&num=10" },
-        { name: "📘 البحث في Facebook (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.facebook.com+", suffix: "&num=10" },
-        { name: "🎵 البحث في TikTok (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.tiktok.com+", suffix: "&num=10" },
-        { name: "𝕏 البحث في X (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://x.com+", suffix: "&num=10" },
-        { name: "👻 البحث في Snapchat (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.snapchat.com+", suffix: "&num=10" },
-        { name: "💼 البحث في LinkedIn (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.linkedin.com+", suffix: "&num=10" },
-        { name: "🟠 البحث في Reddit (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.reddit.com+", suffix: "&num=10" },
-        { name: "📌 البحث في Pinterest (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.pinterest.com+", suffix: "&num=10" },
-        { name: "🧵 البحث في Threads (أي وقت)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.threads.net+", suffix: "&num=10" },
+        { name: "📷 البحث في Instagram (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.instagram.com+", suffix: "&num=10&tbs=qdr:d" },
         { name: "📺 البحث داخل قناة ArabicMOD", group: "قنوات محددة", base: "https://www.youtube.com/@ArabicMOD/search?query=", suffix: "" },
         { name: "📺 البحث داخل قناة Fortinet", group: "قنوات محددة", base: "https://www.youtube.com/@fortinet/search?query=", suffix: "" },
         { name: "😂 البحث داخل قناة Gags", group: "قنوات محددة", base: "https://www.youtube.com/@gags/search?query=", suffix: "" },
@@ -61,7 +53,12 @@
         { name: "📹 AOL Video", group: "منصات", base: "https://search.aol.com/aol/video?q=", suffix: "" },
         { name: "📹 Yandex Video", group: "منصات", base: "https://yandex.com/video/search?text=", suffix: "" },
         { name: "🌍 EarthCam", group: "منصات", base: "https://www.earthcam.com/search/ft_search.php?term=", suffix: "" },
-        { name: "📷 WebCamTaxi", group: "منصات", base: "https://www.webcamtaxi.com/en/search.html?searchword=", suffix: "&searchphrase=all" }
+        { name: "📷 WebCamTaxi", group: "منصات", base: "https://www.webcamtaxi.com/en/search.html?searchword=", suffix: "&searchphrase=all" },
+        { name: "🎵 استماع وأغاني", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQAQ%3D%3D" },
+        { name: "🎤 أغاني الفنان", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQAQ%3D%3D" },
+        { name: "🎤 كلمات الأغاني", group: "الموسيقى", base: "https://www.google.com/search?q=", suffix: "+كلمات+الأغنية" },
+        { name: "🎬 الفيديو كليب الرسمي", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "+official+music+video" },
+        { name: "🔎 البحث عن أغنية", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "" },
       ];
 
       // =====================================================
@@ -113,24 +110,8 @@
       let langTouched = false;
       let currentQuery = '';
       let cmdActiveIndex = 0;
-      const FILTER_USAGE_KEY = 'sh_filter_usage_v1';
-      let filterUsage = {};
-      function loadFilterUsage() {
-        try {
-          const saved = localStorage.getItem(FILTER_USAGE_KEY);
-          const parsed = saved ? JSON.parse(saved) : {};
-          filterUsage = parsed && typeof parsed === 'object' ? parsed : {};
-        } catch (e) { filterUsage = {}; }
-      }
-      function saveFilterUsage() {
-        try { localStorage.setItem(FILTER_USAGE_KEY, JSON.stringify(filterUsage)); } catch (e) {}
-      }
-      function recordFilterUsage(filterId) {
-        if (!filterId) return;
-        filterUsage[filterId] = (Number(filterUsage[filterId]) || 0) + 1;
-        saveFilterUsage();
-      }
-      function getFilterUsage(filterId) { return Number(filterUsage[filterId]) || 0; }
+      let smartSaveTimer = null;
+      let lastFocusedElement = null;
 
       function getActiveMode() {
         const activeTab = document.querySelector('.mode-tab.active');
@@ -188,6 +169,26 @@
       let presets = [];
       let pendingFilterState = createDefaultFilterState();
 
+      // localStorage غير مضمون (وضع التصفح الخاص/قيود المساحة)، لذلك لا ينبغي
+      // أن يمنع تهيئة التطبيق أو البحث الأساسي عند فشل القراءة أو الكتابة.
+      function readStorage(key, fallback = null) {
+        try {
+          const value = localStorage.getItem(key);
+          return value === null ? fallback : value;
+        } catch (error) {
+          return fallback;
+        }
+      }
+
+      function writeStorage(key, value) {
+        try {
+          localStorage.setItem(key, value);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
       // =====================================================
       // SAVE / LOAD STATE
       // =====================================================
@@ -217,11 +218,19 @@
           mapCategory: mapState.category, mapSort: mapState.sort,
           selectedLinks: JSON.parse(JSON.stringify(selectedLinksState.selected || {}))
         };
-        localStorage.setItem('sh_mode_filters', JSON.stringify(modeFilters));
+        writeStorage('sh_mode_filters', JSON.stringify(modeFilters));
       }
 
       function saveCurrentStateToMode() {
         saveStateToMode(getActiveMode());
+      }
+
+      function scheduleSmartStateSave() {
+        clearTimeout(smartSaveTimer);
+        smartSaveTimer = setTimeout(() => {
+          saveStateToMode('smart');
+          smartSaveTimer = null;
+        }, 180);
       }
 
       function loadStateFromMode(modeId) {
@@ -259,7 +268,7 @@
       }
 
       function loadModeFilters() {
-        const saved = localStorage.getItem('sh_mode_filters');
+        const saved = readStorage('sh_mode_filters');
         if (saved) {
           try {
             const parsed = JSON.parse(saved);
@@ -284,7 +293,7 @@
         if (oldMode === newMode) return;
         saveStateToMode(oldMode);
         setActiveMode(newMode);
-        localStorage.setItem('sh_mode', newMode);
+        writeStorage('sh_mode', newMode);
         loadStateFromMode(newMode);
         renderContextualFilters();
         syncFilterTabWithMode(newMode);
@@ -310,22 +319,13 @@
         const grid = document.getElementById('allFiltersGrid');
         if (!grid) return;
         grid.innerHTML = '';
-        grid.classList.remove('show-more');
-
         const groups = getSearchesByGroup();
-        const priorityGroups = ['أساسي', 'الترتيب', 'التاريخ', 'المدة', 'الجودة'];
-        const orderedGroups = Object.entries(groups).sort(([a], [b]) => {
-          const ai = priorityGroups.indexOf(a);
-          const bi = priorityGroups.indexOf(b);
-          return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
-        });
-
-        orderedGroups.forEach(([groupName, items], groupIndex) => {
+        Object.entries(groups).forEach(([groupName, items]) => {
           const groupDiv = document.createElement('div');
-          groupDiv.className = 'all-filter-group' + (groupIndex >= priorityGroups.length ? ' all-filter-group-extra' : '');
+          groupDiv.className = 'all-filter-group';
           groupDiv.dataset.group = groupName;
           const icon = groupIcons[groupName] || '📌';
-          groupDiv.innerHTML = `<div class="all-filter-group-title">${icon} ${groupName}</div>`;
+          groupDiv.innerHTML = `<div class="all-filter-group-title">${escapeHTML(icon)} ${escapeHTML(groupName)}</div>`;
           const itemsDiv = document.createElement('div');
           itemsDiv.className = 'all-filter-items';
           items.forEach(item => {
@@ -335,341 +335,206 @@
             const parts = item.name.trim().split(' ');
             const itemIcon = parts[0];
             const itemName = parts.slice(1).join(' ');
-            itemDiv.innerHTML = `<span class="af-icon">${itemIcon}</span><span class="af-name">${itemName}</span>`;
+            itemDiv.innerHTML = `<span class="af-icon">${escapeHTML(itemIcon)}</span><span class="af-name">${escapeHTML(itemName)}</span>`;
             itemsDiv.appendChild(itemDiv);
           });
           groupDiv.appendChild(itemsDiv);
           grid.appendChild(groupDiv);
         });
-
-        const moreBtn = document.getElementById('allFiltersMoreBtn');
-        if (moreBtn) moreBtn.style.display = orderedGroups.length > priorityGroups.length ? '' : 'none';
       }
 
       // =====================================================
       // SMART SEARCH DETECTION
       // =====================================================
-      const smartPatterns = {
-        maps: {
-          keywords: [
-            'مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','صيدليات','مستشفى','مستشفيات',
-            'بنك','بنوك','صراف','محطة','محطات','بقالة','سوبر ماركت','مول','مركز تجاري',
-            'أماكن','مكان','موقع','عنوان','اتجاهات','طريق','قريب','قريبة','بالقرب','حولي','حولّي',
-            'أقرب','nearest','nearby','near me','restaurant','restaurants','hotel','hotels',
-            'cafe','cafes','pharmacy','hospital','bank','atm','gas station','supermarket','mall',
-            'location','locations','map','maps','directions',
-            // إضافات شائعة للبحث المحلي
-            'مطاعم حولي','مطعم قريب','مطعم بالقرب مني','فندق قريب','فندق بالقرب مني','كافيه قريب','مقهى قريب',
-            'صيدلية قريبة','مستشفى قريب مني','بنك قريب مني','محطة وقود قريبة','متجر قريب مني','محل قريب مني',
-            'أماكن قريبة','أماكن حولي','ماذا يوجد حولي','ماذا يوجد بالقرب مني','دليل الأماكن','أماكن سياحية',
-            'مطاعم في','فنادق في','مقاهي في','صيدليات في','مستشفيات في','بنوك في','مولات في','متاجر في',
-            'where is','where are','places near me','restaurants near me','hotels near me','cafes near me',
-            'pharmacies near me','hospitals near me','stores near me','shops near me','things to do near me',
-            "أقرب مطعم",
-            "أقرب فندق",
-            "أقرب مقهى",
-            "أقرب صيدلية",
-            "أقرب مستشفى",
-            "أقرب بنك",
-            "أقرب متجر",
-            "أقرب محطة",
-            "أماكن للزيارة",
-            "أماكن تستحق الزيارة",
-            "أفضل الأماكن القريبة",
-            "مطاعم مفتوحة الآن",
-            "فنادق قريبة",
-            "مقاهي قريبة",
-            "محلات قريبة",
-            "مطاعم للعائلات",
-            "فنادق رخيصة قريبة",
-            "أماكن سياحية قريبة",
-            "nearest restaurant",
-            "nearest hotel",
-            "nearest cafe",
-            "best places near me",
-          ],
-          phrases: ['قريب مني','قريبة مني','بالقرب مني','حولّي','حولي','أقرب مكان','أين أقرب','near me','nearby','closest to me'],
-          icon:'🗺️', label:'خرائط', weight:3
-        },
-        news: {
-          keywords: [
-            'أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','اليوم','الآن','آخر الأخبار',
-            'أخبار اليوم','خبر اليوم','الأخبار العاجلة','news','breaking','politics','economy',
-            'sports news','latest news','today news','breaking news',
-            // عبارات إخبارية شائعة
-            'آخر المستجدات','مستجدات اليوم','ما الجديد اليوم','ما الأخبار','ما الجديد في العالم',
-            'أخبار العالم','أخبار اليمن','أخبار السعودية','أخبار مصر','أخبار التقنية','أخبار السيارات',
-            'أخبار الذكاء الاصطناعي','أخبار الشركات','أخبار الاقتصاد اليوم','أخبار السياسة اليوم',
-            'نتائج المباريات اليوم','أخبار كرة القدم اليوم','آخر أخبار كرة القدم','أخبار عاجلة الآن',
-            'ماذا حدث اليوم','ما الذي حدث اليوم','تطورات اليوم','آخر التطورات','today latest news',
-            'latest updates','world news','tech news','football news','business news','news today',
-            "أهم الأخبار اليوم",
-            "أبرز أخبار اليوم",
-            "ملخص أخبار اليوم",
-            "آخر الأخبار العاجلة",
-            "أحدث الأخبار",
-            "أخبار التكنولوجيا اليوم",
-            "أخبار الذكاء الاصطناعي اليوم",
-            "أخبار العالم اليوم",
-            "أخبار اليمن اليوم",
-            "أخبار السعودية اليوم",
-            "أخبار كرة القدم اليوم",
-            "أخبار الدوري اليوم",
-            "نتائج اليوم",
-            "آخر المستجدات اليوم",
-            "ما هي آخر الأخبار",
-            "ما آخر الأخبار",
-            "top news today",
-            "latest headlines",
-            "breaking news today",
-            "latest technology news",
-          ],
-          phrases: ['آخر أخبار','أخبار اليوم','خبر عاجل','الأخبار العاجلة','latest news','breaking news','today news'],
-          icon:'📰', label:'أخبار', weight:3
-        },
-        images: {
-          keywords: [
-            'صورة','صور','خلفية','خلفيات','شعار','شعارات','تصميم','تصاميم','صورة لـ','صور لـ',
-            'image','images','wallpaper','wallpapers','logo','logos','picture','pictures','photo','photos',
-            'png','jpg','jpeg','4k wallpaper',
-            // طلبات صور شائعة
-            'صور عالية الجودة','صور hd','صور 4k','صورة عالية الجودة','خلفية 4k','خلفيات 4k للهاتف',
-            'خلفيات ايفون','خلفيات اندرويد','خلفيات سطح المكتب','خلفية كمبيوتر','خلفية جوال',
-            'صور بروفايل','صور شخصية','صور كرتونية','صور انمي','صور طبيعة 4k','صور سيارات 4k',
-            'صور للاستخدام','صور مجانية','صور بدون حقوق','صورة شعار','صور شعارات الشركات',
-            'صور مرجعية','صور توضيحية','ابحث عن صورة','اعرض لي صور','show me pictures',
-            'high quality images','hd images','4k images','4k wallpapers','iphone wallpapers',
-            'desktop wallpapers','profile pictures','free images','stock photos',
-            "صور جميلة",
-            "صور جديدة",
-            "صور نادرة",
-            "صور واضحة",
-            "صور احترافية",
-            "صور مجانية عالية الجودة",
-            "خلفيات جميلة",
-            "خلفيات جديدة",
-            "خلفيات موبايل",
-            "خلفيات آيفون 4K",
-            "خلفيات كمبيوتر 4K",
-            "صور للطبيعة",
-            "صور للسيارات",
-            "صور للحيوانات",
-            "صور للفضاء",
-            "صور للمدن",
-            "صور كرتونية جميلة",
-            "صور أنمي عالية الجودة",
-            "ابحث عن صور",
-            "اعرض الصور",
-            "best wallpapers",
-            "beautiful images",
-            "nature 4k",
-            "car wallpapers 4k",
-          ],
-          phrases: ['صور لـ','صورة لـ','خلفيات للهاتف','خلفيات للكمبيوتر','wallpaper 4k','phone wallpapers'],
-          icon:'🖼️', label:'صور', weight:3
-        },
-        videos: {
-          keywords: [
-            'فيديو','فيديوهات','يوتيوب','مقطع','مقاطع','حلقة','حلقات','مشاهدة','شاهد',
-            'video','videos','youtube','watch','clip','clips','shorts','tutorial video',
-            // طلبات فيديو شائعة
-            'فيديو تعليمي','شرح بالفيديو','شرح فيديو','فيديو كامل','فيديو مباشر','بث مباشر',
-            'مقاطع قصيرة','فيديوهات قصيرة','فيديوهات تعليمية','فيديوهات مضحكة','مقاطع كرة القدم',
-            'فيديو مباراة','مشاهدة المباراة','مشاهدة مباشرة','شاهد الآن','شاهد الحلقة','الحلقة كاملة',
-            'فيديو شرح','دروس فيديو','كورس فيديو','ابحث عن فيديو','اعرض لي فيديو',
-            'watch video','watch live','live stream','full video','video tutorial','video lesson',
-            'short videos','football video','match highlights','watch the match',
-            "فيديوهات جديدة",
-            "أفضل فيديوهات",
-            "فيديو شرح كامل",
-            "شرح كامل بالفيديو",
-            "فيديو للمبتدئين",
-            "فيديو تعليمي قصير",
-            "دروس تعليمية بالفيديو",
-            "فيديوهات تقنية",
-            "فيديوهات برمجة",
-            "فيديوهات كرة القدم",
-            "ملخص المباراة فيديو",
-            "أهداف المباراة فيديو",
-            "فيديو مباشر الآن",
-            "مشاهدة البث المباشر",
-            "شاهد الفيديو كامل",
-            "ابحث عن مقاطع",
-            "اعرض فيديوهات",
-            "طريقة صنع",
-            "طريقة صناعة",
-            "كيفية صنع",
-            "كيفية صناعة",
-            "كيف يصنع",
-            "كيف تصنع",
-            "كيف اصنع",
-            "طريقة تصنيع",
-            "كيف اسوي",
-            "كيف اعمل",
-            "كيف أعمل",
-            "شرح",
-            "شرح كامل",
-            "شرح بالتفصيل",
-            "شرح للمبتدئين",
-            "تعلم",
-            "تعلم كيف",
-            "دروس",
-            "درس",
-            "خطوات",
-            "خطوة بخطوة",
-            "طريقة عمل",
-            "طريقة استخدام",
-            "طريقة تركيب",
-            "طريقة إصلاح",
-            "طريقة اصلاح",
-            "حل مشكلة",
-            "حل مشاكل",
-            "تجربة",
-            "تجارب",
-            "مراجعة",
-            "مراجعات",
-            "مقارنة",
-            "مقارنات",
-            "أفضل طريقة",
-            "افضل طريقة",
-            "نصائح",
-            "نصائح للمبتدئين",
-            "شرح يوتيوب",
-            "فيديو تعليمي",
-            "فيديو شرح",
-            "فيديو كامل",
-            "فيديوهات تعليمية",
-            "how to",
-            "how do I",
-            "how to make",
-            "how to use",
-            "tutorial",
-            "tutorials",
-            "step by step",
-            "beginner guide",
-            "full tutorial",
-            "review",
-            "reviews",
-            "comparison",
-            "guide",
-            "كيفية تصنيع",
-            "تصنيع",
-            "صناعة",
-            "فيلم",
-            "أفلام",
-            "فيلم كامل",
-            "فيلم مترجم",
-            "فيلم مدبلج",
-            "فيلم عربي",
-            "فيلم أجنبي",
-            "فيلم تركي",
-            "فيلم هندي",
-            "فيلم أكشن",
-            "فيلم رعب",
-            "فيلم كوميدي",
-            "أفلام جديدة",
-            "أفلام كاملة",
-            "أفضل الأفلام",
-            "مسلسل",
-            "مسلسلات",
-            "مسلسل كامل",
-            "مسلسل مترجم",
-            "مسلسل مدبلج",
-            "مسلسلات جديدة",
-            "مسلسلات تركية",
-            "مسلسلات عربية",
-            "مسلسلات كورية",
-            "أفضل المسلسلات",
-            "حلقة",
-            "الحلقة",
-            "الحلقة كاملة",
-            "الحلقة الأخيرة",
-            "الحلقة الأولى",
-            "جميع الحلقات",
-            "موسم",
-            "الموسم الأول",
-            "الموسم الثاني",
-            "أنمي",
-            "انمي",
-            "أنمي كامل",
-            "حلقات الأنمي",
-            "كرتون",
-            "رسوم متحركة",
-            "وثائقي",
-            "وثائقيات",
-            "فيلم وثائقي",
-            "أفلام وثائقية",
-            "وثائقي",
-            "documentary",
-            "best videos",
-            "latest videos",
-            "full tutorial",
-            "live video now",
-          ],
-          phrases: ['فيديو عن','فيديوهات','مشاهدة مباراة','شاهد فيديو','youtube','youtube tutorial','programming videos'],
-          icon:'🎬', label:'فيديو', weight:3
+      // =====================================================
+      // ✨ SMART SEARCH ENGINE
+      // =====================================================
+      const DEFAULT_SMART_RULES = {
+        version: 1,
+        settings: { phraseWeight: 5, keywordWeight: 1, tieMinScore: 5, maxSuggestions: 8 },
+        modes: {
+          maps:{icon:'🗺️',label:'خرائط',phrases:['مطاعم قريبه','مطاعم قريبة','فنادق قريبه','فنادق قريبة','بالقرب مني','near me','nearby'],keywords:['مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','مستشفى','بنك','محطة','restaurant','hotel','cafe','pharmacy','hospital','bank']},
+          news:{icon:'📰',label:'أخبار',phrases:['اخبار اليوم','أخبار اليوم','آخر الأخبار','اخر الاخبار','خبر عاجل','latest news','breaking news'],keywords:['اخبار','أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','news','breaking','politics','economy','sports']},
+          images:{icon:'🖼️',label:'صور',phrases:['صور عالية الجودة','خلفيات عالية الدقة','صور مجانية','صور كبيرة','صور png'],keywords:['صورة','صور','صوره','خلفية','خلفيات','شعار','تصميم','png','jpg','jpeg','wallpaper','image','images','picture','logo']},
+          videos:{icon:'🎬',label:'فيديو',phrases:['فيديو تعليمي','فيديو كامل','فيديو مباشر','بث مباشر','فيلم كامل','مسلسل كامل','الحلقة كاملة','شرح كامل','شرح بالتفصيل','شرح للمبتدئين','خطوة بخطوة','طريقة صنع','كيفية صنع','كيف اصنع','كيف اسوي','كيف اعمل','طريقة عمل','طريقة استخدام','طريقة تركيب','حل مشكلة','مراجعة','مقارنة','tutorial','how to','how to make','step by step','documentary'],keywords:['فيديو','يوتيوب','مقطع','مشاهدة','شاهد','حلقة','فيلم','أفلام','مسلسل','شرح','تعلم','دروس','طريقة','كيفية','مراجعة','مقارنة','وثائقي','انمي','كرتون','video','youtube','watch','tutorial','documentary']}
         }
       };
+      let smartRules = DEFAULT_SMART_RULES;
+      let smartRulesLoaded = false;
 
       function normalizeSmartQuery(query) {
-        return (query || '')
-          .toLowerCase()
-          .replace(/[إأآ]/g, 'ا')
-          .replace(/ة/g, 'ه')
-          .replace(/[ًٌٍَُِّْـ]/g, '')
-          .replace(/[؟?!.,،؛:()[\]{}"']/g, ' ')
-          .replace(/\\s+/g, ' ')
-          .trim();
+        return String(query || '').toLowerCase().replace(/[إأآ]/g,'ا').replace(/ة/g,'ه').replace(/[ًٌٍَُِّْـ]/g,'').replace(/[؟?!.,،؛:()[\]{}"']/g,' ').replace(/\s+/g,' ').trim();
       }
-
+      function scoreSmartMode(query, mode, config) {
+        const q=normalizeSmartQuery(query), matched=[]; let score=0;
+        (config.phrases||[]).forEach(p=>{const n=normalizeSmartQuery(p);if(n&&q.includes(n)){score+=smartRules.settings.phraseWeight;matched.push(n);}});
+        (config.keywords||[]).forEach(k=>{const n=normalizeSmartQuery(k);if(n&&q.includes(n)){score+=smartRules.settings.keywordWeight;matched.push(n);}});
+        return {mode,config,score,matched:[...new Set(matched)]};
+      }
       function detectSearchMode(query) {
-        const lower = normalizeSmartQuery(query);
-        if (lower.length < 2) return null;
-
-        const candidates = Object.entries(smartPatterns).map(([mode, config]) => {
-          let score = 0;
-          const matches = [];
-
-          // العبارات المركبة أقوى من الكلمات المفردة لأنها تعبّر عن نية أوضح.
-          (config.phrases || []).forEach(phrase => {
-            const p = normalizeSmartQuery(phrase);
-            if (p && lower.includes(p)) {
-              score += config.weight * 3;
-              matches.push(phrase);
-            }
-          });
-
-          // الكلمات العامة تعطي إشارة، لكن بوزن أقل.
-          (config.keywords || []).forEach(keyword => {
-            const k = normalizeSmartQuery(keyword);
-            if (!k || !lower.includes(k)) return;
-            const alreadyMatched = (config.phrases || []).some(phrase => normalizeSmartQuery(phrase) === k);
-            score += config.weight + (alreadyMatched ? 0 : 1);
-            matches.push(keyword);
-          });
-
-          // وجود أكثر من إشارة مختلفة لنفس النية يزيد الثقة.
-          const uniqueMatches = [...new Set(matches)];
-          if (uniqueMatches.length > 1) score += Math.min(uniqueMatches.length - 1, 3);
-
-          return { mode, config, score, matches: uniqueMatches };
-        }).sort((a, b) => b.score - a.score);
-
-        const best = candidates[0];
-        const second = candidates[1];
-
-        if (!best || best.score < 4) return null;
-
-        // إذا كانت نيتان واضحتان بنفس القوة، لا نخمن.
-        if (second && second.score >= best.score && second.mode !== best.mode) return null;
-
-        return {
-          mode: best.mode,
-          config: best.config,
-          score: best.score,
-          matches: best.matches
-        };
+        const q=normalizeSmartQuery(query); if(q.length<2)return null;
+        const results=Object.entries(smartRules.modes||{}).map(([mode,c])=>scoreSmartMode(query,mode,c)).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+        if(!results.length)return null;
+        const best=results[0], second=results[1];
+        if(second && best.score===second.score && best.score < Number(smartRules.settings.tieMinScore||5))return null;
+        return best;
       }
+      function resetSmartAutoState() {
+        filterState=createDefaultFilterState();
+        advancedState={allWords:'',exactPhrase:'',anyWords:'',noneWords:'',numbers:'',site:'',fileType:'',lastUpdate:'',lang:'',usageRights:''};
+        newsState={allWords:'',exactPhrase:'',site:'',time:'all',sort:'relevance'};
+        imageState={allWords:'',site:'',fileType:'',size:'all',exactWidth:'',exactHeight:'',aspect:'all',color:'all',colorType:'all',type:'all',rights:'all',time:'all',lang:'',region:'',safe:'all'};
+        mapState={place:'',near:'',rating:'0',hours:'all',price:'all',category:'',sort:'relevance'};
+        selectedLinksState={selected:{}};
+      }
+      function getSmartFilterIndex(id) {
+        const r=(smartRules.filters||[]).find(x=>x.id===id);
+        if(r && r.linkIndex!==undefined)return Number(r.linkIndex);
+        const legacy={views:1,rating:2,uploaded:3,title:4,hour:5,today:6,week:7,month:8,year:9,short:10,medium:11,long:12,'4k':13,hdr:14,hd:15,'360':16,vr180:17,'3d':18,longViews:19,long4k:20,long4kHd:21,video:22,channel:23,playlist:24,movie:25,live:26,shorts:27,instagram:33};
+        return legacy[id];
+      }
+      function selectSmartLink(index) {
+        const idx = Number(index);
+        if (!Number.isInteger(idx) || idx < 0 || idx >= searches.length) return false;
+        const current = searches[idx];
+        if (!current) return false;
+
+        const key = 'link:' + idx;
+        const sameGroupKeys = Object.keys(selectedLinksState.selected).filter(k => {
+          if (!selectedLinksState.selected[k] || k === key) return false;
+          const otherIdx = Number(k.replace('link:', ''));
+          return searches[otherIdx] && searches[otherIdx].group === current.group;
+        });
+
+        if (selectedLinksState.selected[key]) {
+          delete selectedLinksState.selected[key];
+        } else {
+          sameGroupKeys.forEach(k => delete selectedLinksState.selected[k]);
+          selectedLinksState.selected[key] = true;
+        }
+
+        updateAllFiltersUI();
+        saveCurrentStateToMode();
+        return true;
+      }
+
+      function getMatchedSmartRules(query) {
+        const q=normalizeSmartQuery(query);
+        return (smartRules.filters||[]).map(rule=>{
+          let score=0;
+          (rule.phrases||[]).forEach(p=>{if(q.includes(normalizeSmartQuery(p)))score+=Number(rule.phraseWeight||smartRules.settings.phraseWeight||5);});
+          (rule.keywords||[]).forEach(k=>{if(q.includes(normalizeSmartQuery(k)))score+=Number(rule.keywordWeight||smartRules.settings.keywordWeight||1);});
+          return {rule,score};
+        }).filter(x=>x.score>0).sort((a,b)=>(Number(b.rule.priority)||0)-(Number(a.rule.priority)||0)||b.score-a.score);
+      }
+      function applySmartRule(rule) {
+        if(!rule)return;
+        const v=rule.value;
+        // 🎬 الفلاتر الذكية للفيديو تُطبّق على filterState مباشرةً،
+        // حتى يمكن جمع فيلم/مسلسل + مدة + جودة + تاريخ بدون الاعتماد على رابط واحد.
+        if(rule.mode==='videos' && rule.action==='link'){
+          const map = {
+            short: ['duration','short'], medium: ['duration','medium'], long: ['duration','long'],
+            '4k': ['quality','4k'], hd: ['quality','hd'], hdr: ['feature','hdr'],
+            '360': ['feature','360'], vr180: ['feature','vr180'], '3d': ['feature','3d'],
+            live: ['type','live'], shorts: ['type','shorts'], playlist: ['type','playlist'],
+            channel: ['type','channel'], video: ['type','video'],
+            movie: ['type','movie'], series: ['type','series']
+          };
+          if(v==='views'){
+            // 🔥 عبارات الشرح/التصنيع/التركيب وما شابه = محتوى تعليمي طويل + الأعلى مشاهدة.
+            // النوايا التعليمية/التصنيع/التركيب/الإصلاح/المقارنة/الوثائقيات
+            // تتعامل كبحث طويل + الأعلى مشاهدة.
+            const longIntents = [
+              'instructional','educational','installation','manufacturing',
+              'repair','comparison','documentary'
+            ];
+            if(longIntents.includes(rule.id)){
+              if(!Array.isArray(filterState.duration)) filterState.duration=[];
+              if(!filterState.duration.includes('long')) filterState.duration.push('long');
+            }
+            // المراجعات تحتاج الأعلى تقييمًا، مع الإبقاء على الأعلى مشاهدة كترتيب مساعد.
+            if(rule.id==='review'){
+              filterState.sort='rating';
+              return;
+            }
+            filterState.sort='views';
+            return;
+          }
+          if(v==='rating'){ filterState.sort='rating'; return; }
+          if(v==='hour'||v==='today'||v==='week'||v==='month'||v==='year'){
+            filterState.date=[v]; return;
+          }
+          const mapped=map[v];
+          if(mapped){
+            const [key,value]=mapped;
+            if(!Array.isArray(filterState[key])) filterState[key]=[];
+            if(!filterState[key].includes(value)) filterState[key].push(value);
+            const longIntentIds = [
+              'movie-full','series-full','quality-4k','quality-hd','quality-hdr'
+            ];
+            if(longIntentIds.includes(rule.id)){
+              if(!Array.isArray(filterState.duration)) filterState.duration=[];
+              if(!filterState.duration.includes('long')) filterState.duration.push('long');
+            }
+            // عبارات السياحة والمناظر الطبيعية تطلب جودة 4K + HD معًا.
+            if(rule.id && rule.id.startsWith('tourism-') && rule.id.endsWith('-quality')){
+              if(!Array.isArray(filterState.quality)) filterState.quality=[];
+              if(!filterState.quality.includes('4k')) filterState.quality.push('4k');
+              if(!filterState.quality.includes('hd')) filterState.quality.push('hd');
+            }
+          }
+          return;
+        }
+        if(rule.action==='link'){const i=getSmartFilterIndex(v);if(i!==undefined)selectSmartLink(i);}
+        else if(rule.action==='advancedFileType')advancedState.fileType=v;
+        else if(rule.action==='advancedUsageRights')advancedState.usageRights=v;
+        else if(rule.action==='imageRights')imageState.rights=v;
+        else if(rule.action==='imageSize')imageState.size=v;
+        else if(rule.action==='imageColorType')imageState.colorType=v;
+        else if(rule.action==='imageType')imageState.type=v;
+        else if(rule.action==='imageFileType')imageState.fileType=v;
+        else if(rule.action==='mapCategory')mapState.category=v;
+        else if(rule.action==='mapRating')mapState.rating=v;
+        else if(rule.action==='mapHours')mapState.hours=v;
+        else if(rule.action==='mapPrice')mapState.price=v;
+        else if(rule.action==='newsTime')newsState.time=v;
+        else if(rule.action==='newsSort')newsState.sort=v;
+      }
+      function getSmartSpecialSuggestions(query) {
+        return getMatchedSmartRules(query).slice(0,Number(smartRules.settings.maxSuggestions)||8).map(({rule})=>({id:'smart-'+rule.id,icon:rule.icon||'✨',label:rule.label||rule.id,linkIndex:rule.action==='link'?getSmartFilterIndex(rule.value):undefined,apply:()=>applySmartRule(rule)}));
+      }
+      function applySmartIntent(query,{reset=true}={}) {
+        if(reset)resetSmartAutoState();
+        const detected=detectSearchMode(query), matched=getMatchedSmartRules(query);
+        if(!query)return null;
+        if(detected?.mode==='maps'){mapState.place=query;matched.filter(x=>x.rule.mode==='maps').forEach(x=>applySmartRule(x.rule));}
+        else if(detected?.mode==='news'){newsState.allWords=query;matched.filter(x=>x.rule.mode==='news').forEach(x=>applySmartRule(x.rule));}
+        else if(detected?.mode==='images'){imageState.allWords=query;matched.filter(x=>x.rule.mode==='images').forEach(x=>applySmartRule(x.rule));}
+        else if(detected?.mode==='videos'){
+          // 🎯 طبّق كل نوايا الفيديو المكتشفة معًا.
+          // مثال: "فيلم عادل امام أكثر من 20 دقيقة" => فيلم + مدة طويلة.
+          const videoMatches=matched.filter(x=>x.rule.mode==='videos');
+          videoMatches
+            .sort((a,b)=>(Number(b.rule.priority)||0)-(Number(a.rule.priority)||0)||b.score-a.score)
+            .forEach(x=>applySmartRule(x.rule));
+        } else {
+          const web=matched.find(x=>x.rule.mode==='web');
+          if(web)applySmartRule(web.rule);
+        }
+        return {detected,suggestions:getSmartSpecialSuggestions(query)};
+      }
+      async function loadSmartRules(){
+        try{
+          const response=await fetch('./smart-rules.json',{cache:'no-store'});
+          if(!response.ok)throw new Error('HTTP '+response.status);
+          const data=await response.json();
+          if(data&&data.modes&&Array.isArray(data.filters))smartRules={...DEFAULT_SMART_RULES,...data,settings:{...DEFAULT_SMART_RULES.settings,...(data.settings||{})}};
+          smartRulesLoaded=true;
+        }catch(e){smartRules=DEFAULT_SMART_RULES;smartRulesLoaded=false;console.warn('Smart rules fallback',e);}
+        updateSmartIndicator(); if(typeof renderContextualFilters==='function')renderContextualFilters();
+      }
+      loadSmartRules();
 
       const searchModesConfig = [
         { id: 'smart', icon: '✨', label: 'ذكي', labelEn: 'Smart' },
@@ -682,87 +547,34 @@
 
       const contextualSuggestions = {
         maps: [
-          { id: 'maps-rating-4', icon: '⭐', label: '4+ نجوم', apply: () => { mapState.rating = '4'; } },
-          { id: 'maps-open-now', icon: '🕐', label: 'مفتوح الآن', apply: () => { mapState.hours = 'open'; } },
-          { id: 'maps-budget', icon: '💰', label: 'اقتصادي', apply: () => { mapState.price = '1'; } },
-          { id: 'maps-restaurants', icon: '🍽️', label: 'مطاعم', apply: () => { mapState.category = 'restaurants'; } }
+          { icon: '⭐', label: '4+ نجوم', apply: () => { mapState.rating = '4'; } },
+          { icon: '🕐', label: 'مفتوح الآن', apply: () => { mapState.hours = 'open'; } },
+          { icon: '💰', label: 'اقتصادي', apply: () => { mapState.price = '1'; } },
+          { icon: '🍽️', label: 'مطاعم', apply: () => { mapState.category = 'restaurants'; } }
         ],
         news: [
-          { id: 'news-last-hour', icon: '⏰', label: 'آخر ساعة', apply: () => { newsState.time = 'h'; } },
-          { id: 'news-today', icon: '📅', label: 'اليوم', apply: () => { newsState.time = 'h24'; } },
-          { id: 'news-week', icon: '📆', label: 'هذا الأسبوع', apply: () => { newsState.time = 'd7'; } },
-          { id: 'news-latest', icon: '🔥', label: 'الأحدث', apply: () => { newsState.sort = 'date'; } }
+          { icon: '⏰', label: 'آخر ساعة', apply: () => { newsState.time = 'h'; } },
+          { icon: '📅', label: 'اليوم', apply: () => { newsState.time = 'h24'; } },
+          { icon: '📆', label: 'هذا الأسبوع', apply: () => { newsState.time = 'd7'; } },
+          { icon: '🔥', label: 'الأحدث', apply: () => { newsState.sort = 'date'; } }
         ],
         images: [
-          { id: 'images-large', icon: '📐', label: 'كبير', apply: () => { imageState.size = 'l'; } },
-          { id: 'images-color', icon: '🎨', label: 'ملون', apply: () => { imageState.colorType = 'color'; } },
-          { id: 'images-face', icon: '👤', label: 'وجه', apply: () => { imageState.type = 'face'; } },
-          { id: 'images-free', icon: '⚖️', label: 'مجاني', apply: () => { imageState.rights = 'f'; } }
+          { icon: '📐', label: 'كبير', apply: () => { imageState.size = 'l'; } },
+          { icon: '🎨', label: 'ملون', apply: () => { imageState.colorType = 'color'; } },
+          { icon: '👤', label: 'وجه', apply: () => { imageState.type = 'face'; } },
+          { icon: '⚖️', label: 'مجاني', apply: () => { imageState.rights = 'f'; } }
         ],
         videos: [
-          { id: 'videos-views', icon: '🔥', label: 'الترتيب حسب عدد المشاهدات', linkIndex: 1, apply: () => {} },
-          { id: 'videos-long', icon: '🎬', label: 'أكثر من 20 دقيقة', linkIndex: 12, apply: () => { filterState.duration = ['long']; } },
-          { id: 'videos-4k', icon: '🎥', label: '4K', linkIndex: 13, apply: () => { filterState.quality = ['4k']; } },
-          { id: 'videos-hd', icon: '📺', label: 'HD', linkIndex: 15, apply: () => { filterState.quality = ['hd']; } },
-          { id: 'videos-long-4k-hd', icon: '💎', label: 'أكثر من 20 دقيقة + 4K + HD', linkIndex: 21, apply: () => {} },
-          { id: 'videos-short', icon: '⏱️', label: 'قصير', linkIndex: 10, apply: () => { filterState.duration = ['short']; } },
-          { id: 'videos-live', icon: '🔴', label: 'مباشر', linkIndex: 26, apply: () => { filterState.type = ['live']; } }
+          { icon: '⏱️', label: 'قصير', apply: () => { filterState.duration = ['short']; } },
+          { icon: '🎥', label: 'HD', apply: () => { filterState.quality = ['hd']; } },
+          { icon: '🔴', label: 'مباشر', apply: () => { filterState.type = ['live']; } }
         ],
         web: [
-          { id: 'web-pdf', icon: '📄', label: 'PDF', apply: () => { advancedState.fileType = 'pdf'; } },
-          { id: 'web-year', icon: '📅', label: 'هذا العام', apply: () => { filterState.date = ['year']; } },
-          { id: 'web-news', icon: '📰', label: 'أخبار', apply: () => { advancedState.allWords = 'أخبار'; } }
+          { icon: '📄', label: 'PDF', apply: () => { advancedState.fileType = 'pdf'; } },
+          { icon: '📅', label: 'هذا العام', apply: () => { filterState.date = ['year']; } },
+          { icon: '📰', label: 'أخبار', apply: () => { advancedState.allWords = 'أخبار'; } }
         ]
       };
-
-                  function getSmartSpecialSuggestions(query) {
-        const lower = normalizeSmartQuery(query);
-
-        const fileTypes = [
-          { type: 'pdf', icon: '📄', label: 'ويب: نوع ملف: pdf', phrases: ['ملف pdf', 'pdf', 'بي دي اف', 'ملفات بي دي اف'] },
-          { type: 'doc', icon: '📝', label: 'ويب: نوع ملف: doc', phrases: ['ملف doc', 'ملف docx', 'doc', 'docx', 'وورد', 'word'] },
-          { type: 'xls', icon: '📊', label: 'ويب: نوع ملف: xls', phrases: ['ملف xls', 'ملف xlsx', 'xls', 'xlsx', 'اكسل', 'excel'] },
-          { type: 'ppt', icon: '📽️', label: 'ويب: نوع ملف: ppt', phrases: ['ملف ppt', 'ملف pptx', 'ppt', 'pptx', 'باوربوينت', 'powerpoint'] },
-          { type: 'txt', icon: '📃', label: 'ويب: نوع ملف: txt', phrases: ['ملف txt', 'txt', 'نص txt', 'ملف نصي'] }
-        ];
-
-        for (const item of fileTypes) {
-          if (item.phrases.some(phrase => lower.includes(normalizeSmartQuery(phrase)))) {
-            return [{
-              id: 'smart-file-' + item.type,
-              icon: item.icon,
-              label: 'ويب: نوع ملف: ' + item.type.toUpperCase(),
-              fileType: item.type,
-              apply: () => { advancedState.fileType = item.type; }
-            }];
-          }
-        }
-
-        const platforms = [
-          ['smart-instagram-24h','📷','البحث في Instagram (أي وقت)','انستقرام|انستجرام|instagram'],
-          ['smart-facebook-24h','📘','البحث في Facebook (أي وقت)','فيسبوك|فيس بوك|facebook|fb'],
-          ['smart-tiktok-24h','🎵','البحث في TikTok (أي وقت)','تيك توك|تيكتوك|tiktok|tik tok'],
-          ['smart-x-24h','𝕏','البحث في X (أي وقت)','تويتر|twitter|منصة اكس|منصة x|اكس'],
-          ['smart-snapchat-24h','👻','البحث في Snapchat (أي وقت)','سناب شات|سناب|snapchat'],
-          ['smart-linkedin-24h','💼','البحث في LinkedIn (أي وقت)','لينكد ان|لينكدإن|linkedin'],
-          ['smart-reddit-24h','🟠','البحث في Reddit (أي وقت)','ريديت|reddit'],
-          ['smart-pinterest-24h','📌','البحث في Pinterest (أي وقت)','بنترست|pinterest'],
-          ['smart-threads-24h','🧵','البحث في Threads (أي وقت)','ثريدز|threads']
-        ];
-        for (const [id, icon, label, rawPhrases] of platforms) {
-          if (!rawPhrases.split('|').some(p => lower.includes(normalizeSmartQuery(p)))) continue;
-          const linkIndex = searches.findIndex(item => item && item.name === icon + ' ' + label);
-          if (linkIndex >= 0) return [{ id, icon, label, linkIndex, apply: () => {} }];
-        }
-        return [];
-      }
-
-      function getContextualSuggestions(modeKey) {
-        return (contextualSuggestions[modeKey] || [])
-          .map((suggestion, index) => ({ suggestion, index, usage: getFilterUsage(suggestion.id) }))
-          .sort((a, b) => b.usage - a.usage || a.index - b.index)
-          .map(item => item.suggestion);
-      }
 
       // =====================================================
       // DOM ELEMENTS
@@ -900,16 +712,16 @@
       const filterLabels = {
         ar: {
           sort: { relevance: 'الأكثر صلة', date: 'تاريخ النشر', views: 'عدد المشاهدات', rating: 'التقييم' },
-          type: { video: 'فيديو', playlist: 'قائمة', live: 'بث', shorts: 'Shorts', channel: 'قنوات', movie: 'أفلام' },
-          duration: { short: 'قصير', medium: 'متوسط', long: 'طويل' },
+          type: { video: 'فيديو', playlist: 'قائمة', live: 'بث', shorts: 'Shorts', channel: 'قنوات', movie: 'أفلام', series: 'مسلسلات' },
+          duration: { short: 'أقل من 4 دقائق', medium: 'بين 4 و20 دقيقة', long: '🎬 أكثر من 20 دقيقة' },
           date: { hour: 'ساعة', today: 'اليوم', week: 'أسبوع', month: 'شهر', year: 'سنة' },
           quality: { '4k': '4K', hd: 'HD' },
           feature: { '360': '360°', vr180: 'VR180', '3d': '3D', hdr: 'HDR', cc: 'ترجمة' }
         },
         en: {
           sort: { relevance: 'Relevance', date: 'Date', views: 'Views', rating: 'Rating' },
-          type: { video: 'Video', playlist: 'Playlist', live: 'Live', shorts: 'Shorts', channel: 'Channels', movie: 'Movies' },
-          duration: { short: 'Short', medium: 'Medium', long: 'Long' },
+          type: { video: 'Video', playlist: 'Playlist', live: 'Live', shorts: 'Shorts', channel: 'Channels', movie: 'Movies', series: 'Series' },
+          duration: { short: 'Under 4 min', medium: '4–20 min', long: '🎬 Over 20 min' },
           date: { hour: 'Hour', today: 'Today', week: 'Week', month: 'Month', year: 'Year' },
           quality: { '4k': '4K', hd: 'HD' },
           feature: { '360': '360°', vr180: 'VR180', '3d': '3D', hdr: 'HDR', cc: 'CC' }
@@ -1011,26 +823,9 @@
       }
 
       function handleAllFilterClick(item) {
-        const idx = Number(item.dataset.linkIndex);
-        const current = searches[idx];
-        if (!current) return;
+        const idx = item.dataset.linkIndex;
         const key = 'link:' + idx;
-
-        // داخل نفس المجموعة: اختيار واحد فقط.
-        // يمكن الجمع بين مجموعات مختلفة، لكن لا يمكن اختيار فلترين من نفس المجموعة.
-        const sameGroupKeys = Object.keys(selectedLinksState.selected).filter(k => {
-          if (!selectedLinksState.selected[k] || k === key) return false;
-          const otherIdx = Number(k.replace('link:', ''));
-          return searches[otherIdx] && searches[otherIdx].group === current.group;
-        });
-
-        if (selectedLinksState.selected[key]) {
-          delete selectedLinksState.selected[key];
-        } else {
-          sameGroupKeys.forEach(k => delete selectedLinksState.selected[k]);
-          selectedLinksState.selected[key] = true;
-        }
-
+        selectedLinksState.selected[key] = !selectedLinksState.selected[key];
         updateAllFiltersUI();
         saveCurrentStateToMode();
       }
@@ -1045,8 +840,6 @@
         if (filterSearchInput) {
           filterSearchInput.addEventListener('input', (e) => {
             const q = e.target.value.trim().toLowerCase();
-            const grid = document.getElementById('allFiltersGrid');
-            if (grid) grid.classList.toggle('show-more', !!q);
             document.querySelectorAll('.all-filter-item').forEach(item => {
               const name = item.querySelector('.af-name').textContent.toLowerCase();
               item.style.display = q === '' || name.includes(q) ? '' : 'none';
@@ -1055,16 +848,6 @@
               const visibleItems = Array.from(group.querySelectorAll('.all-filter-item')).filter(it => it.style.display !== 'none');
               group.style.display = visibleItems.length > 0 ? '' : 'none';
             });
-          });
-        }
-        const allFiltersMoreBtn = document.getElementById('allFiltersMoreBtn');
-        if (allFiltersMoreBtn) {
-          allFiltersMoreBtn.addEventListener('click', () => {
-            const grid = document.getElementById('allFiltersGrid');
-            if (!grid) return;
-            const expanded = grid.classList.toggle('show-more');
-            allFiltersMoreBtn.setAttribute('aria-expanded', String(expanded));
-            allFiltersMoreBtn.textContent = expanded ? 'إظهار أقل ⌃' : 'إظهار المزيد ⌄';
           });
         }
         const selectAllBtn = document.getElementById('afSelectAll');
@@ -1115,19 +898,7 @@
         }
         if (advancedState.numbers) parts.push(advancedState.numbers.trim());
         if (advancedState.site) parts.push('site:' + advancedState.site.trim());
-        if (advancedState.fileType) {
-          const fileTypeGroups = {
-            pdf: ['pdf'],
-            doc: ['doc', 'docx'],
-            xls: ['xls', 'xlsx'],
-            ppt: ['ppt', 'pptx'],
-            txt: ['txt']
-          };
-          const extensions = fileTypeGroups[advancedState.fileType] || [advancedState.fileType];
-          parts.push(extensions.length === 1
-            ? 'filetype:' + extensions[0]
-            : '(' + extensions.map(ext => 'filetype:' + ext).join(' OR ') + ')');
-        }
+        if (advancedState.fileType) parts.push('filetype:' + advancedState.fileType);
         if (parts.length === 0) return baseQuery;
         if (baseQuery && !advancedState.allWords && !advancedState.exactPhrase && !advancedState.anyWords && !advancedState.numbers) {
           parts.unshift(baseQuery);
@@ -1143,6 +914,79 @@
         if (parts.length === 0) return baseQuery;
         if (baseQuery && !newsState.allWords && !newsState.exactPhrase) parts.unshift(baseQuery);
         return parts.join(' ');
+      }
+
+      function videoSearchURL(query) {
+        let finalQuery = String(query || '').trim();
+        const types = filterState.type || [];
+        const durations = filterState.duration || [];
+        const dates = filterState.date || [];
+        const quality = filterState.quality || [];
+        const features = filterState.feature || [];
+
+        // 🧠 نظّف عبارات الفلاتر التي كتبها المستخدم من نص البحث.
+        // مثال: "فيلم عادل امام أكثر من 20 دقيقة" يصبح بحثًا عن "عادل امام فيلم"
+        // مع تطبيق فلتر المدة بشكل مستقل.
+        const filterPhrases = [
+          /أكثر\s+من\s+20\s+دقيقة|اكثر\s+من\s+20\s+دقيقه/gi,
+          /بين\s+4\s*(?:و|إلى|الى|-)\s*20\s+دقيقة/gi,
+          /أقل\s+من\s+4\s+دقائق|اقل\s+من\s+4\s+دقائق/gi,
+          /4k/gi, /hd/gi, /hdr/gi, /vr\s*180/gi,
+          /ثلاثي\s+الأبعاد|ثلاثي\s+الابعاد/gi,
+          /آخر\s+ساعة|اخر\s+ساعه/gi, /اليوم/gi, /هذا\s+الأسبوع|هذا\s+الاسبوع/gi,
+          /هذا\s+الشهر/gi, /هذا\s+العام|هذه\s+السنة/gi
+        ];
+        filterPhrases.forEach(pattern => { finalQuery = finalQuery.replace(pattern, ' '); });
+
+        // إزالة كلمات نوع المحتوى من النص ثم إضافتها بصيغة موحّدة.
+        finalQuery = finalQuery
+          .replace(/\b(?:movie|movies|series|video|videos|shorts|playlist|playlists)\b/gi, ' ')
+          .replace(/\b(?:فيلم|أفلام|افلام|مسلسل|مسلسلات|فيديو|فيديوهات|شورتس|شورت|قائمة تشغيل|قوائم تشغيل)\b/gi, ' ')
+          .replace(/\s+/g, ' ').trim();
+
+        // النوع: أفلام/مسلسلات ليست فلاتر YouTube مستقلة في صفحة النتائج،
+        // لذلك نضيفها للاستعلام بشكل صريح.
+        if (types.includes('movie')) finalQuery += ' فيلم';
+        if (types.includes('series')) finalQuery += ' مسلسل';
+
+        const params = new URLSearchParams();
+        params.set('search_query', finalQuery);
+
+        // نستخدم فلاتر YouTube الأصلية عندما يكون هناك فلتر واحد قابل للتمثيل مباشرة.
+        // عند تعدد الفلاتر، نُبقي الاستعلام صالحًا ونستخدم أول فلتر مدعوم.
+        const spMap = {
+          short: 'EgIYAQ%3D%3D',
+          medium: 'EgIYAw%3D%3D',
+          long: 'EgIYAg%3D%3D',
+          '4k': 'EgJwAQ%3D%3D',
+          hd: 'EgIgAQ%3D%3D',
+          '360': 'EgJ4AQ%3D%3D',
+          vr180: 'EgPQAQE%3D',
+          '3d': 'EgI4AQ%3D%3D',
+          hdr: 'EgPIAQE%3D'
+        };
+        const candidates = [...durations, ...quality, ...features];
+        const supported = candidates.find(v => spMap[v]);
+        if (supported) params.set('sp', decodeURIComponent(spMap[supported]));
+
+        // فلاتر النوع الأساسية التي يدعمها YouTube عبر sp.
+        const typeSp = {
+          live: 'EgJAAQ%3D%3D',
+          playlist: 'EgIQAw%3D%3D',
+          shorts: 'EgIQAQ%3D%3D',
+          video: 'EgIQAQ%3D%3D'
+        };
+        if (!supported) {
+          const t = types.find(v => typeSp[v]);
+          if (t) params.set('sp', decodeURIComponent(typeSp[t]));
+        }
+
+        const dateMap = { hour: 'EgIIAQ%3D%3D', today: 'EgQIAhAB', week: 'EgQIAxAB', month: 'EgQIBBAB', year: 'EgQIBRAB' };
+        const d = dates.find(v => dateMap[v]);
+        if (d && !params.has('sp')) params.set('sp', decodeURIComponent(dateMap[d]));
+
+        // الترتيب يظل مفيدًا عبر واجهة Google عند الحاجة، لذلك لا نخلط مصدرين للفلترة.
+        return 'https://www.youtube.com/results?' + params.toString();
       }
 
       function googleSearchURL(query) {
@@ -1279,7 +1123,7 @@
               // ⭐ استخدم أول رابط مختار أو الرابط الافتراضي
               const selected = buildSelectedLinksURLs(query);
               if (selected.length > 0) return selected[0].url;
-              return generateAdvancedLink(query, 0);
+              return videoSearchURL(query);
             }
             return googleSearchURL(query);
           }
@@ -1297,7 +1141,19 @@
           active.push({ key: 'sort', value: filterState.sort, label: 'ترتيب: ' + (filterLabels[currentLang].sort?.[filterState.sort] || filterState.sort), type: 'simple', multi: false });
         }
         (filterState.type || []).forEach(v => active.push({ key: 'type', value: v, label: 'نوع: ' + (filterLabels[currentLang].type?.[v] || v), type: 'simple', multi: true }));
-        (filterState.duration || []).forEach(v => active.push({ key: 'duration', value: v, label: 'مدة: ' + (filterLabels[currentLang].duration?.[v] || v), type: 'simple', multi: true }));
+        // 🎯 اعرض الفلتر التعليمي كفلتر مركّب واحد بدل شريحتين منفصلتين.
+        const hasLong = (filterState.duration || []).includes('long');
+        const hasViews = filterState.sort === 'views';
+        if(hasLong && hasViews){
+          active.push({
+            key: 'instructionalCombo',
+            value: 'long-views',
+            label: currentLang === 'ar' ? '🏆 أكثر من 20 دقيقة + الأعلى مشاهدة' : '🏆 Over 20 min + Most viewed',
+            type: 'simpleCombo'
+          });
+        } else {
+          (filterState.duration || []).forEach(v => active.push({ key: 'duration', value: v, label: (filterLabels[currentLang].duration?.[v] || v), type: 'simple', multi: true }));
+        }
         (filterState.date || []).forEach(v => active.push({ key: 'date', value: v, label: 'تاريخ: ' + (filterLabels[currentLang].date?.[v] || v), type: 'simple', multi: true }));
         (filterState.quality || []).forEach(v => active.push({ key: 'quality', value: v, label: 'جودة: ' + (filterLabels[currentLang].quality?.[v] || v), type: 'simple', multi: true }));
         (filterState.feature || []).forEach(v => active.push({ key: 'feature', value: v, label: 'ميزة: ' + (filterLabels[currentLang].feature?.[v] || v), type: 'simple', multi: true }));
@@ -1374,7 +1230,12 @@
           closeBtn.className = 'chip-close';
           closeBtn.textContent = '×';
           closeBtn.addEventListener('click', () => {
-            if (filter.type === 'simple') {
+            if (filter.type === 'simpleCombo') {
+              filterState.duration = (filterState.duration || []).filter(v => v !== 'long');
+              filterState.sort = 'date';
+              setFilterButtonVisuals(filterState);
+              saveCurrentStateToMode();
+            } else if (filter.type === 'simple') {
               if (filter.multi) {
                 const arr = filterState[filter.key];
                 const idx = arr.indexOf(filter.value);
@@ -1476,83 +1337,51 @@
 
       function renderContextualFilters() {
         const mode = getActiveMode();
-        const query = currentQuery || searchInput.value || '';
-        const modeKey = mode === 'smart'
-          ? (detectSearchMode(query)?.mode || 'web')
-          : mode;
-        const specialSuggestions = mode === 'smart' ? getSmartSpecialSuggestions(query) : [];
-        const suggestions = [...specialSuggestions, ...getContextualSuggestions(modeKey)]
-          .filter((item, index, arr) => arr.findIndex(x => x.id === item.id) === index);
-
-        // تفعيل الفلتر الذكي المناسب تلقائيًا، سواء كان فلتر منصة أو نوع ملف ويب.
-        if (mode === 'smart' && specialSuggestions.length > 0) {
-          const special = specialSuggestions[0];
-          if (special.linkIndex !== undefined) {
-            selectedLinksState.selected = {};
-            selectedLinksState.selected['link:' + special.linkIndex] = true;
-            saveCurrentStateToMode();
-            updateAllFiltersUI();
-          } else if (special.fileType) {
-            // غيّر نوع الملف مباشرة حسب النوع الذي اكتشفه البحث الذكي.
-            advancedState.fileType = special.fileType;
-            saveCurrentStateToMode();
-            syncAdvancedInputs();
-            renderActiveFiltersBar();
-            updateAllFiltersUI();
+        let suggestions = [];
+        if (mode === 'smart') {
+          const smart = getSmartSpecialSuggestions(currentQuery || '').filter(s => s && s.label);
+          const seen = new Set();
+          suggestions = smart.filter(s => {
+            const key = s.linkIndex !== undefined ? 'link:' + s.linkIndex : s.id;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          }).slice(0, Number(smartRules.settings.maxSuggestions) || 10);
+          if (!suggestions.length) {
+            const modeKey = detectSearchMode(currentQuery)?.mode || 'web';
+            suggestions = contextualSuggestions[modeKey] || [];
           }
+        } else {
+          suggestions = contextualSuggestions[mode] || [];
         }
-
         if (!suggestions.length) {
           contextualFilters.classList.remove('show');
           return;
         }
-
         contextualFilters.classList.add('show');
-        cfLabelText.textContent = langStrings[currentLang].cfLabelText;
+        cfLabelText.textContent = currentLang === 'ar' ? 'فلاتر ذكية مقترحة' : 'Suggested smart filters';
         cfChips.innerHTML = '';
-
-        suggestions.slice(0, 4).forEach(sug => {
+        suggestions.forEach(sug => {
           const chip = document.createElement('button');
+          chip.type = 'button';
           chip.className = 'cf-chip';
-          chip.dataset.filterId = sug.id;
-          const usage = getFilterUsage(sug.id);
-          chip.innerHTML = `
-            <span class="chip-icon">${sug.icon}</span>
-            <span>${sug.label}</span>
-            ${usage > 0 ? `<span style="font-size:10px;opacity:.65">×${usage}</span>` : ''}
-          `;
-
-          chip.addEventListener('click', () => {
-            sug.apply();
-
-            if (sug.linkIndex !== undefined) {
-              selectedLinksState.selected = {};
-              selectedLinksState.selected['link:' + sug.linkIndex] = true;
-            }
-
-            recordFilterUsage(sug.id);
+          chip.setAttribute('aria-label', String(sug.label));
+          chip.dataset.smartRuleId = sug.id || '';
+          if (sug.linkIndex !== undefined) chip.dataset.linkIndex = String(sug.linkIndex);
+          chip.innerHTML = `<span class="chip-icon">${escapeHTML(sug.icon || '✨')}</span><span>${escapeHTML(sug.label)}</span>`;
+          chip.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            let applied = false;
+            if (sug.linkIndex !== undefined) applied = selectSmartLink(sug.linkIndex);
+            else if (typeof sug.apply === 'function') { sug.apply(); applied = true; }
+            if (!applied) return;
             saveCurrentStateToMode();
-            syncAllInputs();
+            updateAllFiltersUI();
             updateFilterSummary();
             renderActiveFiltersBar();
-
-            const query = (searchInput.value || currentQuery || '').trim();
-            if (query) {
-              performSearch(query);
-            } else {
-              showToast(currentLang === 'ar'
-                ? '✏️ اكتب كلمة أولاً ثم اختر الفلتر'
-                : '✏️ Enter a search term first');
-            }
-
-            renderContextualFilters();
+            chip.classList.toggle('active');
           });
-
-          if (usage > 0) {
-            chip.title = currentLang === 'ar'
-              ? `استخدمت هذا الفلتر ${usage} مرة`
-              : `Used ${usage} times`;
-          }
           cfChips.appendChild(chip);
         });
       }
@@ -1593,7 +1422,7 @@
             if (e.target.classList.contains('preset-close')) {
               e.stopPropagation();
               presets.splice(idx, 1);
-              localStorage.setItem('sh_presets', JSON.stringify(presets));
+              writeStorage('sh_presets', JSON.stringify(presets));
               renderPresets();
               showToast(langStrings[currentLang].toastPresetDeleted);
               return;
@@ -1633,7 +1462,7 @@
           mode: mode,
           modeState: JSON.parse(JSON.stringify(modeFilters[mode]))
         });
-        localStorage.setItem('sh_presets', JSON.stringify(presets));
+        writeStorage('sh_presets', JSON.stringify(presets));
         renderPresets();
         showToast(langStrings[currentLang].toastPresetSaved);
       }
@@ -1735,6 +1564,11 @@
         if (!query) { showToast(langStrings[currentLang].toastEmpty); return; }
         currentQuery = query;
         const mode = getActiveMode();
+        if (mode === 'smart') {
+          applySmartIntent(query,{reset:true});
+          saveStateToMode('smart');
+          updateAllFiltersUI(); updateFilterSummary(); renderActiveFiltersBar();
+        }
 
         // ⭐ إذا كانت هناك روابط مختارة → افتحها كلها
         const selectedLinks = buildSelectedLinksURLs(query);
@@ -1742,17 +1576,6 @@
           selectedLinks.slice(0, 5).forEach(link => {
             window.open(link.url, '_blank');
           });
-
-          // تبويب "ذكي" يبدأ كل بحث بحالة جديدة ولا يرث الفلاتر المستخدمة سابقًا.
-          if (mode === 'smart') {
-            selectedLinksState.selected = {};
-            filterUsage = {};
-            saveFilterUsage();
-            saveCurrentStateToMode();
-            renderContextualFilters();
-            updateAllFiltersUI();
-          }
-
           emptyState.style.display = 'none';
           lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
           const modeInfo = searchModesConfig.find(m => m.id === mode);
@@ -1951,6 +1774,7 @@
       // =====================================================
       function openFilterDrawer() {
         const mode = getActiveMode();
+        lastFocusedElement = document.activeElement;
         pendingFilterState = {
           sort: filterState.sort,
           type: [...(filterState.type || [])],
@@ -1962,7 +1786,9 @@
         setFilterButtonVisuals(pendingFilterState);
         filterOverlay.classList.add('open');
         filterBackdrop.classList.add('open');
+        filterOverlay.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+        closeFiltersBtn.focus();
         syncFilterTabWithMode(mode);
         setTimeout(() => syncFilterTabWithMode(mode), 100);
         setTimeout(() => syncFilterTabWithMode(mode), 260);
@@ -1971,7 +1797,9 @@
       function closeFilterDrawer() {
         filterOverlay.classList.remove('open');
         filterBackdrop.classList.remove('open');
+        filterOverlay.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus();
       }
 
       function applyFilters() {
@@ -2026,8 +1854,10 @@
       ];
 
       function openCmdPalette() {
+        lastFocusedElement = document.activeElement;
         cmdBackdrop.classList.add('show');
         cmdPalette.classList.add('show');
+        cmdPalette.setAttribute('aria-hidden', 'false');
         cmdSearchInput.value = '';
         renderCmdResults('');
         setTimeout(() => cmdSearchInput.focus(), 50);
@@ -2035,6 +1865,8 @@
       function closeCmdPalette() {
         cmdBackdrop.classList.remove('show');
         cmdPalette.classList.remove('show');
+        cmdPalette.setAttribute('aria-hidden', 'true');
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus();
       }
 
       function renderCmdResults(query) {
@@ -2111,33 +1943,26 @@
         strings.quickSuggestions.forEach(text => {
           const chip = document.createElement('button');
           chip.textContent = text;
-          chip.addEventListener('click', () => { searchInput.value = text; currentQuery = text; const detected = detectSearchMode(text); if (detected) switchMode(detected.mode); performSearch(text); });
+          chip.addEventListener('click', () => { searchInput.value = text; performSearch(text); });
           quickSuggestions.appendChild(chip);
         });
       }
 
       // =====================================================
+      // =====================================================
       // EVENT LISTENERS
       // =====================================================
-      searchBtn.addEventListener('click', () => performSearch());
+      searchBtn.addEventListener('click', (e) => { e.preventDefault(); performSearch(); });
       searchInput.addEventListener('input', () => {
-        showSuggestions();
-        updateSmartIndicator();
-        if (getActiveMode() === 'smart') {
-          const nextQuery = searchInput.value.trim();
-
-          // كل استعلام ذكي يبدأ بدون فلتر رابط مركب قديم.
-          if (nextQuery !== currentQuery) {
-            selectedLinksState.selected = {};
-            saveCurrentStateToMode();
-            updateAllFiltersUI();
-          }
-
-          currentQuery = nextQuery;
-          renderContextualFilters();
+        currentQuery=searchInput.value.trim();
+        if(getActiveMode()==='smart') {
+          applySmartIntent(currentQuery,{reset:true});
+          scheduleSmartStateSave();
+          updateAllFiltersUI(); updateFilterSummary(); renderActiveFiltersBar();
         }
+        showSuggestions(); updateSmartIndicator();
+        if(getActiveMode()==='smart')renderContextualFilters();
       });
-
       searchInput.addEventListener('focus', showSuggestions);
       searchInput.addEventListener('blur', hideSuggestions);
       searchInput.addEventListener('keydown', (e) => {
@@ -2160,7 +1985,7 @@
         isDark = !isDark;
         document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
         themeToggle.textContent = isDark ? '☀️' : '🌙';
-        localStorage.setItem('sh_theme', isDark ? 'dark' : 'light');
+        writeStorage('sh_theme', isDark ? 'dark' : 'light');
       });
 
       langAr.addEventListener('click', () => switchLanguage('ar'));
@@ -2295,9 +2120,7 @@
         // ⭐ بناء شبكة كافة الفلاتر من searches
         buildAllFiltersGrid();
 
-        loadFilterUsage();
-
-        const savedTheme = localStorage.getItem('sh_theme');
+        const savedTheme = readStorage('sh_theme');
         if (savedTheme === 'dark') {
           isDark = true;
           document.documentElement.setAttribute('data-theme', 'dark');
@@ -2307,12 +2130,16 @@
           document.documentElement.setAttribute('data-theme', 'light');
           themeToggle.textContent = '🌙';
         }
-        const savedPresets = localStorage.getItem('sh_presets');
+        const savedPresets = readStorage('sh_presets');
         if (savedPresets) {
-          try { presets = JSON.parse(savedPresets) || []; } catch(e) { presets = []; }
+          try {
+            const parsedPresets = JSON.parse(savedPresets);
+            presets = Array.isArray(parsedPresets) ? parsedPresets.filter(p => p && typeof p.name === 'string') : [];
+          } catch(e) { presets = []; }
         }
-        const savedMode = localStorage.getItem('sh_mode');
-        const initialMode = savedMode || 'web';
+        const savedMode = readStorage('sh_mode');
+        const validModes = new Set(['smart', 'web', 'news', 'images', 'maps', 'videos']);
+        const initialMode = validModes.has(savedMode) ? savedMode : 'web';
         setActiveMode(initialMode);
         attachModeTabListeners();
         attachAllFiltersListeners();
