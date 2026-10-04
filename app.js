@@ -630,15 +630,7 @@
       };
 
       function translateWithDictionary(text, targetLang) {
-        if (!text || !text.trim()) return text;
-        const trimmed = text.trim();
-        const isArabic = /[\u0600-\u06FF]/.test(trimmed);
-        if ((targetLang === 'ar' && isArabic) || (targetLang === 'en' && !isArabic)) return trimmed;
-        const lowerInput = trimmed.toLowerCase();
-        for (const [key, value] of Object.entries(translationDict)) {
-          if (lowerInput === key.toLowerCase()) return value;
-        }
-        return text;
+        return translateWithDictionaryCore(text, targetLang, translationDict);
       }
 
       async function translateWithGoogle(text, targetLang) {
@@ -657,7 +649,7 @@
       }
 
       async function translateText(text, targetLang) {
-        const cacheKey = `${text}|${targetLang}`;
+        const cacheKey = makeTranslationCacheKey(text, targetLang);
         if (translationCache.has(cacheKey)) return translationCache.get(cacheKey);
         try {
           const result = await translateWithGoogle(text, targetLang);
@@ -1761,7 +1753,7 @@
 
       function renderCmdResults(query) {
         const lower = query.toLowerCase();
-        const filtered = commands.filter(c => c.name.toLowerCase().includes(lower) || c.nameEn.toLowerCase().includes(lower));
+        const filtered = filterCommandsCore(commands, query);
         cmdResults.innerHTML = '';
         if (filtered.length === 0) {
           cmdResults.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">لا توجد نتائج</div>';
@@ -1776,7 +1768,7 @@
           item.className = `cmd-item ${idx === cmdActiveIndex ? 'active' : ''}`;
           item.innerHTML = `
             <span class="cmd-icon">${cmd.icon}</span>
-            <span class="cmd-name">${escapeHTML(currentLang === 'ar' ? cmd.name : cmd.nameEn)}</span>
+            <span class="cmd-name">${escapeHTML(getCommandLabel(cmd, currentLang))}</span>
             ${cmd.shortcut ? `<span class="cmd-shortcut">${cmd.shortcut}</span>` : ''}
           `;
           item.addEventListener('click', () => { closeCmdPalette(); cmd.action(); });
@@ -2066,4 +2058,7 @@ import { createDefaultFilterState, readStorage, writeStorage } from './src/state
 import { debounce } from './src/utils.js';
 import { normalizeSmartQuery as normalizeSmartQueryCore, scoreSmartMode as scoreSmartModeCore, detectSearchMode as detectSearchModeCore } from './src/smart/core.js';
 import { generateAdvancedLink as generateAdvancedLinkCore } from './src/search/url-core.js';
+import { filterCommands as filterCommandsCore, getCommandLabel } from './src/commands/core.js';
+import { translateWithDictionary as translateWithDictionaryCore, makeTranslationCacheKey } from './src/i18n/core.js';
+import { cloneFilterState } from './src/state/store.js';
 
