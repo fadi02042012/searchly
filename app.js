@@ -1482,6 +1482,44 @@ import { translateWithDictionary as translateWithDictionaryCore, makeTranslation
       // =====================================================
       // SYNC INPUTS
       // =====================================================
+      function syncAllInputs() {
+        syncAdvancedInputs();
+        syncNewsInputs();
+        syncImageInputs();
+        syncMapInputs();
+        setFilterButtonVisuals(filterState);
+      }
+
+      function buildAllFiltersGrid() {
+        const grid = document.getElementById('allFiltersGrid');
+        if (!grid) return;
+        const groups = getSearchesByGroup();
+        grid.innerHTML = '';
+        Object.entries(groups).forEach(([groupName, items]) => {
+          const section = document.createElement('section');
+          section.className = 'all-filter-group';
+          const title = document.createElement('h4');
+          title.className = 'all-filter-group-title';
+          title.textContent = (groupIcons[groupName] || '🔎') + ' ' + groupName;
+          section.appendChild(title);
+          const list = document.createElement('div');
+          list.className = 'all-filter-group-items';
+          items.forEach(item => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'all-filter-item';
+            button.dataset.linkIndex = String(item.index);
+            const parts = String(item.name || '').trim().split(' ');
+            const icon = parts.shift() || '🔎';
+            const name = parts.join(' ');
+            button.innerHTML = '<span class="af-icon">' + escapeHTML(icon) + '</span><span class="af-name">' + escapeHTML(name || item.name) + '</span>';
+            list.appendChild(button);
+          });
+          section.appendChild(list);
+          grid.appendChild(section);
+        });
+      }
+
       function syncAdvancedInputs() {
         advAllWords.value = advancedState.allWords || '';
         advExactPhrase.value = advancedState.exactPhrase || '';
