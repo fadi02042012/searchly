@@ -1,65 +1,14 @@
     (function() {
       'use strict';
 
+      import { searches } from './src/data/searches.js';
+      import { createDefaultFilterState, readStorage, writeStorage } from './src/state.js';
+      import { debounce } from './src/utils.js';
+
       // =====================================================
       // ⭐⭐⭐ 48 رابط بحث متقدم (من 03-links.js) ⭐⭐⭐
       // =====================================================
-      const searches = [
-        { name: "📺 البحث العادي", group: "أساسي", base: "https://www.youtube.com/results?search_query=", suffix: "" },
-        { name: "🔥 الترتيب حسب عدد المشاهدات", group: "الترتيب", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=CAMSAhAB" },
-        { name: "⭐ الترتيب حسب التقييم", group: "الترتيب", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=CAESAhAB" },
-        { name: "📅 الترتيب حسب تاريخ التحميل", group: "الترتيب", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=CAI%3D" },
-        { name: "📝 البحث في عنوان الفيديو", group: "الترتيب", base: "https://www.youtube.com/results?search_query=intitle%3A%22", suffix: "%22" },
-        { name: "🕐 آخر ساعة", group: "التاريخ", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIIAQ%3D%3D" },
-        { name: "📆 اليوم", group: "التاريخ", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgQIAhAB" },
-        { name: "📅 هذا الأسبوع", group: "التاريخ", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgQIAxAB" },
-        { name: "🗓 هذا الشهر", group: "التاريخ", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgQIBBAB" },
-        { name: "📖 هذا العام", group: "التاريخ", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgQIBRAB" },
-        { name: "⏱ أقل من 4 دقائق", group: "المدة", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIYAQ%3D%3D" },
-        { name: "⌛ بين 4 و20 دقيقة", group: "المدة", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIYAw%3D%3D" },
-        { name: "🎬 أكثر من 20 دقيقة", group: "المدة", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIYAg%3D%3D" },
-        { name: "🎥 فيديوهات 4K", group: "الجودة", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgJwAQ%3D%3D" },
-        { name: "✨ HDR", group: "الجودة", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgPIAQE%3D" },
-        { name: "📺 دقة HD", group: "الجودة", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIgAQ%3D%3D" },
-        { name: "🌍 فيديوهات 360°", group: "الجودة", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgJ4AQ%3D%3D" },
-        { name: "🥽 VR180", group: "الجودة", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgPQAQE%3D" },
-        { name: "🎞 ثلاثي الأبعاد", group: "الجودة", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgI4AQ%3D%3D" },
-        { name: "🏆 أكثر من 20 دقيقة + الأعلى مشاهدة", group: "مركب", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=CAMSAhgC" },
-        { name: "🎞 أكثر من 20 دقيقة + 4K", group: "مركب", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgYQBBgCcAE%3D" },
-        { name: "💎 أكثر من 20 دقيقة + 4K + HD", group: "مركب", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgYYAiABcAE%3D" },
-        { name: "🎥 فيديوهات فقط", group: "نوع المحتوى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQAQ%3D%3D" },
-        { name: "📺 قنوات", group: "نوع المحتوى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQAg%3D%3D" },
-        { name: "📂 قوائم تشغيل", group: "نوع المحتوى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQAw%3D%3D" },
-        { name: "🎬 أفلام", group: "نوع المحتوى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQBA%3D%3D" },
-        { name: "📡 بث مباشر", group: "نوع المحتوى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgJAAQ%3D%3D" },
-        { name: "🎬 YouTube Shorts", group: "منصات", base: "https://www.google.com/search?q=site:youtube.com+", suffix: "&udm=39" },
-        { name: "🔍 البحث في Google عن فيديوهات YouTube", group: "منصات", base: "https://www.google.com/search?q=site:youtube.com+", suffix: "&tbm=vid" },
-        { name: "🆕 فيديوهات YouTube الأحدث (Google)", group: "منصات", base: "https://www.google.com/search?q=site:youtube.com+", suffix: "&num=100&udm=7&tbs=qdr:d" },
-        { name: "📈 ترند YouTube", group: "منصات", base: "https://www.google.com/search?q=", suffix: "+site:https://www.youtube.com/feed/trending" },
-        { name: "📂 قوائم تشغيل YouTube", group: "منصات", base: "https://www.google.com/search?q=", suffix: "+site:https://www.youtube.com/user/*/playlists" },
-        { name: "📺 البحث داخل قناة TEDx", group: "قنوات محددة", base: "https://www.youtube.com/@TEDx/search?query=", suffix: "" },
-        { name: "📷 البحث في Instagram (آخر 24 ساعة)", group: "منصات", base: "https://www.google.com/search?q=site:https://www.instagram.com+", suffix: "&num=10&tbs=qdr:d" },
-        { name: "📺 البحث داخل قناة ArabicMOD", group: "قنوات محددة", base: "https://www.youtube.com/@ArabicMOD/search?query=", suffix: "" },
-        { name: "📺 البحث داخل قناة Fortinet", group: "قنوات محددة", base: "https://www.youtube.com/@fortinet/search?query=", suffix: "" },
-        { name: "😂 البحث داخل قناة Gags", group: "قنوات محددة", base: "https://www.youtube.com/@gags/search?query=", suffix: "" },
-        { name: "📖 البحث داخل قناة Sautuliman", group: "قنوات محددة", base: "https://www.youtube.com/@Sautuliman-AljameatusSaifiyah/search?query=", suffix: "" },
-        { name: "🎥 Vimeo", group: "منصات", base: "https://www.google.com/search?q=site:https://vimeo.com+", suffix: "" },
-        { name: "🎞 Dailymotion", group: "منصات", base: "https://www.dailymotion.com/search/", suffix: "/videos" },
-        { name: "▶ Playeur", group: "منصات", base: "https://playeur.com/search?q=", suffix: "" },
-        { name: "🎬 Youku", group: "منصات", base: "https://so.youku.com/search_video/q_", suffix: "?searchfrom=1" },
-        { name: "📺 Bilibili", group: "منصات", base: "https://search.bilibili.com/all?keyword=", suffix: "&from_source=webtop_search" },
-        { name: "📹 Bing Video", group: "منصات", base: "https://www.bing.com/videos/search?q=", suffix: "" },
-        { name: "📹 Yahoo Video", group: "منصات", base: "https://www.yahoo.com/video/search?p=", suffix: "" },
-        { name: "📹 AOL Video", group: "منصات", base: "https://search.aol.com/aol/video?q=", suffix: "" },
-        { name: "📹 Yandex Video", group: "منصات", base: "https://yandex.com/video/search?text=", suffix: "" },
-        { name: "🌍 EarthCam", group: "منصات", base: "https://www.earthcam.com/search/ft_search.php?term=", suffix: "" },
-        { name: "📷 WebCamTaxi", group: "منصات", base: "https://www.webcamtaxi.com/en/search.html?searchword=", suffix: "&searchphrase=all" },
-        { name: "🎵 استماع وأغاني", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQAQ%3D%3D" },
-        { name: "🎤 أغاني الفنان", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "&sp=EgIQAQ%3D%3D" },
-        { name: "🎤 كلمات الأغاني", group: "الموسيقى", base: "https://www.google.com/search?q=", suffix: "+كلمات+الأغنية" },
-        { name: "🎬 الفيديو كليب الرسمي", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "+official+music+video" },
-        { name: "🔎 البحث عن أغنية", group: "الموسيقى", base: "https://www.youtube.com/results?search_query=", suffix: "" },
-      ];
+      ;
 
       // =====================================================
       // ⭐ دوال الروابط المتقدمة (من 03-links.js)
@@ -126,24 +75,7 @@
         });
       }
 
-      function createDefaultFilterState() {
-        return {
-          sort: 'date',
-          type: [], duration: [], date: [], quality: [], feature: [],
-          advAllWords: '', advExactPhrase: '', advAnyWords: '', advNoneWords: '',
-          advNumbers: '', advSite: '', advFileType: '', advLastUpdate: '',
-          advLang: '', advUsageRights: '',
-          newsAllWords: '', newsExactPhrase: '', newsSite: '',
-          newsTime: 'all', newsSort: 'relevance',
-          imgAllWords: '', imgSite: '', imgFileType: '',
-          imgSize: 'all', imgExactWidth: '', imgExactHeight: '', imgAspect: 'all',
-          imgColor: 'all', imgColorType: 'all', imgType: 'all', imgRights: 'all',
-          imgTime: 'all', imgLang: '', imgRegion: '', imgSafe: 'all',
-          mapPlace: '', mapNear: '', mapRating: '0', mapHours: 'all',
-          mapPrice: 'all', mapCategory: '', mapSort: 'relevance',
-          selectedLinks: {}  // ⭐ مفاتيح الروابط المختارة من searches
-        };
-      }
+      
 
       let modeFilters = {
         smart: createDefaultFilterState(),
@@ -171,23 +103,9 @@
 
       // localStorage غير مضمون (وضع التصفح الخاص/قيود المساحة)، لذلك لا ينبغي
       // أن يمنع تهيئة التطبيق أو البحث الأساسي عند فشل القراءة أو الكتابة.
-      function readStorage(key, fallback = null) {
-        try {
-          const value = localStorage.getItem(key);
-          return value === null ? fallback : value;
-        } catch (error) {
-          return fallback;
-        }
-      }
+      
 
-      function writeStorage(key, value) {
-        try {
-          localStorage.setItem(key, value);
-          return true;
-        } catch (error) {
-          return false;
-        }
-      }
+      
 
       // =====================================================
       // SAVE / LOAD STATE
@@ -1953,16 +1871,21 @@
       // EVENT LISTENERS
       // =====================================================
       searchBtn.addEventListener('click', (e) => { e.preventDefault(); performSearch(); });
-      searchInput.addEventListener('input', () => {
-        currentQuery=searchInput.value.trim();
-        if(getActiveMode()==='smart') {
-          applySmartIntent(currentQuery,{reset:true});
+      const handleSearchInput = debounce(() => {
+        currentQuery = searchInput.value.trim();
+        if (getActiveMode() === 'smart') {
+          applySmartIntent(currentQuery, { reset: true });
           scheduleSmartStateSave();
-          updateAllFiltersUI(); updateFilterSummary(); renderActiveFiltersBar();
+          updateAllFiltersUI();
+          updateFilterSummary();
+          renderActiveFiltersBar();
         }
-        showSuggestions(); updateSmartIndicator();
-        if(getActiveMode()==='smart')renderContextualFilters();
-      });
+        showSuggestions();
+        updateSmartIndicator();
+        if (getActiveMode() === 'smart') renderContextualFilters();
+      }, 180);
+
+      searchInput.addEventListener('input', handleSearchInput);
       searchInput.addEventListener('focus', showSuggestions);
       searchInput.addEventListener('blur', hideSuggestions);
       searchInput.addEventListener('keydown', (e) => {
