@@ -41,6 +41,9 @@ function cleanHistory(history) {
 }
 
 module.exports = async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'no-referrer');
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const clientKey = getClientKey(req);
