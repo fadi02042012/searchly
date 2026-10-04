@@ -1357,41 +1357,65 @@ import { translateWithDictionary as translateWithDictionaryCore, makeTranslation
       // =====================================================
       // SEARCH — ⭐ يستخدم الروابط المختارة من searches
       // =====================================================
-      function performSearch(term) {
-        const query = (term || searchInput.value).trim();
-        if (!query) { showToast(langStrings[currentLang].toastEmpty); return; }
-        currentQuery = query;
-        const mode = getActiveMode();
-        if (mode === 'smart') {
-          applySmartIntent(query,{reset:true});
-          saveStateToMode('smart');
-          updateAllFiltersUI(); updateFilterSummary(); renderActiveFiltersBar();
+      function openSearchURL(url) {
+        const safeUrl = String(url || '').trim();
+        if (!/^https?:\\/\\//i.test(safeUrl)) throw new Error('Invalid search URL');
+        try {
+          const opened = window.open(safeUrl, '_blank', 'noopener,noreferrer');
+          if (opened) return true;
+        } catch (e) {
+          console.warn('Popup blocked; using same-tab fallback.', e);
         }
+        window.location.assign(safeUrl);
+        return true;
+      }
 
-        // ⭐ إذا كانت هناك روابط مختارة → افتحها كلها
-        const selectedLinks = buildSelectedLinksURLs(query);
-        if (selectedLinks.length > 0 && (mode === 'videos' || mode === 'smart')) {
-          selectedLinks.slice(0, 5).forEach(link => {
-            window.open(link.url, '_blank');
-          });
+      function performSearch(term) {
+        try {
+          const query = (term ?? searchInput.value).trim();
+          if (!query) { showToast(langStrings[currentLang].toastEmpty); searchInput.focus(); return false; }
+          currentQuery = query;
+          const mode = getActiveMode();
+
+          // Smart mode always detects intent at search time, so rules loaded later are honored.
+          if (mode === 'smart') {
+            applySmartIntent(query, { reset: true });
+            saveStateToMode('smart');
+            updateAllFiltersUI(); updateFilterSummary(); renderActiveFiltersBar();
+          }
+
+          const selectedLinks = buildSelectedLinksURLs(query);
+          if (selectedLinks.length > 0 && (mode === 'videos' || mode === 'smart')) {
+            selectedLinks.slice(0, 5).forEach(link => openSearchURL(link.url));
+            emptyState.style.display = 'none';
+            lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
+            const modeInfo = searchModesConfig.find(m => m.id === mode);
+            if (modeInfo) {
+              const label = currentLang === 'ar' ? modeInfo.label : modeInfo.labelEn;
+              showToast(langStrings[currentLang].toastSearchIn + label + ' (' + selectedLinks.length + ')');
+            }
+            return true;
+          }
+
+          const url = buildSearchURL(mode, query);
+          openSearchURL(url);
           emptyState.style.display = 'none';
           lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
           const modeInfo = searchModesConfig.find(m => m.id === mode);
           if (modeInfo) {
             const label = currentLang === 'ar' ? modeInfo.label : modeInfo.labelEn;
-            showToast(`${langStrings[currentLang].toastSearchIn}${label} (${selectedLinks.length})`);
+            showToast(langStrings[currentLang].toastSearchIn + label);
           }
-          return;
-        }
-
-        const url = buildSearchURL(mode, query);
-        window.open(url, '_blank');
-        emptyState.style.display = 'none';
-        lastUpdated.textContent = new Date().toLocaleString(currentLang === 'ar' ? 'ar' : 'en');
-        const modeInfo = searchModesConfig.find(m => m.id === mode);
-        if (modeInfo) {
-          const label = currentLang === 'ar' ? modeInfo.label : modeInfo.labelEn;
-          showToast(langStrings[currentLang].toastSearchIn + label);
+          return true;
+        } catch (error) {
+          console.error('Searchly search error:', error);
+          showToast(currentLang === 'ar' ? 'تعذر تنفيذ البحث. تم الرجوع للبحث الأساسي.' : 'Search failed. Falling back to basic web search.');
+          try {
+            const fallback = 'https://www.google.com/search?q=' + encodeURIComponent(String(term ?? searchInput.value).trim());
+            if (fallback.endsWith('q=')) return false;
+            openSearchURL(fallback);
+          } catch (fallbackError) { console.error('Search fallback failed:', fallbackError); }
+          return false;
         }
       }
 
