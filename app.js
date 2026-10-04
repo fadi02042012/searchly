@@ -1,7 +1,3 @@
-import { searches } from './src/data/searches.js';
-import { createDefaultFilterState, readStorage, writeStorage } from './src/state.js';
-import { debounce } from './src/utils.js';
-
     (function() {
       'use strict';
 
@@ -13,22 +9,9 @@ import { debounce } from './src/utils.js';
       // =====================================================
       // ⭐ دوال الروابط المتقدمة (من 03-links.js)
       // =====================================================
-      function generateAdvancedLink(query, index = 0) {
-        const safeIndex = Math.max(0, Math.min(searches.length - 1, Number(index) || 0));
-        const search = searches[safeIndex];
-        const value = String(query || '').trim();
-        const url = search.base + encodeURIComponent(value) + search.suffix;
-        try {
-          const parsed = new URL(url);
-          if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') throw new Error('unsupported_protocol');
-          return parsed.href;
-        } catch (error) {
-          console.warn('رابط بحث متقدم غير صالح:', search.name, error);
-          return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(value);
-        }
-      }
+      function generateAdvancedLink(query, index = 0) { return generateAdvancedLinkCore(query, index, searches); }
 
-      // ⭐ تجميع الروابط حسب group للبناء الديناميكي
+      
       function getSearchesByGroup() {
         const groups = {};
         searches.forEach((s, i) => {
@@ -280,23 +263,12 @@ import { debounce } from './src/utils.js';
       let smartRules = DEFAULT_SMART_RULES;
       let smartRulesLoaded = false;
 
-      function normalizeSmartQuery(query) {
-        return String(query || '').toLowerCase().replace(/[إأآ]/g,'ا').replace(/ة/g,'ه').replace(/[ًٌٍَُِّْـ]/g,'').replace(/[؟?!.,،؛:()[\]{}"']/g,' ').replace(/\s+/g,' ').trim();
-      }
-      function scoreSmartMode(query, mode, config) {
-        const q=normalizeSmartQuery(query), matched=[]; let score=0;
-        (config.phrases||[]).forEach(p=>{const n=normalizeSmartQuery(p);if(n&&q.includes(n)){score+=smartRules.settings.phraseWeight;matched.push(n);}});
-        (config.keywords||[]).forEach(k=>{const n=normalizeSmartQuery(k);if(n&&q.includes(n)){score+=smartRules.settings.keywordWeight;matched.push(n);}});
-        return {mode,config,score,matched:[...new Set(matched)]};
-      }
-      function detectSearchMode(query) {
-        const q=normalizeSmartQuery(query); if(q.length<2)return null;
-        const results=Object.entries(smartRules.modes||{}).map(([mode,c])=>scoreSmartMode(query,mode,c)).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
-        if(!results.length)return null;
-        const best=results[0], second=results[1];
-        if(second && best.score===second.score && best.score < Number(smartRules.settings.tieMinScore||5))return null;
-        return best;
-      }
+      function normalizeSmartQuery(query) { return normalizeSmartQueryCore(query); }
+      
+      function scoreSmartMode(query, mode, config) { return scoreSmartModeCore(query, mode, config, smartRules.settings); }
+      
+      function detectSearchMode(query) { return detectSearchModeCore(query, smartRules); }
+      
       function resetSmartAutoState() {
         filterState=createDefaultFilterState();
         advancedState={allWords:'',exactPhrase:'',anyWords:'',noneWords:'',numbers:'',site:'',fileType:'',lastUpdate:'',lang:'',usageRights:''};
@@ -2089,3 +2061,9 @@ import { debounce } from './src/utils.js';
       }
 
     })();
+import { searches } from './src/data/searches.js';
+import { createDefaultFilterState, readStorage, writeStorage } from './src/state.js';
+import { debounce } from './src/utils.js';
+import { normalizeSmartQuery as normalizeSmartQueryCore, scoreSmartMode as scoreSmartModeCore, detectSearchMode as detectSearchModeCore } from './src/smart/core.js';
+import { generateAdvancedLink as generateAdvancedLinkCore } from './src/search/url-core.js';
+
