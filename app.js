@@ -104,6 +104,55 @@ import { translateWithDictionary as translateWithDictionaryCore, makeTranslation
       function saveStateToMode(mode) {
         if (!mode || !modeFilters[mode]) return;
         modeFilters[mode] = snapshotFilterState(filterState, advancedState, newsState, imageState, mapState, selectedLinksState);
+        try {
+          writeStorage('sh_mode_filters', JSON.stringify(modeFilters));
+        } catch {
+          // Storage can be unavailable or full; the in-memory state remains usable.
+        }
+      }
+
+      function saveCurrentStateToMode() {
+        saveStateToMode(getActiveMode());
+      }
+
+      function loadModeFilters() {
+        const saved = readStorage('sh_mode_filters');
+        if (!saved) return;
+        try {
+          const parsed = JSON.parse(saved);
+          if (!parsed || typeof parsed !== 'object') return;
+          Object.keys(modeFilters).forEach(mode => {
+            const restored = parsed[mode] || {};
+            modeFilters[mode] = { ...createDefaultFilterState(), ...restored };
+            ['type', 'duration', 'date', 'quality', 'feature'].forEach(key => {
+              if (!Array.isArray(modeFilters[mode][key])) modeFilters[mode][key] = [];
+            });
+            if (!modeFilters[mode].selectedLinks || typeof modeFilters[mode].selectedLinks !== 'object') {
+              modeFilters[mode].selectedLinks = {};
+            }
+          });
+        } catch {
+          // Ignore corrupted local state and keep defaults.
+        }
+      }
+
+      function switchMode(newMode) {
+        const validModes = new Set(['smart', 'web', 'news', 'images', 'maps', 'videos']);
+        if (!validModes.has(newMode)) return;
+        const oldMode = getActiveMode();
+        if (oldMode === newMode) return;
+        saveStateToMode(oldMode);
+        setActiveMode(newMode);
+        writeStorage('sh_mode', newMode);
+        loadStateFromMode(newMode);
+        renderContextualFilters();
+        syncFilterTabWithMode(newMode);
+        syncAllInputs();
+        setFilterButtonVisuals(filterState);
+        updateFilterSummary();
+        renderActiveFiltersBar();
+        updateSmartIndicator();
+        updateAllFiltersUI();
       }
 
       function scheduleSmartStateSave() {
