@@ -340,8 +340,6 @@ import { translateWithDictionary as translateWithDictionaryCore, makeTranslation
         }catch(e){smartRules=DEFAULT_SMART_RULES;smartRulesLoaded=false;console.warn('Smart rules fallback',e);}
         updateSmartIndicator(); if(typeof renderContextualFilters==='function')renderContextualFilters();
       }
-      loadSmartRules();
-
       const searchModesConfig = [
         { id: 'smart', icon: '✨', label: 'ذكي', labelEn: 'Smart' },
         { id: 'web', icon: '🌐', label: 'ويب', labelEn: 'Web' },
@@ -2022,6 +2020,7 @@ import { translateWithDictionary as translateWithDictionaryCore, makeTranslation
         searchInput.focus();
 
         console.log('✅ searchly — تم تحميل ' + searches.length + ' رابطاً متقدماً');
+        loadSmartRules();
       }
 
       if (document.readyState === 'loading') {
