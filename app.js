@@ -1,9 +1,9 @@
+import { searches } from './src/data/searches.js';
+import { createDefaultFilterState, readStorage, writeStorage } from './src/state.js';
+import { debounce } from './src/utils.js';
+
     (function() {
       'use strict';
-
-      import { searches } from './src/data/searches.js';
-      import { createDefaultFilterState, readStorage, writeStorage } from './src/state.js';
-      import { debounce } from './src/utils.js';
 
       // =====================================================
       // ⭐⭐⭐ 48 رابط بحث متقدم (من 03-links.js) ⭐⭐⭐
