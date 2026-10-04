@@ -1,4 +1,12 @@
-    (function() {
+import { searches } from './src/data/searches.js';
+import { createDefaultFilterState, readStorage, writeStorage } from './src/state.js';
+import { debounce } from './src/utils.js';
+import { normalizeSmartQuery as normalizeSmartQueryCore, scoreSmartMode as scoreSmartModeCore, detectSearchMode as detectSearchModeCore } from './src/smart/core.js';
+import { generateAdvancedLink as generateAdvancedLinkCore } from './src/search/url-core.js';
+import { snapshotFilterState, restoreFilterState } from './src/filters/state.js';
+import { filterCommands as filterCommandsCore, getCommandLabel } from './src/commands/core.js';
+import { translateWithDictionary as translateWithDictionaryCore, makeTranslationCacheKey } from './src/i18n/core.js';
+(function() {
       'use strict';
 
       // =====================================================
@@ -1900,12 +1908,3 @@
       }
 
     })();
-import { searches } from './src/data/searches.js';
-import { createDefaultFilterState, readStorage, writeStorage } from './src/state.js';
-import { debounce } from './src/utils.js';
-import { normalizeSmartQuery as normalizeSmartQueryCore, scoreSmartMode as scoreSmartModeCore, detectSearchMode as detectSearchModeCore } from './src/smart/core.js';
-import { generateAdvancedLink as generateAdvancedLinkCore } from './src/search/url-core.js';
-import { snapshotFilterState, restoreFilterState } from './src/filters/state.js';
-import { filterCommands as filterCommandsCore, getCommandLabel } from './src/commands/core.js';
-import { translateWithDictionary as translateWithDictionaryCore, makeTranslationCacheKey } from './src/i18n/core.js';
-
