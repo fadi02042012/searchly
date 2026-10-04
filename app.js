@@ -212,6 +212,18 @@ import { translateWithDictionary as translateWithDictionaryCore, makeTranslation
         return true;
       }
 
+      function normalizeSmartQuery(query) {
+        return normalizeSmartQueryCore(query);
+      }
+
+      function detectSearchMode(query) {
+        return detectSearchModeCore(query, smartRules);
+      }
+
+      function scoreSmartMode(query, mode) {
+        return scoreSmartModeCore(query, mode, smartRules?.modes?.[mode], smartRules?.settings || {});
+      }
+
       function getMatchedSmartRules(query) {
         const q=normalizeSmartQuery(query);
         return (smartRules.filters||[]).map(rule=>{
