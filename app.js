@@ -95,35 +95,7 @@
       // =====================================================
       function saveStateToMode(mode) {
         if (!mode || !modeFilters[mode]) return;
-        modeFilters[mode] = {
-          sort: filterState.sort,
-          type: [...(filterState.type || [])],
-          duration: [...(filterState.duration || [])],
-          date: [...(filterState.date || [])],
-          quality: [...(filterState.quality || [])],
-          feature: [...(filterState.feature || [])],
-          advAllWords: advancedState.allWords, advExactPhrase: advancedState.exactPhrase,
-          advAnyWords: advancedState.anyWords, advNoneWords: advancedState.noneWords,
-          advNumbers: advancedState.numbers, advSite: advancedState.site,
-          advFileType: advancedState.fileType, advLastUpdate: advancedState.lastUpdate,
-          advLang: advancedState.lang, advUsageRights: advancedState.usageRights,
-          newsAllWords: newsState.allWords, newsExactPhrase: newsState.exactPhrase,
-          newsSite: newsState.site, newsTime: newsState.time, newsSort: newsState.sort,
-          imgAllWords: imageState.allWords, imgSite: imageState.site, imgFileType: imageState.fileType,
-          imgSize: imageState.size, imgExactWidth: imageState.exactWidth, imgExactHeight: imageState.exactHeight,
-          imgAspect: imageState.aspect, imgColor: imageState.color, imgColorType: imageState.colorType,
-          imgType: imageState.type, imgRights: imageState.rights, imgTime: imageState.time,
-          imgLang: imageState.lang, imgRegion: imageState.region, imgSafe: imageState.safe,
-          mapPlace: mapState.place, mapNear: mapState.near, mapRating: mapState.rating,
-          mapHours: mapState.hours, mapPrice: mapState.price,
-          mapCategory: mapState.category, mapSort: mapState.sort,
-          selectedLinks: JSON.parse(JSON.stringify(selectedLinksState.selected || {}))
-        };
-        writeStorage('sh_mode_filters', JSON.stringify(modeFilters));
-      }
-
-      function saveCurrentStateToMode() {
-        saveStateToMode(getActiveMode());
+        modeFilters[mode] = snapshotFilterState(filterState, advancedState, newsState, imageState, mapState, selectedLinksState);
       }
 
       function scheduleSmartStateSave() {
@@ -135,140 +107,15 @@
       }
 
       function loadStateFromMode(modeId) {
-        const s = modeFilters[modeId] || createDefaultFilterState();
-        filterState = {
-          sort: s.sort || 'date',
-          type: [...(s.type || [])], duration: [...(s.duration || [])],
-          date: [...(s.date || [])], quality: [...(s.quality || [])],
-          feature: [...(s.feature || [])]
-        };
-        advancedState = {
-          allWords: s.advAllWords || '', exactPhrase: s.advExactPhrase || '',
-          anyWords: s.advAnyWords || '', noneWords: s.advNoneWords || '',
-          numbers: s.advNumbers || '', site: s.advSite || '',
-          fileType: s.advFileType || '', lastUpdate: s.advLastUpdate || '',
-          lang: s.advLang || '', usageRights: s.advUsageRights || ''
-        };
-        newsState = {
-          allWords: s.newsAllWords || '', exactPhrase: s.newsExactPhrase || '',
-          site: s.newsSite || '', time: s.newsTime || 'all', sort: s.newsSort || 'relevance'
-        };
-        imageState = {
-          allWords: s.imgAllWords || '', site: s.imgSite || '', fileType: s.imgFileType || '',
-          size: s.imgSize || 'all', exactWidth: s.imgExactWidth || '', exactHeight: s.imgExactHeight || '',
-          aspect: s.imgAspect || 'all', color: s.imgColor || 'all', colorType: s.imgColorType || 'all',
-          type: s.imgType || 'all', rights: s.imgRights || 'all', time: s.imgTime || 'all',
-          lang: s.imgLang || '', region: s.imgRegion || '', safe: s.imgSafe || 'all'
-        };
-        mapState = {
-          place: s.mapPlace || '', near: s.mapNear || '', rating: s.mapRating || '0',
-          hours: s.mapHours || 'all', price: s.mapPrice || 'all',
-          category: s.mapCategory || '', sort: s.mapSort || 'relevance'
-        };
-        selectedLinksState = { selected: s.selectedLinks || {} };
+        const restored = restoreFilterState(modeFilters[modeId], createDefaultFilterState());
+        filterState = restored.filterState;
+        advancedState = restored.advancedState;
+        newsState = restored.newsState;
+        imageState = restored.imageState;
+        mapState = restored.mapState;
+        selectedLinksState = restored.selectedLinksState;
       }
 
-      function loadModeFilters() {
-        const saved = readStorage('sh_mode_filters');
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            if (parsed && typeof parsed === 'object') {
-              Object.keys(modeFilters).forEach(k => {
-                modeFilters[k] = { ...createDefaultFilterState(), ...(parsed[k] || {}) };
-                ['type', 'duration', 'date', 'quality', 'feature'].forEach(mk => {
-                  if (!Array.isArray(modeFilters[k][mk])) modeFilters[k][mk] = [];
-                });
-                if (!modeFilters[k].selectedLinks || typeof modeFilters[k].selectedLinks !== 'object') {
-                  modeFilters[k].selectedLinks = {};
-                }
-              });
-            }
-          } catch(e) {}
-        }
-      }
-      loadModeFilters();
-
-      function switchMode(newMode) {
-        const oldMode = getActiveMode();
-        if (oldMode === newMode) return;
-        saveStateToMode(oldMode);
-        setActiveMode(newMode);
-        writeStorage('sh_mode', newMode);
-        loadStateFromMode(newMode);
-        renderContextualFilters();
-        syncFilterTabWithMode(newMode);
-        syncAllInputs();
-        setFilterButtonVisuals(filterState);
-        updateFilterSummary();
-        renderActiveFiltersBar();
-        updateSmartIndicator();
-        updateAllFiltersUI();
-      }
-
-      function syncAllInputs() {
-        syncAdvancedInputs();
-        syncNewsInputs();
-        syncImageInputs();
-        syncMapInputs();
-      }
-
-      // =====================================================
-      // ⭐⭐⭐ بناء شبكة "كافة الفلاتر" ديناميكياً من searches ⭐⭐⭐
-      // =====================================================
-      function buildAllFiltersGrid() {
-        const grid = document.getElementById('allFiltersGrid');
-        if (!grid) return;
-        grid.innerHTML = '';
-        const groups = getSearchesByGroup();
-        Object.entries(groups).forEach(([groupName, items]) => {
-          const groupDiv = document.createElement('div');
-          groupDiv.className = 'all-filter-group';
-          groupDiv.dataset.group = groupName;
-          const icon = groupIcons[groupName] || '📌';
-          groupDiv.innerHTML = `<div class="all-filter-group-title">${escapeHTML(icon)} ${escapeHTML(groupName)}</div>`;
-          const itemsDiv = document.createElement('div');
-          itemsDiv.className = 'all-filter-items';
-          items.forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'all-filter-item';
-            itemDiv.dataset.linkIndex = String(item.index);
-            const parts = item.name.trim().split(' ');
-            const itemIcon = parts[0];
-            const itemName = parts.slice(1).join(' ');
-            itemDiv.innerHTML = `<span class="af-icon">${escapeHTML(itemIcon)}</span><span class="af-name">${escapeHTML(itemName)}</span>`;
-            itemsDiv.appendChild(itemDiv);
-          });
-          groupDiv.appendChild(itemsDiv);
-          grid.appendChild(groupDiv);
-        });
-      }
-
-      // =====================================================
-      // SMART SEARCH DETECTION
-      // =====================================================
-      // =====================================================
-      // ✨ SMART SEARCH ENGINE
-      // =====================================================
-      const DEFAULT_SMART_RULES = {
-        version: 1,
-        settings: { phraseWeight: 5, keywordWeight: 1, tieMinScore: 5, maxSuggestions: 8 },
-        modes: {
-          maps:{icon:'🗺️',label:'خرائط',phrases:['مطاعم قريبه','مطاعم قريبة','فنادق قريبه','فنادق قريبة','بالقرب مني','near me','nearby'],keywords:['مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','مستشفى','بنك','محطة','restaurant','hotel','cafe','pharmacy','hospital','bank']},
-          news:{icon:'📰',label:'أخبار',phrases:['اخبار اليوم','أخبار اليوم','آخر الأخبار','اخر الاخبار','خبر عاجل','latest news','breaking news'],keywords:['اخبار','أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','news','breaking','politics','economy','sports']},
-          images:{icon:'🖼️',label:'صور',phrases:['صور عالية الجودة','خلفيات عالية الدقة','صور مجانية','صور كبيرة','صور png'],keywords:['صورة','صور','صوره','خلفية','خلفيات','شعار','تصميم','png','jpg','jpeg','wallpaper','image','images','picture','logo']},
-          videos:{icon:'🎬',label:'فيديو',phrases:['فيديو تعليمي','فيديو كامل','فيديو مباشر','بث مباشر','فيلم كامل','مسلسل كامل','الحلقة كاملة','شرح كامل','شرح بالتفصيل','شرح للمبتدئين','خطوة بخطوة','طريقة صنع','كيفية صنع','كيف اصنع','كيف اسوي','كيف اعمل','طريقة عمل','طريقة استخدام','طريقة تركيب','حل مشكلة','مراجعة','مقارنة','tutorial','how to','how to make','step by step','documentary'],keywords:['فيديو','يوتيوب','مقطع','مشاهدة','شاهد','حلقة','فيلم','أفلام','مسلسل','شرح','تعلم','دروس','طريقة','كيفية','مراجعة','مقارنة','وثائقي','انمي','كرتون','video','youtube','watch','tutorial','documentary']}
-        }
-      };
-      let smartRules = DEFAULT_SMART_RULES;
-      let smartRulesLoaded = false;
-
-      function normalizeSmartQuery(query) { return normalizeSmartQueryCore(query); }
-      
-      function scoreSmartMode(query, mode, config) { return scoreSmartModeCore(query, mode, config, smartRules.settings); }
-      
-      function detectSearchMode(query) { return detectSearchModeCore(query, smartRules); }
-      
       function resetSmartAutoState() {
         filterState=createDefaultFilterState();
         advancedState={allWords:'',exactPhrase:'',anyWords:'',noneWords:'',numbers:'',site:'',fileType:'',lastUpdate:'',lang:'',usageRights:''};
@@ -2058,6 +1905,7 @@ import { createDefaultFilterState, readStorage, writeStorage } from './src/state
 import { debounce } from './src/utils.js';
 import { normalizeSmartQuery as normalizeSmartQueryCore, scoreSmartMode as scoreSmartModeCore, detectSearchMode as detectSearchModeCore } from './src/smart/core.js';
 import { generateAdvancedLink as generateAdvancedLinkCore } from './src/search/url-core.js';
+import { snapshotFilterState, restoreFilterState } from './src/filters/state.js';
 import { filterCommands as filterCommandsCore, getCommandLabel } from './src/commands/core.js';
 import { translateWithDictionary as translateWithDictionaryCore, makeTranslationCacheKey } from './src/i18n/core.js';
 
