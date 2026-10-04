@@ -271,7 +271,7 @@ import { translateWithDictionary as translateWithDictionaryCore, makeTranslation
       }
       async function loadSmartRules(){
         try{
-          const response=await fetch('./data/smart-rules.json',{cache:'no-store'});
+          const response=await fetch('./data/smart-rules.json',{cache:'force-cache'});
           if(!response.ok)throw new Error('HTTP '+response.status);
           const data=await response.json();
           if(data&&data.modes&&Array.isArray(data.filters))smartRules={...DEFAULT_SMART_RULES,...data,settings:{...DEFAULT_SMART_RULES.settings,...(data.settings||{})}};
