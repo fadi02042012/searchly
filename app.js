@@ -181,6 +181,20 @@ import { translateWithDictionary as translateWithDictionaryCore, makeTranslation
         mapState={place:'',near:'',rating:'0',hours:'all',price:'all',category:'',sort:'relevance'};
         selectedLinksState={selected:{}};
       }
+      // Default smart rules are required before the async JSON rules load.
+      const DEFAULT_SMART_RULES = {
+        version: 1,
+        settings: { phraseWeight: 5, keywordWeight: 1, tieMinScore: 5, maxSuggestions: 8 },
+        modes: {
+          maps: { icon: '🗺️', label: 'خرائط', phrases: ['مطاعم قريبه','مطاعم قريبة','فنادق قريبه','فنادق قريبة','بالقرب مني','near me','nearby'], keywords: ['مطعم','مطاعم','فندق','فنادق','مقهى','مقاهي','صيدلية','مستشفى','بنك','محطة','restaurant','hotel','cafe','pharmacy','hospital','bank'] },
+          news: { icon: '📰', label: 'أخبار', phrases: ['اخبار اليوم','أخبار اليوم','آخر الأخبار','اخر الاخبار','خبر عاجل','latest news','breaking news'], keywords: ['اخبار','أخبار','خبر','عاجل','سياسة','اقتصاد','رياضة','news','breaking','politics','economy','sports'] },
+          images: { icon: '🖼️', label: 'صور', phrases: ['صور عالية الجودة','خلفيات عالية الدقة','صور مجانية','صور كبيرة','صور png'], keywords: ['صورة','صور','صوره','خلفية','خلفيات','شعار','تصميم','png','jpg','jpeg','wallpaper','image','images','picture','logo'] },
+          videos: { icon: '🎬', label: 'فيديو', phrases: ['فيديو تعليمي','فيديو كامل','فيديو مباشر','بث مباشر','فيلم كامل','مسلسل كامل','الحلقة كاملة','شرح كامل','شرح بالتفصيل','شرح للمبتدئين','خطوة بخطوة','طريقة صنع','كيفية صنع','كيف اصنع','كيف اسوي','كيف اعمل','طريقة عمل','طريقة استخدام','طريقة تركيب','حل مشكلة','مراجعة','مقارنة','tutorial','how to','how to make','step by step','documentary'], keywords: ['فيديو','يوتيوب','مقطع','مشاهدة','شاهد','حلقة','فيلم','أفلام','مسلسل','شرح','تعلم','دروس','طريقة','كيفية','مراجعة','مقارنة','وثائقي','انمي','كرتون','video','youtube','watch','tutorial','documentary'] }
+        }
+      };
+      let smartRules = DEFAULT_SMART_RULES;
+      let smartRulesLoaded = false;
+
       function getSmartFilterIndex(id) {
         const r=(smartRules.filters||[]).find(x=>x.id===id);
         if(r && r.linkIndex!==undefined)return Number(r.linkIndex);
