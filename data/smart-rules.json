@@ -1,0 +1,4018 @@
+{
+  "version": 9,
+  "settings": {
+    "phraseWeight": 6,
+    "keywordWeight": 1,
+    "tieMinScore": 6,
+    "maxSuggestions": 10
+  },
+  "modes": {
+    "maps": {
+      "icon": "🗺️",
+      "label": "خرائط",
+      "phrases": [
+        "مطاعم قريبه",
+        "مطاعم قريبة",
+        "مطعم قريب",
+        "فنادق قريبه",
+        "فنادق قريبة",
+        "مقاهي قريبه",
+        "صيدليات قريبه",
+        "مستشفيات قريبه",
+        "بالقرب مني",
+        "بالقرب من",
+        "قريب مني",
+        "قريبة مني",
+        "near me",
+        "nearby",
+        "restaurants near",
+        "hotels near"
+      ],
+      "keywords": [
+        "مطعم",
+        "مطاعم",
+        "فندق",
+        "فنادق",
+        "مقهى",
+        "مقاهي",
+        "صيدلية",
+        "صيدليات",
+        "مستشفى",
+        "مستشفيات",
+        "بنك",
+        "بنوك",
+        "صراف",
+        "محطة",
+        "محطات",
+        "بقالة",
+        "سوبر ماركت",
+        "مول",
+        "مركز تجاري",
+        "restaurant",
+        "hotel",
+        "cafe",
+        "pharmacy",
+        "hospital",
+        "bank",
+        "atm",
+        "gas station",
+        "supermarket",
+        "mall"
+      ]
+    },
+    "news": {
+      "icon": "📰",
+      "label": "أخبار",
+      "phrases": [
+        "اخبار اليوم",
+        "أخبار اليوم",
+        "اخر الاخبار",
+        "آخر الأخبار",
+        "خبر عاجل",
+        "اخبار عاجله",
+        "هذا الخبر",
+        "ما الجديد في",
+        "latest news",
+        "breaking news",
+        "today news"
+      ],
+      "keywords": [
+        "اخبار",
+        "أخبار",
+        "خبر",
+        "عاجل",
+        "سياسة",
+        "اقتصاد",
+        "رياضة",
+        "انتخابات",
+        "news",
+        "breaking",
+        "politics",
+        "economy",
+        "sports"
+      ]
+    },
+    "images": {
+      "icon": "🖼️",
+      "label": "صور",
+      "phrases": [
+        "صور عاليه الجوده",
+        "صور عالية الجودة",
+        "خلفيات عاليه الدقه",
+        "خلفيات عالية الدقة",
+        "صور png",
+        "صور مجانية",
+        "صورة مجانية",
+        "صور كبيره",
+        "صور كبيرة",
+        "صور مربعة",
+        "صور عريضه",
+        "صور عريضة"
+      ],
+      "keywords": [
+        "صورة",
+        "صور",
+        "صوره",
+        "خلفية",
+        "خلفيات",
+        "شعار",
+        "تصميم",
+        "png",
+        "jpg",
+        "jpeg",
+        "wallpaper",
+        "image",
+        "images",
+        "picture",
+        "logo"
+      ]
+    },
+    "videos": {
+      "icon": "🎬",
+      "label": "فيديو",
+      "phrases": [
+        "فيديو تعليمي",
+        "فيديو كامل",
+        "فيديو مباشر",
+        "بث مباشر",
+        "فيلم كامل",
+        "فيلم مترجم",
+        "فيلم مدبلج",
+        "مسلسل كامل",
+        "مسلسل مترجم",
+        "جميع الحلقات",
+        "الحلقة كاملة",
+        "حلقة كاملة",
+        "فيديو 4k",
+        "فيديو hd",
+        "شرح كامل",
+        "شرح بالتفصيل",
+        "شرح للمبتدئين",
+        "خطوة بخطوة",
+        "طريقة صنع",
+        "طريقة صناعة",
+        "كيفية صنع",
+        "كيفية صناعة",
+        "كيف يصنع",
+        "كيف تصنع",
+        "كيف اصنع",
+        "كيف اسوي",
+        "كيف اعمل",
+        "طريقة عمل",
+        "طريقة استخدام",
+        "طريقة تركيب",
+        "طريقة اصلاح",
+        "طريقة إصلاح",
+        "حل مشكلة",
+        "مراجعة",
+        "مراجعات",
+        "مقارنة",
+        "مقارنات",
+        "تجربة",
+        "تجارب",
+        "دروس",
+        "درس",
+        "تعلم",
+        "tutorial",
+        "how to",
+        "how do i",
+        "how to make",
+        "how to use",
+        "step by step",
+        "beginner guide",
+        "full tutorial",
+        "review",
+        "reviews",
+        "comparison",
+        "guide",
+        "documentary",
+        "فيلم وثائقي",
+        "فيلم وثائقية",
+        "أفلام وثائقية",
+        "افلام وثائقية",
+        "وثائقي",
+        "وثائقيات",
+        "مسلسل",
+        "مسلسلات",
+        "حلقة",
+        "موسم",
+        "أنمي",
+        "انمي",
+        "كرتون"
+      ],
+      "keywords": [
+        "فيديو",
+        "يوتيوب",
+        "مقطع",
+        "مشاهدة",
+        "شاهد",
+        "حلقة",
+        "فيلم",
+        "أفلام",
+        "مسلسل",
+        "مسلسلات",
+        "شرح",
+        "تعلم",
+        "دروس",
+        "طريقة",
+        "كيفية",
+        "مراجعة",
+        "مقارنة",
+        "وثائقي",
+        "انمي",
+        "أنمي",
+        "كرتون",
+        "video",
+        "youtube",
+        "watch",
+        "clip",
+        "tutorial",
+        "documentary"
+      ]
+    },
+    "web": {
+      "icon": "🌐",
+      "label": "ويب",
+      "phrases": [
+        "بحث ويب",
+        "بحث على الانترنت",
+        "موقع رسمي",
+        "مصادر",
+        "معلومة",
+        "تعريف",
+        "كيف",
+        "لماذا",
+        "ما هو",
+        "ما هي",
+        "what is",
+        "why",
+        "how"
+      ],
+      "keywords": [
+        "بحث",
+        "معلومة",
+        "معلومات",
+        "شرح",
+        "دليل",
+        "مرجع",
+        "مصدر",
+        "موقع",
+        "مواقع",
+        "web",
+        "search",
+        "guide",
+        "reference",
+        "official"
+      ]
+    }
+  },
+  "filters": [
+    {
+      "id": "file-pdf",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "PDF",
+      "phrases": [
+        "ملف pdf",
+        "pdf",
+        "بي دي اف",
+        "ملفات بي دي اف"
+      ],
+      "value": "pdf",
+      "linkIndex": 10,
+      "priority": 10
+    },
+    {
+      "id": "file-doc",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "DOC + DOCX",
+      "phrases": [
+        "ملف doc",
+        "ملف docx",
+        "doc",
+        "docx",
+        "وورد",
+        "word"
+      ],
+      "value": "doc",
+      "linkIndex": 10,
+      "priority": 10
+    },
+    {
+      "id": "file-xls",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "XLS + XLSX",
+      "phrases": [
+        "ملف xls",
+        "ملف xlsx",
+        "xls",
+        "xlsx",
+        "اكسل",
+        "excel"
+      ],
+      "value": "xls",
+      "linkIndex": 10,
+      "priority": 10
+    },
+    {
+      "id": "file-ppt",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "PPT + PPTX",
+      "phrases": [
+        "ملف ppt",
+        "ملف pptx",
+        "ppt",
+        "pptx",
+        "باوربوينت",
+        "powerpoint"
+      ],
+      "value": "ppt",
+      "linkIndex": 10,
+      "priority": 10
+    },
+    {
+      "id": "file-txt",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "TXT",
+      "phrases": [
+        "ملف txt",
+        "txt",
+        "ملف نصي",
+        "نص txt"
+      ],
+      "value": "txt",
+      "linkIndex": 10,
+      "priority": 10
+    },
+    {
+      "id": "free-images",
+      "mode": "images",
+      "action": "imageRights",
+      "icon": "⚖️",
+      "label": "صور: مجاني",
+      "phrases": [
+        "صور مجانية",
+        "صورة مجانية",
+        "مجاني",
+        "free",
+        "royalty free"
+      ],
+      "value": "f",
+      "linkIndex": 8,
+      "priority": 8
+    },
+    {
+      "id": "free-web",
+      "mode": "web",
+      "action": "advancedUsageRights",
+      "icon": "⚖️",
+      "label": "ويب: مجاني للاستخدام",
+      "phrases": [
+        "مجاني",
+        "free",
+        "royalty free"
+      ],
+      "value": "f",
+      "linkIndex": 5,
+      "priority": 5
+    },
+    {
+      "id": "4k",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎥",
+      "label": "4K",
+      "phrases": [
+        "4k",
+        "فيديو 4k",
+        "دقة 4k"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "hd",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "HD",
+      "phrases": [
+        "hd",
+        "فيديو hd"
+      ],
+      "value": "hd",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "hdr",
+      "mode": "videos",
+      "action": "link",
+      "icon": "✨",
+      "label": "HDR",
+      "phrases": [
+        "hdr"
+      ],
+      "value": "hdr",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "360",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🌍",
+      "label": "360°",
+      "phrases": [
+        "360"
+      ],
+      "value": "360",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "vr180",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🥽",
+      "label": "VR180",
+      "phrases": [
+        "vr180",
+        "vr 180"
+      ],
+      "value": "vr180",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "3d",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎞️",
+      "label": "3D",
+      "phrases": [
+        "ثلاثي الابعاد",
+        "ثلاثي الأبعاد",
+        "3d"
+      ],
+      "value": "3d",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "long",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "أكثر من 20 دقيقة",
+      "phrases": [
+        "اكثر من 20 دقيقه",
+        "أكثر من 20 دقيقة",
+        "20 دقيقة",
+        "20 دقيقه",
+        "long"
+      ],
+      "value": "long",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "short",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⏱️",
+      "label": "أقل من 4 دقائق",
+      "phrases": [
+        "اقل من 4 دقائق",
+        "أقل من 4 دقائق",
+        "اقل من 4 دق",
+        "short"
+      ],
+      "value": "short",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "medium",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⌛",
+      "label": "بين 4 و20 دقيقة",
+      "phrases": [
+        "بين 4 و20",
+        "4-20",
+        "4 الى 20",
+        "medium"
+      ],
+      "value": "medium",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "views",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔥",
+      "label": "الترتيب حسب عدد المشاهدات",
+      "phrases": [
+        "الاكثر مشاهدة",
+        "الأكثر مشاهدة",
+        "عدد المشاهدات",
+        "مشاهدات",
+        "most viewed",
+        "views"
+      ],
+      "value": "views",
+      "linkIndex": 30,
+      "priority": 30
+    },
+    {
+      "id": "rating",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⭐",
+      "label": "الترتيب حسب التقييم",
+      "phrases": [
+        "الأعلى تقييما",
+        "الأعلى تقييمًا",
+        "اعلى تقييم",
+        "تقييم",
+        "rating"
+      ],
+      "value": "rating",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "hour",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🕐",
+      "label": "آخر ساعة",
+      "phrases": [
+        "آخر ساعة",
+        "اخر ساعه",
+        "الساعة الماضية",
+        "last hour"
+      ],
+      "value": "hour",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "today",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📆",
+      "label": "اليوم",
+      "phrases": [
+        "اليوم",
+        "today",
+        "24 ساعة",
+        "24h"
+      ],
+      "value": "today",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "week",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📅",
+      "label": "هذا الأسبوع",
+      "phrases": [
+        "هذا الاسبوع",
+        "هذا الأسبوع",
+        "الاسبوع",
+        "this week"
+      ],
+      "value": "week",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "month",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🗓️",
+      "label": "هذا الشهر",
+      "phrases": [
+        "هذا الشهر",
+        "this month"
+      ],
+      "value": "month",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "year",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📖",
+      "label": "هذا العام",
+      "phrases": [
+        "هذا العام",
+        "هذه السنة",
+        "this year"
+      ],
+      "value": "year",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "live",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔴",
+      "label": "مباشر",
+      "phrases": [
+        "بث مباشر",
+        "مباشر",
+        "live"
+      ],
+      "value": "live",
+      "linkIndex": 25,
+      "priority": 25
+    },
+    {
+      "id": "shorts",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "YouTube Shorts",
+      "phrases": [
+        "shorts",
+        "شورتس",
+        "شورت"
+      ],
+      "value": "shorts",
+      "linkIndex": 25,
+      "priority": 25
+    },
+    {
+      "id": "playlist",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📂",
+      "label": "قوائم تشغيل",
+      "phrases": [
+        "قائمة تشغيل",
+        "قوائم تشغيل",
+        "playlist",
+        "playlists"
+      ],
+      "value": "playlist",
+      "linkIndex": 25,
+      "priority": 25
+    },
+    {
+      "id": "channel",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "قنوات",
+      "phrases": [
+        "قناة",
+        "قنوات",
+        "channel",
+        "channels"
+      ],
+      "value": "channel",
+      "linkIndex": 25,
+      "priority": 25
+    },
+    {
+      "id": "movie",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "أفلام",
+      "phrases": [
+        "فيلم",
+        "افلام",
+        "أفلام",
+        "movie",
+        "movies"
+      ],
+      "value": "movie",
+      "linkIndex": 25,
+      "priority": 25
+    },
+    {
+      "id": "video",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎥",
+      "label": "فيديوهات فقط",
+      "phrases": [
+        "فيديو",
+        "فيديوهات",
+        "video",
+        "videos"
+      ],
+      "value": "video",
+      "linkIndex": 10,
+      "priority": 10
+    },
+    {
+      "id": "instagram",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📷",
+      "label": "البحث في Instagram",
+      "phrases": [
+        "انستقرام",
+        "انستجرام",
+        "instagram"
+      ],
+      "value": "instagram",
+      "linkIndex": 15,
+      "priority": 15
+    },
+    {
+      "id": "instructional",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔥",
+      "label": "الترتيب حسب عدد المشاهدات",
+      "phrases": [
+        "كيف اصنع",
+        "كيف اسوي",
+        "كيف اعمل",
+        "طريقة صنع",
+        "طريقة صناعة",
+        "كيفية صنع",
+        "كيفية صناعة",
+        "كيف يصنع",
+        "كيف تصنع",
+        "شرح",
+        "شرح كامل",
+        "شرح بالتفصيل",
+        "شرح للمبتدئين",
+        "خطوة بخطوة",
+        "طريقة عمل",
+        "طريقة استخدام",
+        "طريقة تركيب",
+        "طريقة اصلاح",
+        "طريقة إصلاح",
+        "حل مشكلة",
+        "تعلم",
+        "دروس",
+        "درس",
+        "tutorial",
+        "how to",
+        "how do i",
+        "how to make",
+        "how to use",
+        "step by step",
+        "beginner guide",
+        "full tutorial",
+        "guide"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 40
+    },
+    {
+      "id": "map-restaurants",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍽️",
+      "label": "مطاعم",
+      "phrases": [
+        "مطعم",
+        "مطاعم",
+        "restaurant"
+      ],
+      "value": "restaurants",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "map-hotels",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏨",
+      "label": "فنادق",
+      "phrases": [
+        "فندق",
+        "فنادق",
+        "hotel"
+      ],
+      "value": "hotels",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "map-cafes",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "☕",
+      "label": "مقاهي",
+      "phrases": [
+        "مقهى",
+        "مقاهي",
+        "cafe"
+      ],
+      "value": "cafes",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "map-pharmacies",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "💊",
+      "label": "صيدليات",
+      "phrases": [
+        "صيدلية",
+        "صيدليات",
+        "pharmacy"
+      ],
+      "value": "pharmacies",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "map-hospitals",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏥",
+      "label": "مستشفيات",
+      "phrases": [
+        "مستشفى",
+        "مستشفيات",
+        "hospital"
+      ],
+      "value": "hospitals",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "map-banks",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏦",
+      "label": "بنوك",
+      "phrases": [
+        "بنك",
+        "بنوك",
+        "bank"
+      ],
+      "value": "banks",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "map-rating",
+      "mode": "maps",
+      "action": "mapRating",
+      "icon": "⭐",
+      "label": "4+ نجوم",
+      "phrases": [
+        "4+ نجوم",
+        "أربع نجوم",
+        "4 نجوم"
+      ],
+      "value": "4",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "map-open",
+      "mode": "maps",
+      "action": "mapHours",
+      "icon": "🕐",
+      "label": "مفتوح الآن",
+      "phrases": [
+        "مفتوح الآن",
+        "open now"
+      ],
+      "value": "open",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "map-budget",
+      "mode": "maps",
+      "action": "mapPrice",
+      "icon": "💰",
+      "label": "اقتصادي",
+      "phrases": [
+        "اقتصادي",
+        "رخيص",
+        "cheap",
+        "budget"
+      ],
+      "value": "1",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "news-hour",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "⏰",
+      "label": "آخر ساعة",
+      "phrases": [
+        "آخر ساعة",
+        "اخر ساعه",
+        "last hour"
+      ],
+      "value": "h",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "news-today",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "📅",
+      "label": "اليوم",
+      "phrases": [
+        "اليوم",
+        "today"
+      ],
+      "value": "h24",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "news-week",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "📆",
+      "label": "هذا الأسبوع",
+      "phrases": [
+        "هذا الاسبوع",
+        "هذا الأسبوع",
+        "this week"
+      ],
+      "value": "d7",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "news-month",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "🗓️",
+      "label": "هذا الشهر",
+      "phrases": [
+        "هذا الشهر",
+        "this month"
+      ],
+      "value": "d30",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "news-latest",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "🔥",
+      "label": "الأحدث",
+      "phrases": [
+        "الأحدث",
+        "الاحدث",
+        "latest"
+      ],
+      "value": "date",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "image-large",
+      "mode": "images",
+      "action": "imageSize",
+      "icon": "📐",
+      "label": "كبير",
+      "phrases": [
+        "كبير",
+        "كبيرة",
+        "large"
+      ],
+      "value": "l",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "image-color",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "🎨",
+      "label": "ملون",
+      "phrases": [
+        "ملون",
+        "ملونة",
+        "color"
+      ],
+      "value": "color",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "image-gray",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "⚫",
+      "label": "أبيض وأسود",
+      "phrases": [
+        "ابيض واسود",
+        "أبيض وأسود",
+        "gray",
+        "black and white"
+      ],
+      "value": "gray",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "image-face",
+      "mode": "images",
+      "action": "imageType",
+      "icon": "👤",
+      "label": "وجه",
+      "phrases": [
+        "وجه",
+        "faces",
+        "face"
+      ],
+      "value": "face",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "image-free",
+      "mode": "images",
+      "action": "imageRights",
+      "icon": "⚖️",
+      "label": "مجاني",
+      "phrases": [
+        "مجاني",
+        "free"
+      ],
+      "value": "f",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "image-transparent",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "🪟",
+      "label": "شفاف",
+      "phrases": [
+        "شفاف",
+        "transparent"
+      ],
+      "value": "trans",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "image-png",
+      "mode": "images",
+      "action": "imageFileType",
+      "icon": "🖼️",
+      "label": "PNG",
+      "phrases": [
+        "png"
+      ],
+      "value": "png",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "image-jpg",
+      "mode": "images",
+      "action": "imageFileType",
+      "icon": "🖼️",
+      "label": "JPG",
+      "phrases": [
+        "jpg",
+        "jpeg"
+      ],
+      "value": "jpg",
+      "linkIndex": 20,
+      "priority": 20
+    },
+    {
+      "id": "web-site",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🌐",
+      "label": "موقع ويب",
+      "value": "",
+      "phrases": [
+        "موقع",
+        "مواقع",
+        "website",
+        "site"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-rtf",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "RTF",
+      "value": "rtf",
+      "phrases": [
+        "ملف rtf",
+        "rtf"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-csv",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📊",
+      "label": "CSV",
+      "value": "csv",
+      "phrases": [
+        "ملف csv",
+        "csv",
+        "جدول csv"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-json",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🧩",
+      "label": "JSON",
+      "value": "json",
+      "phrases": [
+        "ملف json",
+        "json"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-xml",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🧩",
+      "label": "XML",
+      "value": "xml",
+      "phrases": [
+        "ملف xml",
+        "xml"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-zip",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🗜️",
+      "label": "ZIP",
+      "value": "zip",
+      "phrases": [
+        "ملف zip",
+        "zip",
+        "ملف مضغوط"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "file-pdf-ar",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "📄",
+      "label": "PDF عربي",
+      "value": "pdf",
+      "phrases": [
+        "بحث pdf عربي",
+        "ملف بي دي اف عربي",
+        "pdf عربي"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-highres",
+      "mode": "images",
+      "action": "imageSize",
+      "icon": "🔎",
+      "label": "صور عالية الدقة",
+      "value": "l",
+      "phrases": [
+        "عالية الدقة",
+        "عاليه الدقه",
+        "دقة عالية",
+        "high resolution",
+        "high res"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-wallpaper",
+      "mode": "images",
+      "action": "imageType",
+      "icon": "🖼️",
+      "label": "خلفيات",
+      "value": "wallpaper",
+      "phrases": [
+        "خلفيات",
+        "خلفية سطح المكتب",
+        "خلفيات جوال",
+        "wallpapers"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-portrait",
+      "mode": "images",
+      "action": "imageType",
+      "icon": "🧑",
+      "label": "صور أشخاص",
+      "value": "face",
+      "phrases": [
+        "صور اشخاص",
+        "صور شخص",
+        "portrait",
+        "people"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-square",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "⬛",
+      "label": "صور مربعة",
+      "value": "square",
+      "phrases": [
+        "صور مربعة",
+        "مربع",
+        "square"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "image-landscape",
+      "mode": "images",
+      "action": "imageColorType",
+      "icon": "🖼️",
+      "label": "صور عريضة",
+      "value": "wide",
+      "phrases": [
+        "صور عريضة",
+        "عريضة",
+        "wide"
+      ],
+      "keywords": [],
+      "priority": 20
+    },
+    {
+      "id": "video-educational",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎓",
+      "label": "تعليمي",
+      "value": "views",
+      "phrases": [
+        "تعليمي",
+        "تعليمية",
+        "دورة",
+        "دورات",
+        "كورس",
+        "كورسات",
+        "شرح تعليمي",
+        "education",
+        "educational",
+        "course"
+      ],
+      "keywords": [
+        "تعلم",
+        "دروس"
+      ],
+      "priority": 40,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-beginner",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎓",
+      "label": "للمبتدئين",
+      "value": "views",
+      "phrases": [
+        "للمبتدئين",
+        "للمبتدئين",
+        "من الصفر",
+        "للمبتدئ",
+        "beginner",
+        "for beginners"
+      ],
+      "keywords": [
+        "مبتدئ"
+      ],
+      "priority": 42,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-review",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔥",
+      "label": "مراجعات",
+      "value": "views",
+      "phrases": [
+        "مراجعة",
+        "مراجعات",
+        "تقييم المنتج",
+        "تجربة المنتج",
+        "review",
+        "reviews"
+      ],
+      "keywords": [
+        "مراجعة",
+        "تجربة"
+      ],
+      "priority": 35,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-comparison",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⚖️",
+      "label": "مقارنة",
+      "value": "views",
+      "phrases": [
+        "مقارنة",
+        "مقارنات",
+        "مقارنة بين",
+        "comparison",
+        "versus",
+        "vs"
+      ],
+      "keywords": [
+        "مقارنة"
+      ],
+      "priority": 35,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-howto",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🛠️",
+      "label": "طريقة وتعليم",
+      "value": "views",
+      "phrases": [
+        "كيف",
+        "كيفية",
+        "طريقة",
+        "طريقة عمل",
+        "طريقة استخدام",
+        "طريقة تركيب",
+        "طريقة إصلاح",
+        "حل مشكلة",
+        "how to",
+        "how do i"
+      ],
+      "keywords": [
+        "شرح",
+        "تعلم"
+      ],
+      "priority": 45,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-documentary",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎞️",
+      "label": "وثائقي",
+      "value": "views",
+      "phrases": [
+        "وثائقي",
+        "وثائقيات",
+        "فيلم وثائقي",
+        "أفلام وثائقية",
+        "documentary",
+        "documentaries"
+      ],
+      "keywords": [
+        "وثائقي"
+      ],
+      "priority": 35,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-anime",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎌",
+      "label": "أنمي",
+      "value": "movie",
+      "phrases": [
+        "انمي",
+        "أنمي",
+        "anime"
+      ],
+      "keywords": [
+        "انمي",
+        "أنمي"
+      ],
+      "priority": 35,
+      "linkIndex": 25
+    },
+    {
+      "id": "video-series",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "مسلسلات",
+      "value": "movie",
+      "phrases": [
+        "مسلسل",
+        "مسلسلات",
+        "حلقة",
+        "حلقات",
+        "موسم",
+        "مواسم",
+        "series",
+        "episode",
+        "episodes"
+      ],
+      "keywords": [
+        "مسلسل",
+        "حلقة"
+      ],
+      "priority": 35,
+      "linkIndex": 25
+    },
+    {
+      "id": "video-music",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎵",
+      "label": "موسيقى",
+      "value": "views",
+      "phrases": [
+        "موسيقى",
+        "اغاني",
+        "أغاني",
+        "كليب",
+        "music",
+        "song",
+        "songs",
+        "music video"
+      ],
+      "keywords": [
+        "موسيقى",
+        "أغاني"
+      ],
+      "priority": 30,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-podcast",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎙️",
+      "label": "بودكاست",
+      "value": "views",
+      "phrases": [
+        "بودكاست",
+        "بودكاستات",
+        "podcast",
+        "podcasts"
+      ],
+      "keywords": [
+        "بودكاست"
+      ],
+      "priority": 30,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-news",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📰",
+      "label": "أخبار فيديو",
+      "value": "views",
+      "phrases": [
+        "اخبار فيديو",
+        "أخبار فيديو",
+        "فيديو اخبار",
+        "video news"
+      ],
+      "keywords": [
+        "أخبار",
+        "news"
+      ],
+      "priority": 30,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-live-now",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔴",
+      "label": "بث مباشر الآن",
+      "value": "live",
+      "phrases": [
+        "بث الآن",
+        "مباشر الآن",
+        "live now",
+        "streaming now"
+      ],
+      "keywords": [
+        "مباشر"
+      ],
+      "priority": 45,
+      "linkIndex": 26
+    },
+    {
+      "id": "video-vertical",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📱",
+      "label": "فيديو عمودي",
+      "value": "shorts",
+      "phrases": [
+        "فيديو عمودي",
+        "عمودي",
+        "vertical video"
+      ],
+      "keywords": [
+        "عمودي"
+      ],
+      "priority": 30,
+      "linkIndex": 27
+    },
+    {
+      "id": "video-channel",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "من قناة",
+      "value": "channel",
+      "phrases": [
+        "من قناة",
+        "قناة يوتيوب",
+        "youtube channel"
+      ],
+      "keywords": [
+        "قناة"
+      ],
+      "priority": 30,
+      "linkIndex": 23
+    },
+    {
+      "id": "video-playlist",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📂",
+      "label": "قائمة تشغيل",
+      "value": "playlist",
+      "phrases": [
+        "قائمة تشغيل",
+        "قوائم تشغيل",
+        "سلسلة فيديوهات",
+        "playlist"
+      ],
+      "keywords": [
+        "قائمة"
+      ],
+      "priority": 30,
+      "linkIndex": 24
+    },
+    {
+      "id": "video-full",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "كامل",
+      "value": "movie",
+      "phrases": [
+        "كامل",
+        "كاملة",
+        "الفيديو كامل",
+        "الفيديو كاملا",
+        "full video",
+        "full movie",
+        "full episode"
+      ],
+      "keywords": [
+        "كامل"
+      ],
+      "priority": 35,
+      "linkIndex": 25
+    },
+    {
+      "id": "video-recent",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📅",
+      "label": "حديث",
+      "value": "today",
+      "phrases": [
+        "منذ قليل",
+        "حديث",
+        "جديد",
+        "جديدة",
+        "new",
+        "recent",
+        "recently"
+      ],
+      "keywords": [
+        "جديد",
+        "حديث"
+      ],
+      "priority": 20,
+      "linkIndex": 6
+    },
+    {
+      "id": "video-popular",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔥",
+      "label": "شائع",
+      "value": "views",
+      "phrases": [
+        "شائع",
+        "الأكثر شعبية",
+        "ترند",
+        "ترندات",
+        "popular",
+        "trending"
+      ],
+      "keywords": [
+        "شائع",
+        "ترند"
+      ],
+      "priority": 35,
+      "linkIndex": 1
+    },
+    {
+      "id": "video-4k-hdr",
+      "mode": "videos",
+      "action": "link",
+      "icon": "💎",
+      "label": "4K + HDR",
+      "value": "hdr",
+      "phrases": [
+        "4k hdr",
+        "4k و hdr",
+        "4k مع hdr"
+      ],
+      "keywords": [
+        "4k",
+        "hdr"
+      ],
+      "priority": 80,
+      "linkIndex": 14
+    },
+    {
+      "id": "video-4k-hd",
+      "mode": "videos",
+      "action": "link",
+      "icon": "💎",
+      "label": "4K + HD",
+      "value": "long4k",
+      "phrases": [
+        "4k hd",
+        "4k و hd",
+        "4k مع hd"
+      ],
+      "keywords": [
+        "4k",
+        "hd"
+      ],
+      "priority": 70,
+      "linkIndex": 20
+    },
+    {
+      "id": "video-short-4k",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⚡",
+      "label": "قصير + 4K",
+      "value": "short",
+      "phrases": [
+        "فيديو قصير 4k",
+        "شورت 4k",
+        "short 4k"
+      ],
+      "keywords": [
+        "4k"
+      ],
+      "priority": 60,
+      "linkIndex": 10
+    },
+    {
+      "id": "video-long-hd",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "طويل + HD",
+      "value": "long4kHd",
+      "phrases": [
+        "فيديو طويل hd",
+        "اكثر من 20 دقيقة hd",
+        "أكثر من 20 دقيقة hd"
+      ],
+      "keywords": [
+        "hd"
+      ],
+      "priority": 60,
+      "linkIndex": 21
+    },
+    {
+      "id": "news-breaking",
+      "mode": "news",
+      "action": "newsTime",
+      "icon": "🚨",
+      "label": "عاجل",
+      "value": "h",
+      "phrases": [
+        "عاجل",
+        "خبر عاجل",
+        "breaking news",
+        "breaking"
+      ],
+      "keywords": [
+        "عاجل"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "news-tech",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "💻",
+      "label": "تقنية",
+      "value": "date",
+      "phrases": [
+        "اخبار التقنية",
+        "أخبار التقنية",
+        "تقنية اليوم",
+        "tech news",
+        "technology news"
+      ],
+      "keywords": [
+        "تقنية",
+        "تكنولوجيا"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "news-sports",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "⚽",
+      "label": "رياضة",
+      "value": "date",
+      "phrases": [
+        "اخبار الرياضة",
+        "أخبار الرياضة",
+        "sport news",
+        "sports news"
+      ],
+      "keywords": [
+        "رياضة"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "news-economy",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "💰",
+      "label": "اقتصاد",
+      "value": "date",
+      "phrases": [
+        "اخبار الاقتصاد",
+        "أخبار الاقتصاد",
+        "economic news"
+      ],
+      "keywords": [
+        "اقتصاد"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "news-world",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "🌍",
+      "label": "عالم",
+      "value": "date",
+      "phrases": [
+        "اخبار العالم",
+        "أخبار العالم",
+        "world news"
+      ],
+      "keywords": [
+        "العالم"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "news-local",
+      "mode": "news",
+      "action": "newsSort",
+      "icon": "📍",
+      "label": "محلي",
+      "value": "date",
+      "phrases": [
+        "اخبار محلية",
+        "أخبار محلية",
+        "local news"
+      ],
+      "keywords": [
+        "محلي"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-nearby",
+      "mode": "maps",
+      "action": "mapHours",
+      "icon": "📍",
+      "label": "قريب مني",
+      "value": "all",
+      "phrases": [
+        "قريب مني",
+        "قريبة مني",
+        "بالقرب مني",
+        "near me",
+        "nearby"
+      ],
+      "keywords": [
+        "قريب",
+        "بالقرب"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "map-parking",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🅿️",
+      "label": "مواقف سيارات",
+      "value": "parking",
+      "phrases": [
+        "مواقف سيارات",
+        "موقف سيارات",
+        "parking"
+      ],
+      "keywords": [
+        "مواقف",
+        "موقف"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-gas",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "⛽",
+      "label": "محطات وقود",
+      "value": "gas",
+      "phrases": [
+        "محطة وقود",
+        "محطات وقود",
+        "بنزين",
+        "gas station",
+        "fuel"
+      ],
+      "keywords": [
+        "بنزين",
+        "وقود"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-supermarket",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🛒",
+      "label": "متاجر وبقالات",
+      "value": "supermarket",
+      "phrases": [
+        "بقالة",
+        "بقالات",
+        "سوبر ماركت",
+        "supermarket",
+        "grocery"
+      ],
+      "keywords": [
+        "بقالة",
+        "سوبر"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-mall",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏬",
+      "label": "مولات",
+      "value": "mall",
+      "phrases": [
+        "مول",
+        "مولات",
+        "مركز تجاري",
+        "shopping mall"
+      ],
+      "keywords": [
+        "مول"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-atm",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏧",
+      "label": "صراف آلي",
+      "value": "atm",
+      "phrases": [
+        "صراف آلي",
+        "صراف",
+        "atm"
+      ],
+      "keywords": [
+        "صراف"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-price-cheap",
+      "mode": "maps",
+      "action": "mapPrice",
+      "icon": "💰",
+      "label": "رخيص",
+      "value": "1",
+      "phrases": [
+        "رخيص",
+        "رخيصة",
+        "اقل سعر",
+        "أقل سعر",
+        "cheap",
+        "affordable"
+      ],
+      "keywords": [
+        "رخيص",
+        "اقتصادي"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "map-top-rated",
+      "mode": "maps",
+      "action": "mapRating",
+      "icon": "⭐",
+      "label": "تقييم مرتفع",
+      "value": "4",
+      "phrases": [
+        "تقييم مرتفع",
+        "اعلى تقييم",
+        "أعلى تقييم",
+        "top rated",
+        "highly rated"
+      ],
+      "keywords": [
+        "تقييم"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "web-academic",
+      "mode": "web",
+      "action": "advancedUsageRights",
+      "icon": "🎓",
+      "label": "أكاديمي",
+      "value": "",
+      "phrases": [
+        "بحث أكاديمي",
+        "مصادر أكاديمية",
+        "ورقة بحثية",
+        "academic",
+        "scholar",
+        "research paper"
+      ],
+      "keywords": [
+        "بحث",
+        "دراسة"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "web-official",
+      "mode": "web",
+      "action": "advancedFileType",
+      "icon": "🏛️",
+      "label": "المواقع الرسمية",
+      "value": "",
+      "phrases": [
+        "الموقع الرسمي",
+        "المواقع الرسمية",
+        "official website",
+        "official"
+      ],
+      "keywords": [
+        "رسمي",
+        "الرسمية"
+      ],
+      "priority": 35
+    },
+    {
+      "id": "web-github",
+      "mode": "web",
+      "action": "advancedUsageRights",
+      "icon": "💻",
+      "label": "GitHub",
+      "value": "",
+      "phrases": [
+        "github",
+        "مستودع github",
+        "كود على github",
+        "github repository"
+      ],
+      "keywords": [
+        "github",
+        "repository"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "web-documentation",
+      "mode": "web",
+      "action": "advancedUsageRights",
+      "icon": "📚",
+      "label": "توثيق وبرمجيات",
+      "value": "",
+      "phrases": [
+        "التوثيق",
+        "وثائق",
+        "documentation",
+        "docs",
+        "api documentation"
+      ],
+      "keywords": [
+        "توثيق",
+        "وثائق"
+      ],
+      "priority": 30
+    },
+    {
+      "id": "music-listen-intent",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎵",
+      "label": "استماع إلى أغنية",
+      "value": "music-listen-intent",
+      "phrases": [
+        "استمع اغنية",
+        "استمع لأغنية",
+        "استمع الى اغنية",
+        "استمع إلى أغنية",
+        "شغل اغنية",
+        "شغل الأغنية",
+        "شغل لي اغنية",
+        "شغل لي الأغنية",
+        "اريد اسمع اغنية",
+        "أريد أسمع أغنية",
+        "ابي اسمع اغنية",
+        "ابغى اسمع اغنية",
+        "خلني اسمع اغنية",
+        "اسمع اغنية",
+        "اسمع الأغنية",
+        "اسمع لي اغنية",
+        "اسمع لي الأغنية",
+        "اغنية للاستماع",
+        "أغنية للاستماع",
+        "listen to a song",
+        "play a song",
+        "play music",
+        "listen to music"
+      ],
+      "keywords": [
+        "استمع",
+        "اسمع",
+        "اغنية",
+        "أغنية",
+        "شغل",
+        "موسيقى",
+        "listen",
+        "play",
+        "song",
+        "music"
+      ],
+      "priority": 55,
+      "linkIndex": 49
+    },
+    {
+      "id": "music-search-intent",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎵",
+      "label": "البحث عن أغنية",
+      "value": "music-search-intent",
+      "phrases": [
+        "ابحث عن اغنية",
+        "أبحث عن أغنية",
+        "ابحث لي عن اغنية",
+        "دور لي على اغنية",
+        "دور على اغنية",
+        "وين الاغنية",
+        "ما اسم الاغنية",
+        "اسم الاغنية",
+        "اغنية لـ",
+        "أغنية لـ",
+        "أغنية الفنان",
+        "اغنية الفنان",
+        "search for a song",
+        "find a song",
+        "song by"
+      ],
+      "keywords": [
+        "اغنية",
+        "أغنية",
+        "فنان",
+        "مغني",
+        "مطرب",
+        "song",
+        "artist",
+        "singer"
+      ],
+      "priority": 52,
+      "linkIndex": 53
+    },
+    {
+      "id": "music-artist-query",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎤",
+      "label": "أغاني الفنان",
+      "value": "music-artist-query",
+      "phrases": [
+        "اغاني ابوبكر سالم",
+        "أغاني أبو بكر سالم",
+        "اغاني ابو بكر سالم",
+        "اسمع ابوبكر سالم",
+        "اسمع أبو بكر سالم",
+        "استمع لابوبكر سالم",
+        "استمع لأبو بكر سالم",
+        "شغل ابوبكر سالم",
+        "شغل أبو بكر سالم",
+        "اغنية ابوبكر سالم",
+        "أغنية أبو بكر سالم",
+        "اغاني محمد عبده",
+        "أغاني محمد عبده",
+        "اغاني راشد الماجد",
+        "أغاني راشد الماجد",
+        "اغاني ماجد المهندس",
+        "أغاني ماجد المهندس",
+        "اغاني أم كلثوم",
+        "أغاني أم كلثوم",
+        "أغاني فيروز",
+        "اغاني فيروز"
+      ],
+      "keywords": [
+        "ابوبكر سالم",
+        "أبو بكر سالم",
+        "محمد عبده",
+        "راشد الماجد",
+        "ماجد المهندس",
+        "أم كلثوم",
+        "فيروز"
+      ],
+      "priority": 58,
+      "linkIndex": 50
+    },
+    {
+      "id": "music-lyrics-query",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎤",
+      "label": "كلمات الأغنية",
+      "value": "music-lyrics-query",
+      "phrases": [
+        "كلمات اغنية",
+        "كلمات الأغنية",
+        "كلمات اغاني",
+        "كلمات الأغاني",
+        "كلمات أغنية كاملة",
+        "كلمات الاغنية كاملة",
+        "lyrics",
+        "song lyrics"
+      ],
+      "keywords": [
+        "كلمات",
+        "lyrics"
+      ],
+      "priority": 50,
+      "linkIndex": 51
+    },
+    {
+      "id": "music-official",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "الأغنية الرسمية",
+      "value": "music-official",
+      "phrases": [
+        "الاغنية الرسمية",
+        "الأغنية الرسمية",
+        "فيديو كليب رسمي",
+        "كليب رسمي",
+        "official song",
+        "official music video"
+      ],
+      "keywords": [
+        "رسمي",
+        "official"
+      ],
+      "priority": 50,
+      "linkIndex": 52
+    },
+    {
+      "id": "market-search",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🛍️",
+      "label": "أسواق ومحلات شعبية",
+      "value": "markets",
+      "phrases": [
+        "سوق شعبي",
+        "الأسواق الشعبية",
+        "سوق محلي",
+        "السوق المحلي",
+        "سوق قديم",
+        "سوق تراثي",
+        "سوق تقليدي",
+        "سوق الجمعة",
+        "سوق الحراج",
+        "سوق الخضار",
+        "سوق السمك",
+        "سوق اللحوم",
+        "سوق الملابس",
+        "سوق الذهب",
+        "سوق العسل",
+        "سوق البهارات",
+        "سوق التوابل",
+        "سوق الحرف اليدوية",
+        "سوق المنتجات المحلية",
+        "بازار",
+        "بازار شعبي",
+        "souq",
+        "souk",
+        "local market",
+        "traditional market",
+        "street market",
+        "bazaar"
+      ],
+      "keywords": [
+        "سوق",
+        "أسواق",
+        "شعبي",
+        "محلي",
+        "تراثي",
+        "بازار",
+        "souq",
+        "souk",
+        "market"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "market-food",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍲",
+      "label": "أطعمة شعبية",
+      "value": "food",
+      "phrases": [
+        "اكل شعبي",
+        "أكل شعبي",
+        "أكلات شعبية",
+        "أطعمة شعبية",
+        "مطاعم شعبية",
+        "اكلات محلية",
+        "أكلات محلية",
+        "أكل محلي",
+        "طعام محلي",
+        "مأكولات شعبية",
+        "مأكولات محلية",
+        "street food",
+        "local food",
+        "traditional food",
+        "traditional dishes"
+      ],
+      "keywords": [
+        "اكل",
+        "أكل",
+        "أكلات",
+        "أطعمة",
+        "طعام",
+        "مأكولات",
+        "شعبي",
+        "محلي",
+        "food"
+      ],
+      "priority": 55
+    },
+    {
+      "id": "market-spices",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🌶️",
+      "label": "بهارات وتوابل",
+      "value": "spices",
+      "phrases": [
+        "بهارات",
+        "توابل",
+        "سوق البهارات",
+        "محل بهارات",
+        "عطارة",
+        "سوق العطارة",
+        "عطار",
+        "اعشاب وتوابل",
+        "أعشاب وتوابل",
+        "spices",
+        "herbs",
+        "herbal shop"
+      ],
+      "keywords": [
+        "بهارات",
+        "توابل",
+        "عطارة",
+        "عطار",
+        "اعشاب",
+        "أعشاب",
+        "spices"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-honey",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍯",
+      "label": "عسل ومنتجاته",
+      "value": "honey",
+      "phrases": [
+        "عسل",
+        "عسل طبيعي",
+        "عسل بلدي",
+        "عسل سدر",
+        "محل عسل",
+        "سوق العسل",
+        "منتجات العسل",
+        "honey",
+        "natural honey",
+        "sidr honey"
+      ],
+      "keywords": [
+        "عسل",
+        "honey"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-bakery",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🥖",
+      "label": "مخابز وأفران شعبية",
+      "value": "bakery",
+      "phrases": [
+        "مخبز شعبي",
+        "مخبز بلدي",
+        "فرن شعبي",
+        "خبز شعبي",
+        "خبز بلدي",
+        "معجنات شعبية",
+        "مخبوزات",
+        "bakery",
+        "traditional bread"
+      ],
+      "keywords": [
+        "مخبز",
+        "فرن",
+        "خبز",
+        "معجنات",
+        "مخبوزات",
+        "bakery"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-meat",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🥩",
+      "label": "لحوم ودواجن",
+      "value": "meat",
+      "phrases": [
+        "سوق اللحوم",
+        "ملحمة",
+        "محل لحوم",
+        "لحوم طازجة",
+        "لحوم بلدية",
+        "دجاج بلدي",
+        "دواجن",
+        "butcher",
+        "fresh meat",
+        "chicken"
+      ],
+      "keywords": [
+        "لحوم",
+        "ملحمة",
+        "دجاج",
+        "دواجن",
+        "butcher"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-fish",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🐟",
+      "label": "أسماك ومأكولات بحرية",
+      "value": "fish",
+      "phrases": [
+        "سوق السمك",
+        "سمك طازج",
+        "أسماك طازجة",
+        "بحريات",
+        "مأكولات بحرية",
+        "محل سمك",
+        "fish market",
+        "fresh fish",
+        "seafood"
+      ],
+      "keywords": [
+        "سمك",
+        "أسماك",
+        "بحريات",
+        "بحرية",
+        "مأكولات بحرية",
+        "fish",
+        "seafood"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-vegetables",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🥬",
+      "label": "خضروات وفواكه",
+      "value": "produce",
+      "phrases": [
+        "سوق الخضار",
+        "سوق الفواكه",
+        "خضار طازجة",
+        "فواكه طازجة",
+        "خضروات وفواكه",
+        "خضار وفواكه",
+        "سوق المنتجات الزراعية",
+        "vegetable market",
+        "fruit market",
+        "fresh produce"
+      ],
+      "keywords": [
+        "خضار",
+        "خضروات",
+        "فواكه",
+        "فاكهة",
+        "منتجات زراعية",
+        "produce"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-clothes",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "👕",
+      "label": "ملابس شعبية",
+      "value": "clothes",
+      "phrases": [
+        "ملابس شعبية",
+        "ملابس تراثية",
+        "ملابس تقليدية",
+        "سوق الملابس",
+        "ملابس محلية",
+        "ثياب شعبية",
+        "traditional clothes",
+        "traditional clothing",
+        "local clothes"
+      ],
+      "keywords": [
+        "ملابس",
+        "ثياب",
+        "تراثية",
+        "تقليدية",
+        "clothes",
+        "clothing"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "market-gold",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "💍",
+      "label": "ذهب ومجوهرات",
+      "value": "gold",
+      "phrases": [
+        "سوق الذهب",
+        "محل ذهب",
+        "ذهب",
+        "مجوهرات",
+        "فضة",
+        "صياغة",
+        "مجوهرات شعبية",
+        "gold market",
+        "gold shop",
+        "jewelry",
+        "silver"
+      ],
+      "keywords": [
+        "ذهب",
+        "مجوهرات",
+        "فضة",
+        "صياغة",
+        "gold",
+        "jewelry"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "market-crafts",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🧺",
+      "label": "حرف ومنتجات يدوية",
+      "value": "crafts",
+      "phrases": [
+        "حرف يدوية",
+        "صناعات يدوية",
+        "منتجات يدوية",
+        "سوق الحرف",
+        "مشغولات يدوية",
+        "تراثيات",
+        "تحف شعبية",
+        "handicrafts",
+        "handmade",
+        "craft market",
+        "traditional crafts"
+      ],
+      "keywords": [
+        "حرف",
+        "يدوية",
+        "صناعات",
+        "مشغولات",
+        "تراثيات",
+        "handmade",
+        "crafts"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "market-coffee",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "☕",
+      "label": "قهوة وشاي شعبي",
+      "value": "coffee",
+      "phrases": [
+        "قهوة شعبية",
+        "قهوة عربية",
+        "بن",
+        "سوق البن",
+        "محل بن",
+        "شاي شعبي",
+        "شاي",
+        "coffee",
+        "arabic coffee",
+        "coffee beans",
+        "tea"
+      ],
+      "keywords": [
+        "قهوة",
+        "بن",
+        "شاي",
+        "coffee",
+        "tea"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-sweets",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍬",
+      "label": "حلويات شعبية",
+      "value": "sweets",
+      "phrases": [
+        "حلويات شعبية",
+        "حلويات محلية",
+        "حلويات تقليدية",
+        "حلوى شعبية",
+        "سوق الحلويات",
+        "حلويات عربية",
+        "traditional sweets",
+        "local sweets",
+        "arabic sweets"
+      ],
+      "keywords": [
+        "حلويات",
+        "حلوى",
+        "sweets"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-spices-food",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍛",
+      "label": "مكونات الطبخ الشعبية",
+      "value": "groceries",
+      "phrases": [
+        "مكونات طبخ",
+        "مستلزمات الطبخ",
+        "مواد غذائية",
+        "بقالة شعبية",
+        "مواد غذائية محلية",
+        "مكونات محلية",
+        "groceries",
+        "food supplies",
+        "cooking ingredients"
+      ],
+      "keywords": [
+        "مكونات",
+        "طبخ",
+        "مواد غذائية",
+        "بقالة",
+        "groceries"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "street-food-search",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🌮",
+      "label": "أكل الشارع",
+      "value": "streetfood",
+      "phrases": [
+        "اكل الشارع",
+        "أكل الشوارع",
+        "طعام الشارع",
+        "أطعمة الشارع",
+        "عربة أكل",
+        "عربات أكل",
+        "بائع متجول",
+        "street food",
+        "food truck",
+        "food cart"
+      ],
+      "keywords": [
+        "شارع",
+        "عربة",
+        "عربات",
+        "بائع",
+        "street food",
+        "food truck"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "market-breakfast",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍳",
+      "label": "فطور شعبي",
+      "value": "breakfast",
+      "phrases": [
+        "فطور شعبي",
+        "فطور محلي",
+        "فطور بلدي",
+        "وجبة فطور شعبية",
+        "popular breakfast",
+        "local breakfast",
+        "traditional breakfast"
+      ],
+      "keywords": [
+        "فطور",
+        "إفطار",
+        "breakfast"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "market-grills",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🍢",
+      "label": "مشاوي شعبية",
+      "value": "grills",
+      "phrases": [
+        "مشاوي",
+        "مشويات",
+        "مشاوي شعبية",
+        "شواية شعبية",
+        "لحم مشوي",
+        "دجاج مشوي",
+        "grill",
+        "grills",
+        "barbecue"
+      ],
+      "keywords": [
+        "مشاوي",
+        "مشويات",
+        "شواية",
+        "مشوي",
+        "grill",
+        "barbecue"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "tourism-destinations",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🗺️",
+      "label": "وجهات سياحية",
+      "value": "tourism",
+      "phrases": [
+        "أماكن سياحية",
+        "مكان سياحي",
+        "اماكن سياحية",
+        "وجهة سياحية",
+        "وجهات سياحية",
+        "معالم سياحية",
+        "مناطق سياحية",
+        "موقع سياحي",
+        "سياحة",
+        "سياحي",
+        "tourist attractions",
+        "tourist destination",
+        "tourism",
+        "travel destination"
+      ],
+      "keywords": [
+        "سياحة",
+        "سياحي",
+        "وجهة",
+        "وجهات",
+        "معالم",
+        "tourism",
+        "tourist"
+      ],
+      "priority": 55
+    },
+    {
+      "id": "nature-landscapes",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏞️",
+      "label": "مناظر طبيعية",
+      "value": "nature",
+      "phrases": [
+        "مناظر طبيعية",
+        "منظر طبيعي",
+        "أماكن طبيعية",
+        "مكان طبيعي",
+        "طبيعة جميلة",
+        "طبيعة خلابة",
+        "مناظر خلابة",
+        "مناطق طبيعية",
+        "أماكن للاستمتاع بالطبيعة",
+        "nature",
+        "natural landscapes",
+        "scenic places",
+        "beautiful nature",
+        "landscape"
+      ],
+      "keywords": [
+        "طبيعة",
+        "طبيعي",
+        "مناظر",
+        "منظر",
+        "خلابة",
+        "nature",
+        "landscape"
+      ],
+      "priority": 55
+    },
+    {
+      "id": "mountains",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "⛰️",
+      "label": "جبال",
+      "value": "mountains",
+      "phrases": [
+        "جبال",
+        "جبل",
+        "منطقة جبلية",
+        "مناطق جبلية",
+        "رحلة جبلية",
+        "مناظر الجبال",
+        "mountains",
+        "mountain",
+        "mountainous area",
+        "mountain trip"
+      ],
+      "keywords": [
+        "جبل",
+        "جبال",
+        "جبلية",
+        "mountains"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "waterfalls",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "💦",
+      "label": "شلالات",
+      "value": "waterfalls",
+      "phrases": [
+        "شلال",
+        "شلالات",
+        "منطقة شلالات",
+        "شلالات طبيعية",
+        "waterfall",
+        "waterfalls"
+      ],
+      "keywords": [
+        "شلال",
+        "شلالات",
+        "waterfall"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "beaches",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏖️",
+      "label": "شواطئ",
+      "value": "beaches",
+      "phrases": [
+        "شاطئ",
+        "شواطئ",
+        "شاطئ جميل",
+        "شاطئ سياحي",
+        "ساحل",
+        "سواحل",
+        "شاطئ للسباحة",
+        "beach",
+        "beaches",
+        "coast",
+        "coastal"
+      ],
+      "keywords": [
+        "شاطئ",
+        "شواطئ",
+        "ساحل",
+        "سواحل",
+        "beach",
+        "coast"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "parks",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🌳",
+      "label": "حدائق ومنتزهات",
+      "value": "parks",
+      "phrases": [
+        "حديقة",
+        "حدائق",
+        "منتزه",
+        "منتزهات",
+        "منتزه طبيعي",
+        "متنزه",
+        "متنزهات",
+        "park",
+        "parks",
+        "nature park"
+      ],
+      "keywords": [
+        "حديقة",
+        "حدائق",
+        "منتزه",
+        "متنزه",
+        "park"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "valleys",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏜️",
+      "label": "أودية ووديان",
+      "value": "valleys",
+      "phrases": [
+        "وادي",
+        "وديان",
+        "أودية",
+        "منطقة وادي",
+        "وادي جميل",
+        "valley",
+        "valleys"
+      ],
+      "keywords": [
+        "وادي",
+        "وديان",
+        "أودية",
+        "valley"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "deserts",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏜️",
+      "label": "صحارى وكثبان",
+      "value": "desert",
+      "phrases": [
+        "صحراء",
+        "صحارى",
+        "كثبان رملية",
+        "رمال",
+        "منطقة صحراوية",
+        "رحلة للصحراء",
+        "desert",
+        "deserts",
+        "sand dunes"
+      ],
+      "keywords": [
+        "صحراء",
+        "صحارى",
+        "رمال",
+        "كثبان",
+        "desert"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "lakes",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏞️",
+      "label": "بحيرات",
+      "value": "lakes",
+      "phrases": [
+        "بحيرة",
+        "بحيرات",
+        "بحيرة طبيعية",
+        "بحيرة جميلة",
+        "lake",
+        "lakes"
+      ],
+      "keywords": [
+        "بحيرة",
+        "بحيرات",
+        "lake"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "forests",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🌲",
+      "label": "غابات",
+      "value": "forests",
+      "phrases": [
+        "غابة",
+        "غابات",
+        "منطقة غابات",
+        "غابة طبيعية",
+        "forest",
+        "forests",
+        "woodland"
+      ],
+      "keywords": [
+        "غابة",
+        "غابات",
+        "forest"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "caves",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🪨",
+      "label": "كهوف ومغارات",
+      "value": "caves",
+      "phrases": [
+        "كهف",
+        "كهوف",
+        "مغارة",
+        "مغارات",
+        "كهف طبيعي",
+        "cave",
+        "caves"
+      ],
+      "keywords": [
+        "كهف",
+        "كهوف",
+        "مغارة",
+        "مغارات",
+        "cave"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "viewpoints",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🔭",
+      "label": "إطلالات ونقاط مشاهدة",
+      "value": "viewpoints",
+      "phrases": [
+        "إطلالة",
+        "إطلالات",
+        "نقطة مشاهدة",
+        "نقاط مشاهدة",
+        "مكان بإطلالة",
+        "منظر بانورامي",
+        "مكان للتصوير",
+        "viewpoint",
+        "viewpoints",
+        "scenic viewpoint",
+        "panoramic view"
+      ],
+      "keywords": [
+        "إطلالة",
+        "إطلالات",
+        "مشاهدة",
+        "بانورامي",
+        "تصوير",
+        "viewpoint"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "camping",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "⛺",
+      "label": "التخييم والرحلات",
+      "value": "camping",
+      "phrases": [
+        "مكان للتخييم",
+        "التخييم",
+        "مخيم",
+        "مخيمات",
+        "رحلة تخييم",
+        "تخييم في الطبيعة",
+        "camping",
+        "camp",
+        "campsite"
+      ],
+      "keywords": [
+        "تخييم",
+        "مخيم",
+        "مخيمات",
+        "camping"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "hiking",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🥾",
+      "label": "المشي والهايكنج",
+      "value": "hiking",
+      "phrases": [
+        "هايكنج",
+        "هايكينج",
+        "المشي الجبلي",
+        "مسار مشي",
+        "مسارات المشي",
+        "رحلة مشي",
+        "مسار طبيعي",
+        "hiking",
+        "hike",
+        "walking trail",
+        "trail"
+      ],
+      "keywords": [
+        "هايكنج",
+        "هايكينج",
+        "مشي",
+        "مسار",
+        "مسارات",
+        "hiking",
+        "trail"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "historical-tourism",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏛️",
+      "label": "المعالم التاريخية",
+      "value": "historical",
+      "phrases": [
+        "أماكن تاريخية",
+        "معالم تاريخية",
+        "موقع تاريخي",
+        "مواقع تاريخية",
+        "مدينة تاريخية",
+        "قرية تاريخية",
+        "آثار",
+        "موقع أثري",
+        "مواقع أثرية",
+        "historical sites",
+        "historic places",
+        "archaeological site"
+      ],
+      "keywords": [
+        "تاريخية",
+        "تاريخي",
+        "آثار",
+        "أثري",
+        "archaeological",
+        "historic"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "museums",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏛️",
+      "label": "متاحف",
+      "value": "museums",
+      "phrases": [
+        "متحف",
+        "متاحف",
+        "متحف تاريخي",
+        "متحف تراثي",
+        "museum",
+        "museums"
+      ],
+      "keywords": [
+        "متحف",
+        "متاحف",
+        "museum"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "castles",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🏰",
+      "label": "قلاع وحصون",
+      "value": "castles",
+      "phrases": [
+        "قلعة",
+        "قلاع",
+        "حصن",
+        "حصون",
+        "قصر تاريخي",
+        "قلعة تاريخية",
+        "castle",
+        "castles",
+        "fort",
+        "fortress"
+      ],
+      "keywords": [
+        "قلعة",
+        "قلاع",
+        "حصن",
+        "حصون",
+        "castle",
+        "fortress"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "tourist-trip",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "🚗",
+      "label": "رحلات سياحية",
+      "value": "tourism",
+      "phrases": [
+        "رحلة سياحية",
+        "رحلات سياحية",
+        "رحلة يوم",
+        "رحلة يومية",
+        "رحلة نهاية الأسبوع",
+        "أماكن للرحلات",
+        "أماكن للزيارة",
+        "برنامج سياحي",
+        "travel trip",
+        "day trip",
+        "weekend trip",
+        "places to visit"
+      ],
+      "keywords": [
+        "رحلة",
+        "رحلات",
+        "زيارة",
+        "زيارات",
+        "سياحية",
+        "travel",
+        "trip"
+      ],
+      "priority": 50
+    },
+    {
+      "id": "family-tourism",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "👨‍👩‍👧‍👦",
+      "label": "أماكن عائلية",
+      "value": "family",
+      "phrases": [
+        "أماكن عائلية",
+        "مكان مناسب للعائلة",
+        "أماكن للعوائل",
+        "أماكن للأطفال",
+        "أماكن مناسبة للأطفال",
+        "رحلة عائلية",
+        "family places",
+        "family friendly",
+        "places for kids"
+      ],
+      "keywords": [
+        "عائلية",
+        "العائلة",
+        "أطفال",
+        "للأطفال",
+        "family"
+      ],
+      "priority": 45
+    },
+    {
+      "id": "photography-spots",
+      "mode": "maps",
+      "action": "mapCategory",
+      "icon": "📸",
+      "label": "أماكن للتصوير",
+      "value": "photography",
+      "phrases": [
+        "أماكن تصوير",
+        "مكان للتصوير",
+        "أفضل أماكن التصوير",
+        "تصوير الطبيعة",
+        "أماكن جميلة للتصوير",
+        "photo spots",
+        "photography spots",
+        "nature photography"
+      ],
+      "keywords": [
+        "تصوير",
+        "صور",
+        "كاميرا",
+        "photography",
+        "photo"
+      ],
+      "priority": 40
+    },
+    {
+      "id": "documentary",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "وثائقي: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "وثائقي",
+        "وثائقيات",
+        "فيلم وثائقي",
+        "أفلام وثائقية",
+        "افلام وثائقية",
+        "documentary",
+        "documentaries"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 42
+    },
+    {
+      "id": "review",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⭐",
+      "label": "مراجعة: الأعلى مشاهدة + الأعلى تقييمًا",
+      "phrases": [
+        "مراجعة",
+        "مراجعات",
+        "review",
+        "reviews"
+      ],
+      "value": "rating",
+      "linkIndex": 20,
+      "priority": 38
+    },
+    {
+      "id": "comparison",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⚖️",
+      "label": "مقارنة: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "مقارنة",
+        "مقارنات",
+        "مقارنة بين",
+        "مقارنة مع",
+        "vs",
+        "versus",
+        "comparison",
+        "comparisons"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 38
+    },
+    {
+      "id": "educational",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎓",
+      "label": "تعليمي: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "تعليمي",
+        "تعليمية",
+        "فيديو تعليمي",
+        "دورة",
+        "دورات",
+        "كورس",
+        "كورس كامل",
+        "تعلم",
+        "دروس",
+        "درس",
+        "educational",
+        "course",
+        "full course"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 40
+    },
+    {
+      "id": "installation",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔧",
+      "label": "تركيب: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "تركيب",
+        "طريقة تركيب",
+        "تثبيت",
+        "إعداد",
+        "طريقة تثبيت",
+        "installation",
+        "setup",
+        "install"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 41
+    },
+    {
+      "id": "manufacturing",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏭",
+      "label": "تصنيع: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "تصنيع",
+        "صناعة",
+        "طريقة تصنيع",
+        "كيفية تصنيع",
+        "طريقة صناعة",
+        "كيفية صناعة",
+        "كيف يصنع",
+        "كيف تصنع",
+        "manufacturing",
+        "how it's made"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 41
+    },
+    {
+      "id": "repair",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🛠️",
+      "label": "إصلاح: أكثر من 20 دقيقة + الأعلى مشاهدة",
+      "phrases": [
+        "إصلاح",
+        "اصلاح",
+        "تصليح",
+        "طريقة إصلاح",
+        "طريقة اصلاح",
+        "حل مشكلة",
+        "عطل",
+        "إصلاح مشكلة",
+        "repair",
+        "fix",
+        "troubleshooting"
+      ],
+      "value": "views",
+      "linkIndex": 40,
+      "priority": 41
+    },
+    {
+      "id": "movie-full",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎬",
+      "label": "أفلام: أكثر من 20 دقيقة",
+      "phrases": [
+        "فيلم",
+        "أفلام",
+        "افلام",
+        "فيلم كامل",
+        "movie",
+        "movies",
+        "full movie"
+      ],
+      "value": "movie",
+      "linkIndex": 25,
+      "priority": 35
+    },
+    {
+      "id": "series-full",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "مسلسلات: أكثر من 20 دقيقة",
+      "phrases": [
+        "مسلسل",
+        "مسلسلات",
+        "مسلسل كامل",
+        "حلقة كاملة",
+        "الحلقة كاملة",
+        "جميع الحلقات",
+        "موسم كامل",
+        "series",
+        "full episode",
+        "full season"
+      ],
+      "value": "series",
+      "linkIndex": 25,
+      "priority": 35
+    },
+    {
+      "id": "quality-4k",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🎥",
+      "label": "4K: أكثر من 20 دقيقة",
+      "phrases": [
+        "4k",
+        "فيديو 4k",
+        "دقة 4k"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 25
+    },
+    {
+      "id": "quality-hd",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "HD: أكثر من 20 دقيقة",
+      "phrases": [
+        "hd",
+        "فيديو hd",
+        "جودة عالية",
+        "دقة عالية"
+      ],
+      "value": "hd",
+      "linkIndex": 20,
+      "priority": 24
+    },
+    {
+      "id": "quality-hdr",
+      "mode": "videos",
+      "action": "link",
+      "icon": "✨",
+      "label": "HDR: أكثر من 20 دقيقة",
+      "phrases": [
+        "hdr"
+      ],
+      "value": "hdr",
+      "linkIndex": 20,
+      "priority": 24
+    },
+    {
+      "id": "new-videos",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📆",
+      "label": "جديد: هذا الأسبوع",
+      "phrases": [
+        "جديد",
+        "جديدة",
+        "آخر الفيديوهات",
+        "احدث الفيديوهات",
+        "أحدث الفيديوهات",
+        "هذا الأسبوع",
+        "هذا الاسبوع",
+        "this week",
+        "latest videos"
+      ],
+      "value": "week",
+      "linkIndex": 20,
+      "priority": 23
+    },
+    {
+      "id": "live-now",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔴",
+      "label": "بث مباشر",
+      "phrases": [
+        "بث مباشر",
+        "مباشر",
+        "live",
+        "live stream"
+      ],
+      "value": "live",
+      "linkIndex": 25,
+      "priority": 30
+    },
+    {
+      "id": "short-content",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⚡",
+      "label": "Shorts",
+      "phrases": [
+        "shorts",
+        "شورتس",
+        "شورت",
+        "مقطع قصير"
+      ],
+      "value": "shorts",
+      "linkIndex": 25,
+      "priority": 30
+    },
+    {
+      "id": "playlist-content",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📂",
+      "label": "قائمة تشغيل",
+      "phrases": [
+        "قائمة تشغيل",
+        "قوائم تشغيل",
+        "playlist",
+        "playlists"
+      ],
+      "value": "playlist",
+      "linkIndex": 25,
+      "priority": 30
+    },
+    {
+      "id": "channel-content",
+      "mode": "videos",
+      "action": "link",
+      "icon": "📺",
+      "label": "قنوات",
+      "phrases": [
+        "قناة",
+        "قنوات",
+        "channel",
+        "channels"
+      ],
+      "value": "channel",
+      "linkIndex": 25,
+      "priority": 30
+    },
+    {
+      "id": "tourism-scenery-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏞️",
+      "label": "مناظر طبيعية: 4K + HD",
+      "phrases": [
+        "مناظر طبيعية",
+        "مناظر طبيعية في",
+        "مناظر خلابة",
+        "مناظر جميلة",
+        "طبيعة جميلة",
+        "طبيعة خلابة",
+        "أماكن طبيعية",
+        "مشاهد طبيعية",
+        "مناظر بانورامية",
+        "natural scenery",
+        "natural landscapes",
+        "beautiful nature",
+        "scenic views",
+        "landscape"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 46
+    },
+    {
+      "id": "tourism-destinations-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🗺️",
+      "label": "🗺️ وجهات سياحية 🚗 رحلات سياحية: 4K + HD",
+      "phrases": [
+        "أماكن سياحية",
+        "أماكن سياحية في",
+        "وجهات سياحية",
+        "وجهة سياحية",
+        "معالم سياحية",
+        "معالم سياحية في",
+        "مناطق سياحية",
+        "أماكن للزيارة",
+        "أفضل الأماكن السياحية",
+        "tourist attractions",
+        "tourist destinations",
+        "places to visit",
+        "travel destinations",
+        "وجهات سياحية في",
+        "رحلات سياحية",
+        "رحلة سياحية",
+        "رحلات سياحية في",
+        "رحلة إلى",
+        "رحلات إلى",
+        "tourist trips",
+        "travel trips"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 45
+    },
+    {
+      "id": "tourism-beaches-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏖️",
+      "label": "شواطئ: 4K + HD",
+      "phrases": [
+        "شواطئ",
+        "شاطئ",
+        "شواطئ في",
+        "شاطئ في",
+        "أجمل الشواطئ",
+        "شواطئ سياحية",
+        "beaches",
+        "beach scenery",
+        "beautiful beaches"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 45
+    },
+    {
+      "id": "tourism-mountains-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "⛰️",
+      "label": "جبال: 4K + HD",
+      "phrases": [
+        "جبال",
+        "جبال في",
+        "مناظر الجبال",
+        "الجبال والطبيعة",
+        "رحلة إلى الجبال",
+        "mountains",
+        "mountain scenery",
+        "mountain landscapes"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 45
+    },
+    {
+      "id": "tourism-waterfalls-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "💦",
+      "label": "شلالات: 4K + HD",
+      "phrases": [
+        "شلالات",
+        "شلال",
+        "شلالات في",
+        "شلالات طبيعية",
+        "أجمل الشلالات",
+        "waterfalls",
+        "waterfall scenery"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 45
+    },
+    {
+      "id": "tourism-forests-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🌲",
+      "label": "غابات: 4K + HD",
+      "phrases": [
+        "غابات",
+        "غابة",
+        "غابات في",
+        "غابات طبيعية",
+        "مناظر الغابات",
+        "forests",
+        "forest scenery"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 44
+    },
+    {
+      "id": "tourism-deserts-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏜️",
+      "label": "صحارى: 4K + HD",
+      "phrases": [
+        "صحارى",
+        "صحراء",
+        "كثبان رملية",
+        "مناظر صحراوية",
+        "الصحراء في",
+        "desert scenery",
+        "sand dunes"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 44
+    },
+    {
+      "id": "tourism-lakes-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏞️",
+      "label": "بحيرات: 4K + HD",
+      "phrases": [
+        "بحيرات",
+        "بحيرة",
+        "بحيرات في",
+        "بحيرة طبيعية",
+        "مناظر البحيرات",
+        "lakes",
+        "lake scenery"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 44
+    },
+    {
+      "id": "tourism-parks-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🌳",
+      "label": "حدائق ومنتزهات: 4K + HD",
+      "phrases": [
+        "حدائق",
+        "حديقة",
+        "منتزهات",
+        "منتزه",
+        "حدائق في",
+        "مناظر الحدائق",
+        "parks",
+        "nature parks"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 43
+    },
+    {
+      "id": "tourism-historical-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🏛️",
+      "label": "معالم تاريخية: 4K + HD",
+      "phrases": [
+        "أماكن تاريخية",
+        "معالم تاريخية",
+        "مواقع تاريخية",
+        "آثار",
+        "مواقع أثرية",
+        "historical sites",
+        "historic places"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 43
+    },
+    {
+      "id": "tourism-viewpoints-quality",
+      "mode": "videos",
+      "action": "link",
+      "icon": "🔭",
+      "label": "إطلالات: 4K + HD",
+      "phrases": [
+        "إطلالات",
+        "إطلالة",
+        "نقاط مشاهدة",
+        "منظر بانورامي",
+        "أماكن للتصوير",
+        "إطلالات في",
+        "viewpoints",
+        "panoramic views",
+        "scenic viewpoints"
+      ],
+      "value": "4k",
+      "linkIndex": 20,
+      "priority": 43
+    }
+  ],
+  "combinations": [
+    {
+      "id": "long-4k-hd",
+      "mode": "videos",
+      "requires": [
+        "long",
+        "4k",
+        "hd"
+      ],
+      "target": "long4kHd",
+      "priority": 100,
+      "icon": "💎",
+      "label": "أكثر من 20 دقيقة + 4K + HD"
+    },
+    {
+      "id": "long-4k",
+      "mode": "videos",
+      "requires": [
+        "long",
+        "4k"
+      ],
+      "target": "long4k",
+      "priority": 90,
+      "icon": "🎞️",
+      "label": "أكثر من 20 دقيقة + 4K"
+    },
+    {
+      "id": "long-views",
+      "mode": "videos",
+      "requires": [
+        "long",
+        "views"
+      ],
+      "target": "longViews",
+      "priority": 85,
+      "icon": "🏆",
+      "label": "أكثر من 20 دقيقة + الأعلى مشاهدة"
+    },
+    {
+      "id": "short-4k",
+      "mode": "videos",
+      "requires": [
+        "short",
+        "4k"
+      ],
+      "target": "short",
+      "priority": 80,
+      "icon": "⚡",
+      "label": "قصير + 4K"
+    },
+    {
+      "id": "4k-hd",
+      "mode": "videos",
+      "requires": [
+        "4k",
+        "hd"
+      ],
+      "target": "long4k",
+      "priority": 75,
+      "icon": "💎",
+      "label": "4K + HD"
+    }
+  ],
+  "knowledgeBase": {
+    "intentFamilies": [
+      "music_play",
+      "music_search",
+      "music_artist",
+      "music_lyrics",
+      "music_official"
+    ],
+    "examples": [
+      "استمع اغنية ابوبكر سالم",
+      "شغل لي اغاني أبو بكر سالم",
+      "ابحث عن أغنية محمد عبده",
+      "اسمع فيروز",
+      "كلمات أغنية",
+      "الفيديو كليب الرسمي"
+    ],
+    "marketAndFood": {
+      "categories": [
+        "markets",
+        "food",
+        "spices",
+        "honey",
+        "bakery",
+        "meat",
+        "fish",
+        "produce",
+        "clothes",
+        "gold",
+        "crafts",
+        "coffee",
+        "sweets",
+        "groceries",
+        "streetfood",
+        "breakfast",
+        "grills"
+      ],
+      "examples": [
+        "ابحث عن سوق شعبي قريب",
+        "أين أجد أكل شعبي؟",
+        "سوق البهارات قريب مني",
+        "أريد عسل طبيعي",
+        "أين يوجد سوق السمك؟",
+        "أين أجد ملابس شعبية؟",
+        "مطعم أكل شعبي",
+        "أفضل مكان لفطور شعبي"
+      ]
+    },
+    "tourismAndNature": {
+      "categories": [
+        "tourism",
+        "nature",
+        "mountains",
+        "waterfalls",
+        "beaches",
+        "parks",
+        "valleys",
+        "desert",
+        "lakes",
+        "forests",
+        "caves",
+        "viewpoints",
+        "camping",
+        "hiking",
+        "historical",
+        "museums",
+        "castles",
+        "family",
+        "photography"
+      ],
+      "examples": [
+        "أين أجد مناظر طبيعية جميلة؟",
+        "أماكن سياحية قريبة مني",
+        "أريد رحلة إلى الجبال",
+        "أفضل شلالات قريبة",
+        "أين يوجد شاطئ جميل؟",
+        "أماكن للتخييم في الطبيعة",
+        "مسارات للمشي والهايكنج",
+        "أماكن تاريخية للزيارة",
+        "أماكن عائلية سياحية",
+        "أفضل أماكن للتصوير"
+      ]
+    }
+  }
+}
