@@ -6,13 +6,19 @@
   <title>searchly — بحث ذكي متقدم</title>
   <meta name="description" content="Searchly — أداة بحث ذكية ومتقدمة للويب والأخبار والصور والخرائط والفيديو.">
   <meta name="theme-color" content="#1a73e8">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Searchly — بحث ذكي متقدم">
+  <meta property="og:description" content="بحث ذكي ومتقدم للويب والأخبار والصور والخرائط والفيديو.">
+  <meta property="og:image" content="favicon.svg">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <!-- HEADER -->
   <header class="header">
-    <a href="#" class="logo">
+    <a href="./" class="logo" aria-label="Searchly — الصفحة الرئيسية">
       <div class="logo-icon">🔍</div>
       <span>searchly</span>
     </a>
@@ -42,7 +48,7 @@
 
   <!-- SEARCH BOX -->
   <div class="search-container">
-    <div class="search-box">
+    <div class="search-box" role="search">
       <div class="smart-indicator" id="smartIndicator">
         <span>✨</span>
         <span id="smartIndicatorText">وضع ذكي</span>
