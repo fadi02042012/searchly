@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>searchly — بحث ذكي متقدم</title>
+  <meta name="description" content="Searchly — أداة بحث ذكية ومتقدمة للويب والأخبار والصور والخرائط والفيديو.">
+  <meta name="theme-color" content="#1a73e8">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <a href="#" class="logo">
+      <div class="logo-icon">🔍</div>
+      <span>searchly</span>
+    </a>
+    <div class="header-actions">
+      <button class="icon-btn" id="cmdBtn" type="button" title="لوحة الأوامر (Ctrl + /)" aria-label="فتح لوحة الأوامر">⌘</button>
+      <div class="lang-group">
+        <button class="lang-btn active-lang" id="langAr" type="button" aria-label="العربية">🇸🇦</button>
+        <button class="lang-btn" id="langEn" type="button" aria-label="English">🇬🇧</button>
+      </div>
+      <button class="icon-btn" id="themeToggle" type="button" title="تبديل الوضع" aria-label="تبديل الوضع الليلي">🌙</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+<h1 id="heroTitle">اكتشف. ابحث. اعثر.</h1>
+<p id="heroDesc">حوّل فكرتك إلى بحث أسرع وأكثر دقة مع Searchly.</p> </section>
+  <!-- SEARCH MODES -->
+  <div class="search-modes" id="searchModes">
+    <button class="mode-tab" type="button" data-mode="smart" aria-selected="false"><span class="mode-icon">✨</span><span>ذكي</span></button>
+    <button class="mode-tab" type="button" data-mode="web" aria-selected="false"><span class="mode-icon">🌐</span><span>ويب</span></button>
+    <button class="mode-tab" type="button" data-mode="news" aria-selected="false"><span class="mode-icon">📰</span><span>أخبار</span></button>
+    <button class="mode-tab" type="button" data-mode="images" aria-selected="false"><span class="mode-icon">🖼️</span><span>صور</span></button>
+    <button class="mode-tab" type="button" data-mode="maps" aria-selected="false"><span class="mode-icon">🗺️</span><span>خرائط</span></button>
+    <button class="mode-tab" type="button" data-mode="videos" aria-selected="false"><span class="mode-icon">🎬</span><span>فيديو</span></button>
+</div>
+
+  <!-- SEARCH BOX -->
+  <div class="search-container">
+    <div class="search-box">
+      <div class="smart-indicator" id="smartIndicator">
+        <span>✨</span>
+        <span id="smartIndicatorText">وضع ذكي</span>
+      </div>
+      <span class="search-icon">🔍</span>
+      <input id="searchInput" type="search" inputmode="search" enterkeyhint="search" placeholder="اكتب ما تريد البحث عنه..." autocomplete="off" spellcheck="false" aria-label="عبارة البحث">
+      <div class="search-actions">
+        <button class="btn btn-translate" id="translateBtn" type="button" title="ترجمة + بحث" aria-label="ترجمة عبارة البحث ثم البحث">
+          <span class="icon-text">🌐</span>
+          <span class="spinner"></span>
+        </button>
+        <div class="lang-tool" id="langTool" data-tip="لغة الترجمة">
+          <span id="langCode">EN</span>
+<select id="langTarget">
+  <option value="en" selected>🇬🇧 الإنجليزية — English</option>
+  <option value="ar">🇸🇦 العربية — العربية</option>
+  <option value="fr">🇫🇷 الفرنسية — Français</option>
+  <option value="de">🇩🇪 الألمانية — Deutsch</option>
+  <option value="es">🇪🇸 الإسبانية — Español</option>
+  <option value="tr">🇹🇷 التركية — Türkçe</option>
+  <option value="zh">🇨🇳 الصينية — 中文</option>
+  <option value="ru">🇷🇺 الروسية — Русский</option>
+  <option value="ja">🇯🇵 اليابانية — 日本語</option>
+  <option value="ko">🇰🇷 الكورية — 한국어</option>
+  <option value="hi">🇮🇳 الهندية — हिन्दी</option>
+  <option value="fa">🇮🇷 الفارسية — فارسی</option>
+</select>
+        </div>
+        <button class="btn btn-primary" id="searchBtn" type="button">🔍 بحث</button>
+        <button class="filter-main-btn" id="openFiltersBtn" type="button" title="بحث متقدم" aria-haspopup="dialog" aria-controls="filterOverlay">
+          <span>🎛️</span>
+          <span class="filter-label-text" id="filterBtnLabel">بحث متقدم</span>
+          <span class="badge-count" id="filterBadge" style="display:none;">0</span>
+        </button>
+      </div>
+    </div>
+    <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
+  </div>
+<div class="contextual-filters" id="contextualFilters">
+    <span class="cf-label"><span>💡</span><span id="cfLabelText">فلاتر مقترحة:</span></span>
+    <div class="cf-chips" id="cfChips"></div>
+  </div>
+
+  <div class="presets-bar" id="presetsBar"></div>
+  <div class="active-filters-bar" id="activeFiltersBar"></div>
+  <div class="quick-suggestions" id="quickSuggestions"></div>
+
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">🔍</div>
+    <div class="empty-title" id="emptyTitle">ابدأ البحث</div>
+    <div class="empty-text" id="emptyText">اكتب كلمة، وسنقترح عليك أفضل طريقة للبحث</div>
+  </div>
+
+  <footer class="footer">
+    <p>🔍 searchly — بحث ذكي متقدم</p>
+    <p style="margin-top:8px;">
+      <span class="keyboard-hint">Ctrl + /</span> لوحة الأوامر
+      <span style="margin: 0 6px;">·</span>
+      <span class="keyboard-hint">Ctrl + K</span> البحث
+      <span style="margin: 0 6px;">·</span>
+      <span class="keyboard-hint">Esc</span> إغلاق
+    </p>
+    <p style="margin-top:6px;font-size:10px;">آخر تحديث: <span id="lastUpdated"></span></p>
+  </footer>
+  <div class="cmd-backdrop" id="cmdBackdrop"></div>
+  <div class="cmd-palette" id="cmdPalette" role="dialog" aria-modal="true" aria-labelledby="cmdPaletteTitle" aria-hidden="true">
+    <div class="cmd-search">
+      <span class="cmd-search-icon">⌘</span>
+      <label id="cmdPaletteTitle" class="sr-only" for="cmdSearchInput">لوحة الأوامر</label>
+      <input type="search" id="cmdSearchInput" placeholder="اكتب أمراً أو فلتراً..." aria-label="البحث في الأوامر">
+      <span class="cmd-esc">ESC</span>
+    </div>
+    <div class="cmd-results" id="cmdResults"></div>
+  </div>
+
+  <!-- FILTER DRAWER -->
+  <div class="filter-backdrop" id="filterBackdrop"></div>
+  <div class="filter-overlay" id="filterOverlay" role="dialog" aria-modal="true" aria-labelledby="filterDrawerTitle" aria-hidden="true">
+    <section class="filter-drawer">
+      <div class="filter-drawer-head">
+        <h3 id="filterDrawerTitle">🎛️ بحث متقدم</h3>
+        <button class="filter-close-btn" id="closeFiltersBtn" type="button" aria-label="إغلاق البحث المتقدم">×</button>
+      </div>
+
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab" data-tab="quick"><span>⚡</span> سريعة</button>
+        <button class="filter-tab" data-tab="web"><span>🌐</span> ويب متقدم</button>
+        <button class="filter-tab" data-tab="news"><span>📰</span> أخبار</button>
+        <button class="filter-tab" data-tab="images"><span>🖼️</span> صور</button>
+        <button class="filter-tab" data-tab="maps"><span>🗺️</span> خرائط</button>
+        <button class="filter-tab" data-tab="all-filters" style="background: linear-gradient(135deg, #a142f4, #7c3aed); color: white;">
+          <span>🎛️</span> كافة الفلاتر (48)
+        </button>
+      </div>
+
+      <!-- ⭐ ALL FILTERS — مبني ديناميكياً من searches ⭐ -->
+      <div class="filter-panel all-filters-panel" data-panel="all-filters">
+        <div class="advanced-section">
+          <div class="advanced-section-title">
+            🎛️ اختر الفلترة
+            <span class="filter-mode-hint">48 رابطاً جاهزاً — اختيار متعدد</span>
+          </div>
+
+          <div class="selected-previously" id="selectedPreviously">
+            <span class="sp-label">📌 المختارة سابقاً:</span>
+            <span id="spChips"><span style="color:var(--muted-2);font-size:11px;">لم يتم اختيار أي فلتر بعد</span></span>
+          </div>
+
+          <div class="filter-search-box">
+            <input type="text" id="filterSearchInput" placeholder="ابحث عن أي جزء من اسم الفلتر — مثلاً: مشاهدات، 4K، اليوم...">
+          </div>
+
+          <!-- ⭐ تُبنى هذه الشبكة تلقائياً من مصفوفة searches ⭐ -->
+          <div class="all-filters-grid" id="allFiltersGrid"></div>
+        </div>
+
+        <div class="all-filters-actions">
+          <button class="af-select-all" type="button" id="afSelectAll">✅ تحديد الكل</button>
+          <button class="af-clear-all" type="button" id="afClearAll">🗑️ مسح الكل</button>
+        </div>
+      </div>
+      <!-- QUICK -->
+      <div class="filter-panel" data-panel="quick">
+        <div class="advanced-section">
+          <div class="advanced-section-title">📊 الترتيب <span class="filter-mode-hint">اختيار واحد</span></div>
+          <div class="filter-group" data-filter-group="sort">
+            <button class="filter-btn" data-filter="relevance">الأكثر صلة</button>
+            <button class="filter-btn" data-filter="date">تاريخ النشر</button>
+            <button class="filter-btn" data-filter="views">عدد المشاهدات</button>
+            <button class="filter-btn" data-filter="rating">التقييم</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🎬 النوع <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="type">
+            <button class="filter-btn" data-filter-type="video">فيديو</button>
+            <button class="filter-btn" data-filter-type="playlist">قائمة تشغيل</button>
+            <button class="filter-btn" data-filter-type="live">بث مباشر</button>
+            <button class="filter-btn" data-filter-type="shorts">Shorts</button>
+            <button class="filter-btn" data-filter-type="movie">🎬 أفلام</button>
+            <button class="filter-btn" data-filter-type="series">📺 مسلسلات</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">⏱️ المدة <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="duration">
+            <button class="filter-btn" data-filter-duration="short">قصير (≤ 4 دق)</button>
+            <button class="filter-btn" data-filter-duration="medium">متوسط (4-20 دق)</button>
+            <button class="filter-btn" data-filter-duration="long">طويل (≥ 20 دق)</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">📅 التاريخ <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="date">
+            <button class="filter-btn" data-filter-date="hour">الساعة</button>
+            <button class="filter-btn" data-filter-date="today">اليوم</button>
+            <button class="filter-btn" data-filter-date="week">هذا الأسبوع</button>
+            <button class="filter-btn" data-filter-date="month">هذا الشهر</button>
+            <button class="filter-btn" data-filter-date="year">هذا العام</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🎥 الجودة <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="quality">
+            <button class="filter-btn" data-filter-quality="4k">4K</button>
+            <button class="filter-btn" data-filter-quality="hd">HD</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">✨ الميزات <span class="filter-mode-hint">اختيار متعدد</span></div>
+          <div class="filter-group" data-filter-group="feature">
+            <button class="filter-btn" data-filter-feature="360">360°</button>
+            <button class="filter-btn" data-filter-feature="vr180">VR180</button>
+            <button class="filter-btn" data-filter-feature="3d">ثلاثي الأبعاد</button>
+            <button class="filter-btn" data-filter-feature="hdr">HDR</button>
+            <button class="filter-btn" data-filter-feature="cc">ترجمة</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEB -->
+      <div class="filter-panel" data-panel="web">
+        <div class="advanced-section">
+          <div class="advanced-section-title">📄 البحث عن صفحات تشتمل على</div>
+          <div class="advanced-field"><label>كل هذه الكلمات:</label><input type="text" id="advAllWords" placeholder="مثال: أخبار الرياضة اليوم"></div>
+          <div class="advanced-field"><label>العبارة بالضبط:</label><input type="text" id="advExactPhrase" placeholder="مثال: كأس العالم 2026"></div>
+          <div class="advanced-field"><label>أي من هذه الكلمات:</label><input type="text" id="advAnyWords" placeholder="مثال: الرياض | القاهرة | دبي"></div>
+          <div class="advanced-field"><label>لا شيء من هذه الكلمات:</label><input type="text" id="advNoneWords" placeholder="مثال: إعلانات - ترويج"></div>
+          <div class="advanced-field"><label>الأرقام تتراوح بين:</label><input type="text" id="advNumbers" placeholder="مثال: 100..500"></div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🎯 تضييق النتائج</div>
+          <div class="advanced-field"><label>الموقع أو النطاق:</label><input type="text" id="advSite" placeholder="مثال: wikipedia.org"></div>
+          <div class="advanced-field"><label>نوع الملف:</label>
+            <select id="advFileType">
+              <option value="">أي تنسيق</option>
+              <option value="pdf">PDF</option>
+              <option value="doc">DOC / DOCX</option>
+              <option value="xls">XLS / XLSX</option>
+              <option value="ppt">PPT / PPTX</option>
+              <option value="txt">TXT</option>
+            </select>
+          </div>
+          <div class="advanced-field"><label>آخر تعديل:</label>
+            <select id="advLastUpdate">
+              <option value="">في أي وقت</option>
+              <option value="d">آخر 24 ساعة</option>
+              <option value="w">آخر أسبوع</option>
+              <option value="m">آخر شهر</option>
+              <option value="y">آخر سنة</option>
+            </select>
+          </div>
+          <div class="advanced-field"><label>اللغة:</label>
+            <select id="advLang">
+              <option value="">أي لغة</option>
+              <option value="ar">العربية</option>
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
+          <div class="advanced-field"><label>حقوق الاستخدام:</label>
+            <select id="advUsageRights">
+              <option value="">غير المفلترة</option>
+              <option value="f">مجاني للاستخدام</option>
+              <option value="fc">مجاني تجارياً</option>
+              <option value="fm">مجاني للتعديل</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEWS -->
+      <div class="filter-panel" data-panel="news">
+        <div class="advanced-section">
+          <div class="advanced-section-title">📝 البحث في الأخبار</div>
+          <div class="advanced-field"><label>كل هذه الكلمات:</label><input type="text" id="newsAllWords" placeholder="مثال: مصر السودان"></div>
+          <div class="advanced-field"><label>العبارة بالضبط:</label><input type="text" id="newsExactPhrase" placeholder="مثال: أزمة سد النهضة"></div>
+          <div class="advanced-field"><label>الموقع:</label><input type="text" id="newsSite" placeholder="مثال: cnn.com"></div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">📅 الوقت</div>
+          <div class="filter-group">
+            <button class="filter-btn news-time-btn active-filter" data-news-time="all">في أي وقت</button>
+            <button class="filter-btn news-time-btn" data-news-time="h">آخر ساعة</button>
+            <button class="filter-btn news-time-btn" data-news-time="h24">آخر 24 ساعة</button>
+            <button class="filter-btn news-time-btn" data-news-time="d7">آخر أسبوع</button>
+            <button class="filter-btn news-time-btn" data-news-time="d30">آخر شهر</button>
+            <button class="filter-btn news-time-btn" data-news-time="y1">آخر سنة</button>
+            <button class="filter-btn news-time-btn" data-news-time="archive">الأرشيف</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">📊 الترتيب</div>
+          <div class="filter-group">
+            <button class="filter-btn news-sort-btn active-filter" data-news-sort="relevance">الأكثر صلة</button>
+            <button class="filter-btn news-sort-btn" data-news-sort="date">الأحدث</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMAGES -->
+      <div class="filter-panel" data-panel="images">
+        <div class="advanced-section">
+          <div class="advanced-section-title">📐 الحجم</div>
+          <div class="filter-group">
+            <button class="filter-btn img-size-btn active-filter" data-img-size="all">أي حجم</button>
+            <button class="filter-btn img-size-btn" data-img-size="l">كبير</button>
+            <button class="filter-btn img-size-btn" data-img-size="m">متوسط</button>
+            <button class="filter-btn img-size-btn" data-img-size="i">أيقونة</button>
+            <button class="filter-btn img-size-btn" data-img-size="2mp">أكبر من 2MP</button>
+            <button class="filter-btn img-size-btn" data-img-size="8mp">أكبر من 8MP</button>
+            <button class="filter-btn img-size-btn" data-img-size="20mp">أكبر من 20MP</button>
+          </div>
+          <div class="advanced-field" style="margin-top:12px;"><label>العرض بالضبط (px):</label><input type="number" id="imgExactWidth" placeholder="مثال: 1920" min="0"></div>
+          <div class="advanced-field"><label>الارتفاع بالضبط (px):</label><input type="number" id="imgExactHeight" placeholder="مثال: 1080" min="0"></div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">📏 نسبة الأبعاد</div>
+          <div class="filter-group">
+            <button class="filter-btn img-aspect-btn active-filter" data-img-aspect="all">الكل</button>
+            <button class="filter-btn img-aspect-btn" data-img-aspect="tall">طويل</button>
+            <button class="filter-btn img-aspect-btn" data-img-aspect="square">مربع</button>
+            <button class="filter-btn img-aspect-btn" data-img-aspect="wide">عريض</button>
+            <button class="filter-btn img-aspect-btn" data-img-aspect="panoramic">بانورامي</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🎨 اللون</div>
+          <div class="advanced-field">
+            <label>اللون الأساسي:</label>
+            <div class="color-options" id="imgColorOptions">
+              <button class="color-swatch selected" data-img-color="all" style="background: linear-gradient(135deg, #ff0000 0%, #ff8800 25%, #ffff00 50%, #00a000 75%, #0066ff 100%);" title="الكل"></button>
+              <button class="color-swatch" data-img-color="red" style="background: #ff0000;" title="أحمر"></button>
+              <button class="color-swatch" data-img-color="orange" style="background: #ff8800;" title="برتقالي"></button>
+              <button class="color-swatch" data-img-color="yellow" style="background: #ffff00;" title="أصفر"></button>
+              <button class="color-swatch" data-img-color="green" style="background: #00a000;" title="أخضر"></button>
+              <button class="color-swatch" data-img-color="teal" style="background: #00bcd4;" title="تركواز"></button>
+              <button class="color-swatch" data-img-color="blue" style="background: #0066ff;" title="أزرق"></button>
+              <button class="color-swatch" data-img-color="purple" style="background: #8000ff;" title="بنفسجي"></button>
+              <button class="color-swatch" data-img-color="pink" style="background: #ff69b4;" title="زهري"></button>
+              <button class="color-swatch" data-img-color="white" style="background: #ffffff;" title="أبيض"></button>
+              <button class="color-swatch" data-img-color="gray" style="background: #808080;" title="رمادي"></button>
+              <button class="color-swatch" data-img-color="black" style="background: #000000;" title="أسود"></button>
+              <button class="color-swatch" data-img-color="brown" style="background: #8b4513;" title="بني"></button>
+            </div>
+          </div>
+          <div class="advanced-field">
+            <label>نوع اللون:</label>
+            <div class="filter-group">
+              <button class="filter-btn img-color-type-btn active-filter" data-img-color-type="all">الكل</button>
+              <button class="filter-btn img-color-type-btn" data-img-color-type="color">ملون</button>
+              <button class="filter-btn img-color-type-btn" data-img-color-type="gray">أبيض وأسود</button>
+              <button class="filter-btn img-color-type-btn" data-img-color-type="trans">شفاف</button>
+            </div>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🎭 نوع الصورة</div>
+          <div class="filter-group">
+            <button class="filter-btn img-type-btn active-filter" data-img-type="all">الكل</button>
+            <button class="filter-btn img-type-btn" data-img-type="face">وجه</button>
+            <button class="filter-btn img-type-btn" data-img-type="photo">صورة</button>
+            <button class="filter-btn img-type-btn" data-img-type="clipart">رسم</button>
+            <button class="filter-btn img-type-btn" data-img-type="lineart">رسم خطي</button>
+            <button class="filter-btn img-type-btn" data-img-type="animated">متحركة</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">⚖️ حقوق الاستخدام</div>
+          <div class="filter-group">
+            <button class="filter-btn img-rights-btn active-filter" data-img-rights="all">غير المفلترة</button>
+            <button class="filter-btn img-rights-btn" data-img-rights="f">مجاني للاستخدام</button>
+            <button class="filter-btn img-rights-btn" data-img-rights="fc">مجاني تجارياً</button>
+            <button class="filter-btn img-rights-btn" data-img-rights="fm">مجاني للتعديل</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">📅 الوقت</div>
+          <div class="filter-group">
+            <button class="filter-btn img-time-btn active-filter" data-img-time="all">أي وقت</button>
+            <button class="filter-btn img-time-btn" data-img-time="d">آخر 24 ساعة</button>
+            <button class="filter-btn img-time-btn" data-img-time="w">آخر أسبوع</button>
+            <button class="filter-btn img-time-btn" data-img-time="m">آخر شهر</button>
+            <button class="filter-btn img-time-btn" data-img-time="y">آخر سنة</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🛡️ السلامة</div>
+          <div class="filter-group">
+            <button class="filter-btn img-safe-btn active-filter" data-img-safe="all">إظهار الكل</button>
+            <button class="filter-btn img-safe-btn" data-img-safe="active">تصفية الصريح</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAPS -->
+      <div class="filter-panel" data-panel="maps">
+        <div class="advanced-section">
+          <div class="advanced-section-title">📍 الموقع</div>
+          <div class="advanced-field"><label>المكان أو النشاط:</label><input type="text" id="mapPlace" placeholder="مثال: مطاعم، فنادق..."></div>
+          <div class="advanced-field"><label>بالقرب من:</label><input type="text" id="mapNear" placeholder="مثال: صنعاء، القاهرة..."></div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">⭐ التقييم</div>
+          <div class="filter-group">
+            <button class="filter-btn map-rating-btn active-filter" data-map-rating="0">أي تقييم</button>
+            <button class="filter-btn map-rating-btn" data-map-rating="3">3+ نجوم</button>
+            <button class="filter-btn map-rating-btn" data-map-rating="4">4+ نجوم</button>
+            <button class="filter-btn map-rating-btn" data-map-rating="4.5">4.5+ نجوم</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🕐 ساعات العمل</div>
+          <div class="filter-group">
+            <button class="filter-btn map-hours-btn active-filter" data-map-hours="all">أي وقت</button>
+            <button class="filter-btn map-hours-btn" data-map-hours="open">مفتوح الآن</button>
+            <button class="filter-btn map-hours-btn" data-map-hours="24h">24 ساعة</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">💰 السعر</div>
+          <div class="filter-group">
+            <button class="filter-btn map-price-btn active-filter" data-map-price="all">الكل</button>
+            <button class="filter-btn map-price-btn" data-map-price="1">$</button>
+            <button class="filter-btn map-price-btn" data-map-price="2">$$</button>
+            <button class="filter-btn map-price-btn" data-map-price="3">$$$</button>
+            <button class="filter-btn map-price-btn" data-map-price="4">$$$$</button>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">🏪 الفئة</div>
+          <div class="advanced-field">
+            <select id="mapCategory">
+              <option value="">أي فئة</option>
+              <option value="restaurants">مطاعم</option>
+              <option value="cafes">مقاهي</option>
+              <option value="hotels">فنادق</option>
+              <option value="hospitals">مستشفيات</option>
+              <option value="pharmacies">صيدليات</option>
+              <option value="banks">بنوك</option>
+              <option value="gas_stations">محطات بنزين</option>
+              <option value="shopping_malls">مراكز تسوق</option>
+              <option value="supermarkets">سوبر ماركت</option>
+            </select>
+          </div>
+        </div>
+        <div class="advanced-section">
+          <div class="advanced-section-title">📊 الترتيب</div>
+          <div class="filter-group">
+            <button class="filter-btn map-sort-btn active-filter" data-map-sort="relevance">الأكثر صلة</button>
+            <button class="filter-btn map-sort-btn" data-map-sort="rating">الأعلى تقييماً</button>
+            <button class="filter-btn map-sort-btn" data-map-sort="reviews">الأكثر مراجعات</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-drawer-actions">
+        <button class="filter-apply-btn" id="applyFiltersBtn" type="button">✅ تنفيذ والبحث</button>
+        <button class="filter-reset-btn" id="drawerResetFiltersBtn" type="button">🔄 إعادة ضبط</button>
+      </div>
+    </section>
+  </div>
+
+  <noscript><p class="noscript-message">يحتاج Searchly إلى تفعيل JavaScript لإجراء البحث.</p></noscript>
+
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script src="app.js?v=6" defer></script>
+
+</body>
+</html>
