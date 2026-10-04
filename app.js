@@ -2060,5 +2060,4 @@ import { normalizeSmartQuery as normalizeSmartQueryCore, scoreSmartMode as score
 import { generateAdvancedLink as generateAdvancedLinkCore } from './src/search/url-core.js';
 import { filterCommands as filterCommandsCore, getCommandLabel } from './src/commands/core.js';
 import { translateWithDictionary as translateWithDictionaryCore, makeTranslationCacheKey } from './src/i18n/core.js';
-import { cloneFilterState } from './src/state/store.js';
 
